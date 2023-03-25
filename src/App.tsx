@@ -10,7 +10,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandinPage />} />
-        <Route path="/timeline" element={<Timeline />} />
+        <Route path="/timeline/:timeline" element={<Timeline />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>

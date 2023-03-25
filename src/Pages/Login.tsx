@@ -32,7 +32,7 @@ const Login = () => {
                 setCookie('dataUser', JSON.stringify(response.data.data))
                 const id = response.data.data.id
                 console.log(id)
-                // navigate(`/home/${id}`)
+                navigate(`/timeline/${id}`)
                 console.log(email)
                 console.log(password)
             })

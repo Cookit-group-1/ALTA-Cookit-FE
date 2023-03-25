@@ -44,7 +44,7 @@ const Register = () => {
             </div>
             <div className='w-full h-full px-5 lg:mb-16 md:h-[60vh] flex flex-col items-center'>
                 <h1 className='font-bold text-3xl'>Sign up</h1>
-                <form className='sm:w-72 md:w-2/3 lg:w-72 px-5 pb-8 text-center flex flex-col items-center border-b-2 border-gray-300  '>
+                <form className='sm:w-72 lg:px-10 md:w-2/3 lg:w-72 px-5 pb-8 text-center flex flex-col items-center border-b-2 border-gray-300  '>
                     <FormInput
                         width='full'
                         mdWidth='96'
