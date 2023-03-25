@@ -54,7 +54,7 @@ const Register = () => {
                         inputType={['text', 'email', 'password']}
                         onChange={handleInputChange} />
                     <button onClick={(e) => handleRegister(e)} className='w-full md:w-96 lg:w-full h-8 my-5 rounded-lg text-white font-semibold bg-orange-500'>Sign up</button>
-                    <p>Already have an account <span className='font-bold cursor-pointer' onClick={() => navigate('/login')}>Login</span></p>
+                    <p className='text-sm'>Already have an account <span className='font-bold cursor-pointer' onClick={() => navigate('/login')}>Login</span></p>
                 </form>
                 <div className='w-56 h-12 mt-5 flex flex-row bg-white items-center border-2 rounded-md '>
                     <img className='w-auto h-full' src={googleImg} alt="" />

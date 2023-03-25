@@ -47,7 +47,7 @@ const Login = () => {
             </div>
             <div className='w-full h-full px-5 lg:mb-16 md:h-[60vh] flex flex-col items-center'>
                 <h1 className='font-bold text-3xl'>Login</h1>
-                <form className='sm:w-72 md:w-2/3 lg:w-72 px-5 pb-8 text-center flex flex-col items-center border-b-2 border-gray-300  '>
+                <form className='sm:w-72 md:w-2/3 lg:px-10 lg:w-72 px-5 pb-8 text-center flex flex-col items-center border-b-2 border-gray-300  '>
                     <FormInput
                         width='full'
                         mdWidth='96'
@@ -57,7 +57,7 @@ const Login = () => {
                         inputType={['email', 'password']}
                         onChange={handleInputChange} />
                     <button onClick={(e) => handleLogin(e)} className='w-full md:w-96 lg:w-full h-8 my-5 rounded-lg text-white font-semibold bg-orange-500' >Login</button>
-                    <p>Create new account <span className='font-bold cursor-pointer' onClick={() => navigate('/register')}>Sign up</span></p>
+                    <p className='text-sm'>Create new account <span className='font-semibold cursor-pointer' onClick={() => navigate('/register')}>Sign up</span></p>
                 </form>
                 <div className='w-56 h-12 mt-5 flex flex-row bg-white items-center border-2 rounded-md '>
                     <img className='w-auto h-full' src={googleImg} alt="" />
