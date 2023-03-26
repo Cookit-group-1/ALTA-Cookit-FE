@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
     const navigate = useNavigate()
-    const [cookies, setCookie] = useCookies(['dataUser'])
+    const [cookies, setCookie] = useCookies(['user'])
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -29,12 +29,10 @@ const Login = () => {
             "password": password
         })
             .then(response => {
-                setCookie('dataUser', JSON.stringify(response.data.data))
+                setCookie('user', JSON.stringify(response.data.data), { path: "/" });
                 const id = response.data.data.id
-                console.log(id)
+                console.log(cookies.user);
                 navigate(`/timeline/${id}`)
-                console.log(email)
-                console.log(password)
             })
             .catch(err => console.log(err))
     }

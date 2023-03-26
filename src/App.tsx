@@ -4,6 +4,8 @@ import LandinPage from './Pages/LandinPage'
 import Timeline from './Pages/Timeline'
 import Login from './Pages/Login'
 import Register from './Pages/Register'
+import Cart from './Pages/Cart'
+import Follow from './Pages/Follow'
 
 function App() {
   return (
@@ -13,6 +15,11 @@ function App() {
         <Route path="/timeline/:timeline" element={<Timeline />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/follow" element={<Follow />} />
+        
       </Routes>
     </BrowserRouter>
   )
