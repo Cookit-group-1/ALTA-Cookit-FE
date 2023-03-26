@@ -92,7 +92,7 @@ const CardPost: FC<CardPostProps> =
                     <p className='font-light'>{description}</p>
 
                     {/* Recipe Photo */}
-                    <div onClick={handleToPost} className='h-0 pb-2/3 relative hover:cursor-pointer'>
+                    <div onClick={handleToPost} className='h-0 pb-2/3 relative hover:cursor-pointer mt-4'>
                         <img
                             src={postPicture}
                             className='inset-0 absolute w-full h-full object-cover rounded-lg'

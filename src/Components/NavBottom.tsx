@@ -25,7 +25,7 @@ const NavBottom = () => {
             {/* Bottom Navbar */}
             <div className='
             w-full z-30 bg-primary flex justify-between items-center text-white text-4xl py-3 px-8 gap-5
-            sm:text-primary sm:bg-white sm:border-l-2 sm:fixed sm:w-20 lg:w-64
+            sm:text-primary sm:bg-white sm:fixed sm:w-20 lg:w-64
             sm:flex-col sm:h-screen sm:justify-start
             lg:items-start
             '>
