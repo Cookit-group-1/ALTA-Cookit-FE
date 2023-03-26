@@ -1,0 +1,62 @@
+{
+    "data": {
+        "carts": [
+            {
+                "id": 1,
+                "id_seller": 2,
+                "seller_name": "arbi",
+                "recipe_name": "Soto Rawon",
+                "ingredient_name": "Paket Couple",
+                "price": 100.000,
+                "quantity": 1
+            },
+            {
+                "id": 2,
+                "id_seller": 2,
+                "seller_name": "arbi",
+                "recipe_name": "Soto kambing",
+                "ingredient_name": "Paket 5 Orang",
+                "price": 200.000,
+                "quantity": 2
+            },
+            {
+                "id": 3,
+                "id_seller": 3,
+                "seller_name": "udin",
+                "recipe_name": "Soto ayam",
+                "ingredient_name": "Paket 5 Orang",
+                "price": 300.000,
+                "quantity": 1
+            },
+            {
+                "id": 4,
+                "id_seller": 4,
+                "seller_name": "kustia",
+                "recipe_name": "Soto tikus",
+                "ingredient_name": "Paket 5 Orang",
+                "price": 400.000,
+                "quantity": 1
+            },
+            {
+                "id": 6,
+                "id_seller": 5,
+                "seller_name": "ibrahim",
+                "recipe_name": "Soto kaki meja",
+                "ingredient_name": "Paket 5 Orang",
+                "price": 500.000,
+                "quantity": 1
+            },
+            {
+                "id": 6,
+                "id_seller": 5,
+                "seller_name": "ibrahim",
+                "recipe_name": "Soto kaki meja",
+                "ingredient_name": "Paket 5 Orang",
+                "price": 600.000,
+                "quantity": 1
+            }
+        ],
+        "total_page": 1
+    },
+    "message": "succesfully read list of user's carts"
+}
