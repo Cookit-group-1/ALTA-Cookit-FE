@@ -58,7 +58,7 @@ const Cart = () => {
     const responsive = screen.width
     return (
         <div className='bg-gray-100'>
-            <div className='w-full h-16 px-5 grid grid-cols-3 items-center bg-orange-500'>
+            <div className='w-full h-16 px-5 grid grid-cols-3 items-center bg-primary'>
                 <IoIosArrowBack className='text-2xl col-span-1 text-white' />
                 <h1 className='text-xl font-semibold text-white text-center '>Cart</h1>
             </div>
@@ -83,8 +83,8 @@ const Cart = () => {
                 })}
             </div>
             <div className='w-full h-16 px-5 lg:px-10 grid grid-cols-3 place-content-center items-center sticky bottom-0 bg-gray-100'>
-                <p className='col-span-2 font-semibold '>Total : <span className='text-orange-500'>Rp{totalPrice}</span> </p>
-                <button className='w-full md:w-2/3 lg:w-1/3 py-2 place-self-end text-white font-semibold rounded-md bg-orange-500 '>Checkout</button>
+                <p className='col-span-2 font-semibold '>Total : <span className='text-primary'>Rp{totalPrice}</span> </p>
+                <button className='w-full md:w-2/3 lg:w-1/3 py-2 place-self-end text-white font-semibold rounded-md bg-primary '>Checkout</button>
             </div>
         </div>
     )

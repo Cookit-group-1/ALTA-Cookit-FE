@@ -8,6 +8,11 @@ const NavBottom = () => {
     const [modalOpen, setModalOpen] = useState<boolean>(false)
     const navigate = useNavigate()
 
+    // Scroll to Top
+    const handleScrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     // Disable scrolling when modal is open
     useEffect(() => {
         if (modalOpen) {
@@ -29,7 +34,7 @@ const NavBottom = () => {
             sm:flex-col sm:h-screen sm:justify-start
             lg:items-start
             '>
-                <p className='font-semibold hidden lg:flex'>Cookit</p>
+                <button onClick={handleScrollToTop} className='font-bold hidden sm:flex sm:text-sm lg:font-semibold lg:text-4xl'>Cookit</button>
 
                 <Link className='hidden sm:flex items-center gap-2 hover:text-secondary' to={("/timeline")}>
                     <div className='w-9 justify-self-start'>
@@ -43,15 +48,15 @@ const NavBottom = () => {
                     <p className='text-lg hidden lg:flex'>Profile</p>
                 </Link>
 
-                <Link className='flex items-center gap-2 hover:text-secondary' to={("/timeline")}>
+                <Link className='flex items-center gap-2 hover:text-secondary' to={("/timeline/1")}>
                     <MdHome />
                     <p className='text-lg hidden lg:flex'>Home</p>
                 </Link>
-                <Link className='flex items-center gap-2 hover:text-secondary' to={("/timeline")}>
+                <Link className='flex items-center gap-2 hover:text-secondary' to={("/search")}>
                     <MdSearch />
                     <p className='text-lg hidden lg:flex'>Search</p>
                 </Link>
-                <Link className='flex items-center gap-2 hover:text-secondary' to={("/timeline")}>
+                <Link className='flex items-center gap-2 hover:text-secondary' to={("/cart")}>
                     <MdShoppingCart />
                     <p className='text-lg hidden lg:flex'>Cart</p>
                 </Link>

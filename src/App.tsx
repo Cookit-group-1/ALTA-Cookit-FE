@@ -6,6 +6,8 @@ import Login from './Pages/Login'
 import Register from './Pages/Register'
 import Cart from './Pages/Cart'
 import Follow from './Pages/Follow'
+import Search from './Pages/Search'
+import Recipe from './Pages/Recipe'
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route path="/timeline/:timeline" element={<Timeline />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/recipe/:recipeID" element={<Recipe />} />
 
 
         <Route path="/cart" element={<Cart />} />
