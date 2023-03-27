@@ -9,12 +9,15 @@ import Follow from './Pages/Follow'
 import Search from './Pages/Search'
 import Recipe from './Pages/Recipe'
 
+import Payment from './Pages/Payment'
+import { useParams } from 'react-router-dom'
 function App() {
+  const params = useParams()
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandinPage />} />
-        <Route path="/timeline/:timeline" element={<Timeline />} />
+        <Route path="/timeline" element={<Timeline />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/search" element={<Search />} />
@@ -23,6 +26,7 @@ function App() {
 
         <Route path="/cart" element={<Cart />} />
         <Route path="/follow" element={<Follow />} />
+        <Route path="/payment" element={<Payment />} />
         
       </Routes>
     </BrowserRouter>

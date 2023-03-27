@@ -24,15 +24,16 @@ function FormInput({ inputCount, inputType, placeholder, onChange, width, mdWidt
         new Array(inputCount).fill("")
     );
 
+    
     const handleChange = (index: number, value: string) => {
         setInputValues((prevState) => {
             const newState = [...prevState];
             newState[index] = value;
             return newState;
         });
-
-        onChange(inputValues);
     };
+
+    onChange(inputValues);
 
     const hidePw = () => {
         return inputType.includes("text");

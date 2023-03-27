@@ -2,7 +2,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { AiFillHeart } from 'react-icons/ai'
 import { MdModeComment } from 'react-icons/md'
-import React from "react";
+import React, {useEffect} from "react";
 import ScrollAnimation from "../Components/ScrollAnimation";
 
 import pic1 from '../assets/pic1.jpg'
@@ -15,11 +15,20 @@ import pic7 from '../assets/pic3.png'
 import pic8 from '../assets/pic4.png'
 import pic9 from '../assets/pp1.jpg'
 import pic11 from '../assets/bg2.png'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 
 const LandingPage: React.FC = () => {
     const responsive = screen.width
+    const [cookies,setCookie ] = useCookies(['user'])
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (cookies.user) {
+            navigate('/timeline')
+        }
+    }, [cookies.user])
 
     return (
         <div className='px-5 pb-16 flex flex-col gap-10' >

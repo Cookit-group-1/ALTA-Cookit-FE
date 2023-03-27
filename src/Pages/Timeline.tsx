@@ -1,11 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CardPost from '../Components/CardPost'
 import CardQuote from '../Components/CardQuote'
 import NavBottom from '../Components/NavBottom'
 import NavTop from '../Components/NavTop'
 import Layout from '../Components/Layout'
+import { useCookies } from 'react-cookie'
+import { useNavigate } from 'react-router-dom'
 
 const Timeline = () => {
+    const [cookies, setCookie] = useCookies(['user'])
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (cookies.user == undefined) {
+            navigate('/login')
+        }
+    })
+
     return (
         <Layout>
             <NavTop />
