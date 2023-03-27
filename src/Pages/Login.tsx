@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FormInput from '../Components/FormInput'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
@@ -8,31 +8,42 @@ import loginImg from '../assets/login.jpg'
 import graph from '../assets/graph.png'
 import googleImg from '../assets/google.png'
 import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 const Login = () => {
     const navigate = useNavigate()
     const [cookies, setCookie] = useCookies(['user'])
-    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
     const handleInputChange = (inputValues: string[]) => {
-        const firstInputValue = inputValues[0];
-        const secondInputValue = inputValues[1];
-        setEmail(firstInputValue);
-        setPassword(secondInputValue);
-    };
+        setUsername(inputValues[0]);
+        setPassword(inputValues[1]);
+    }
+
+    useEffect(() => {
+        if (cookies.user) {
+            navigate('/timeline')
+        }
+    }, [cookies.user])
 
     const handleLogin = (e: any) => {
         e.preventDefault()
-        axios.post('https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/login', {
-            "email": email,
+        axios.post('https://cookit.my-extravaganza.site/login', {
+            "username": username,
             "password": password
         })
             .then(response => {
                 setCookie('user', JSON.stringify(response.data.data), { path: "/" });
                 const id = response.data.data.id
-                console.log(cookies.user);
-                navigate(`/timeline/${id}`)
+                navigate(`/timeline`)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'sign in has been successful',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
             })
             .catch(err => console.log(err))
     }
@@ -51,8 +62,8 @@ const Login = () => {
                         mdWidth='96'
                         lgWidth='full'
                         inputCount={2}
-                        placeholder={['Email', 'Password']}
-                        inputType={['email', 'password']}
+                        placeholder={['Username', 'Password']}
+                        inputType={['text', 'password']}
                         onChange={handleInputChange} />
                     <button onClick={(e) => handleLogin(e)} className='w-full md:w-96 lg:w-full h-8 my-5 rounded-lg text-white font-semibold bg-orange-500' >Login</button>
                     <p className='text-sm'>Create new account <span className='font-semibold cursor-pointer' onClick={() => navigate('/register')}>Sign up</span></p>
