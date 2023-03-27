@@ -5,6 +5,7 @@ import NavBottom from '../Components/NavBottom'
 import { useState } from 'react'
 import { IoIosCheckmarkCircle } from 'react-icons/io'
 import { MdModeComment, MdFavorite } from 'react-icons/md'
+import Carousel from '../Components/Carousel'
 
 interface Ingredients {
     id: number,
@@ -16,6 +17,11 @@ interface Ingredients {
 interface Steps {
     id: number,
     name: string
+}
+
+interface Images {
+    id: number,
+    url_image: string
 }
 
 interface RecipeVariables {
@@ -30,7 +36,7 @@ interface RecipeVariables {
     steps: Steps[]
     total_like: number
     total_comment: number
-    images: any[]
+    images: Images[]
 }
 
 const initialRecipe: RecipeVariables = {
@@ -155,33 +161,61 @@ const Recipe = () => {
                 {/* Description */}
                 <p>{recipeDetails.description}</p>
 
+                {/* Image Carousel */}
+                <Carousel
+                    images={recipeDetails.images}
+                />
+
+
+                {/* <div className="carousel w-full z-auto rounded-xl h-64">
+                    {recipeDetails.images.map((image: Images) => {
+                        return (
+                            <div id={`img${image.id}`} className="carousel-item relative w-full">
+                                <img src={image.url_image} className="w-full" />
+                                <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                                    <a href={`#img${image.id - 1}`} className="btn btn-circle">❮</a>
+                                    <a href={`#img${image.id + 1}`} className="btn btn-circle">❯</a>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+
+                <div className="flex justify-center w-full py-2 gap-2">
+                    {recipeDetails.images.map((image: Images) => {
+                        return (
+                            <a href={`#img${image.id}`} className="btn btn-xs">{image.id}</a>
+                        )
+                    })}
+                </div> */}
+
                 {/* Ingredients */}
                 <div className="w-full flex flex-col gap-2">
                     <h3 className='text-primary font-semibold'>Ingredients</h3>
 
                     {/* Servings */}
-                    <div className='flex items-center'>
+                    <div className='flex items-center font-bold'>
                         <button
-                            className='btn rounded-l-lg rounded-r-none text-primary'
+                            className='btn rounded-l-lg rounded-r-none text-primary text-2xl'
                             onClick={() => handleChangeServing(recipeDetails.serving - 1)}
                         >-</button>
                         <input
                             type="number"
                             name='serving'
                             value={recipeDetails.serving.toString()}
-                            className='input input-neutral w-20 border-neutral rounded-none text-center'
+                            className='input input-neutral w-16 border-neutral rounded-none text-center'
                             onChange={(event) => handleChangeServing(Number(event.target.value))}
                             min={1}
                         />
                         <button
-                            className='btn rounded-r-lg rounded-l-none text-primary'
+                            className='btn rounded-r-lg rounded-l-none text-primary text-2xl'
                             onClick={() => handleChangeServing(recipeDetails.serving + 1)}
                         >+</button>
                         <p className='ml-4 font-semibold'>Servings</p>
                     </div>
 
                     {/* Table */}
-                    <table className="table table-auto table-zebra w-full">
+                    <table className="table table-auto table-zebra -z-10 w-full">
                         <tbody>
                             {recipeDetails.ingredients.map((ingredient: Ingredients) => {
                                 return (
@@ -194,6 +228,37 @@ const Recipe = () => {
                             })}
                         </tbody>
                     </table>
+
+                    {/* Purchase */}
+                    {recipeDetails.verified ?
+                        <div className='flex flex-col border-2 border-primary mt-1 px-2 pb-2'>
+                            <p className='self-center text-primary font-semibold bg-white -mt-3 px-2'>Buy Ingredients</p>
+                            <p>This is a verified recipe, you can directly purchase the ingredients for
+                                <span className='text-primary'> {recipeDetails.price} / batch</span>
+                            </p>
+                            <div className='grid grid-cols-2 items-center font-bold'>
+                                <div className='flex'>
+                                    <button
+                                        className='btn rounded-l-lg rounded-r-none text-primary text-2xl'
+                                        onClick={() => handleChangeServing(recipeDetails.serving - 1)}
+                                    >-</button>
+                                    <input
+                                        type="number"
+                                        name='serving'
+                                        value={recipeDetails.serving.toString()}
+                                        className='input input-neutral w-16 border-neutral rounded-none text-center'
+                                        onChange={(event) => handleChangeServing(Number(event.target.value))}
+                                        min={1}
+                                    />
+                                    <button
+                                        className='btn rounded-r-lg rounded-l-none text-primary text-2xl'
+                                        onClick={() => handleChangeServing(recipeDetails.serving + 1)}
+                                    >+</button>
+                                </div>
+                                <p className='ml-4 font-semibold'>Servings</p>
+                            </div>
+                        </div> :
+                        <></>}
                 </div>
 
                 {/* Steps */}

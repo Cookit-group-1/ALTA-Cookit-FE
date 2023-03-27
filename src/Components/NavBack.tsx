@@ -15,7 +15,7 @@ const NavBack: FC<NavBackProps> = ({ title }) => {
     };
 
     return (
-        <div className={`w-full text-xl text-white z-0 bg-primary sticky top-0`}>
+        <div className={`w-full text-xl text-white z-50 bg-primary sticky top-0`}>
 
             <div className='w-full h-16 flex flex-col items-center justify-between'>
                 <div className='w-full grid grid-cols-3 justify-items-center items-center mt-6 px-4'>

@@ -46,7 +46,7 @@ const CardPost: FC<CardPostProps> =
         handleRemix
     }) => {
         return (
-            <div className="-z-10 w-full bg-base-100 border-2 border-t-0 flex gap-2 p-2">
+            <div className="w-full bg-base-100 border-2 border-t-0 flex gap-2 p-4">
                 {/* Profile Picture */}
                 <div className='w-2/12'>
                     <div onClick={handleToProfile} className='h-0 pb-1/1 relative hover:cursor-pointer'>

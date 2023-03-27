@@ -58,7 +58,7 @@ const NavSearch: FC<NavSearchProps> = ({ handleTimeline, handleRecipe }) => {
         : ''; // inactive style
 
     return (
-        <div className={`w-full text-xl text-white z-0 bg-primary sticky ${stickyOffset}`}>
+        <div className={`w-full text-xl text-white z-20 bg-primary sticky ${stickyOffset}`}>
 
             <div className='w-full h-16 flex flex-col items-center justify-between'>
                 <div className='w-full grid grid-cols-6 justify-items-center items-center mt-6 px-4'>

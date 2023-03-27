@@ -62,7 +62,7 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
         : ''; // inactive style
 
     return (
-        <div className={`w-full text-xl text-white z-0 bg-primary sticky ${stickyOffset} sm:top-0`}>
+        <div className={`w-full text-xl text-white z-20 bg-primary sticky ${stickyOffset} sm:top-0`}>
 
             <div className='w-full h-16 flex flex-col items-center justify-between sm:hidden'>
                 <div className='w-full grid grid-cols-3 justify-items-center items-center mt-6 px-4'>
