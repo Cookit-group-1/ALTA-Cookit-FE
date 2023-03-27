@@ -4,9 +4,10 @@ import { useCookies } from 'react-cookie'
 import { IoIosArrowBack } from 'react-icons/io'
 import Followers from '../Components/Followers'
 import Following from '../Components/Following'
+import Header from '../Components/Header'
 
 const Follow = () => {
-    const [isNavigate, setIsNavigate] = useState(false)
+    const [isNavigate, setIsNavigate] = useState('')
     const [followers, setFollowers] = useState<any>([])
     const [following, setFollowing] = useState<any>([])
     const [cookies, setCookies] = useCookies(['user'])
@@ -74,16 +75,13 @@ const Follow = () => {
     return (
         <div className='flex justify-center '>
             <div className='w-full h-full flex flex-col items-center'>
-                <div className='w-full h-16 px-5 grid grid-cols-3 items-center bg-primary'>
-                    <IoIosArrowBack className='text-2xl col-span-1 text-white' />
-                    <h1 className='text-xl font-semibold text-white text-center '>Followers</h1>
-                </div>
+                <Header title={isNavigate} />
                 <nav className='w-full h-12 bg-primary sticky top-0 grid grid-cols-2 justify-center items-center text-center'>
-                    <p onClick={() => setIsNavigate(false)} className={`text-white place-self-center cursor-pointer w-fit py-2  ${isNavigate ? '' : 'border-b-[3px] border-secondary font-semibold'} `} >Following</p>
-                    <p onClick={() => setIsNavigate(true)} className={`text-white place-self-center cursor-pointer w-fit py-2  ${isNavigate ? 'border-b-[3px] border-secondary font-semibold' : ''} `} >Followers</p>
+                    <p onClick={() => setIsNavigate('Following')} className={`text-white place-self-center cursor-pointer w-fit py-2  ${isNavigate == 'Following' ? 'border-b-[3px] border-secondary font-semibold' : ''} `} >Following</p>
+                    <p onClick={() => setIsNavigate('Followers')} className={`text-white place-self-center cursor-pointer w-fit py-2  ${isNavigate == 'Followers' ? 'border-b-[3px] border-secondary font-semibold' : ''} `} >Followers</p>
                 </nav>
                 <div className='w-full md:w-1/2 px-2 py-3 '>
-                    {isNavigate
+                    {isNavigate == 'Followers'
                         ? <>
                             {followers?.map((item: any, index: number) => {
                                 return (

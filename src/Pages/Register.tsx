@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FormInput from '../Components/FormInput'
 
 import signupImg from '../assets/signup.jpg'
@@ -6,9 +6,12 @@ import graph from '../assets/graph.png'
 import googleImg from '../assets/google.png'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import Swal from 'sweetalert2'
+import { Cookies, useCookies } from 'react-cookie'
 
 const Register = () => {
     const navigate = useNavigate()
+    const [cookies, setCookie ] = useCookies(['user'])
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [username, setUsername] = useState('')
@@ -23,17 +26,30 @@ const Register = () => {
 
     const handleRegister = (e: any) => {
         e.preventDefault()
-        axios.post('https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/register', {
+        axios.post('https://cookit.my-extravaganza.site/register', {
             "username": username,
             "email": email,
             "password": password
         })
             .then((response) => {
-                console.log(response.data);
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'sign up has been successful',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
                 navigate('/login')
             })
             .catch((err) => { console.log(err); })
     }
+
+
+    useEffect(() => {
+        if (cookies.user) {
+            navigate('/timeline')
+        }
+    }, [cookies.user])
 
 
     const responsive = screen.width

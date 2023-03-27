@@ -51,7 +51,7 @@ const NavBottom = () => {
                     <MdSearch />
                     <p className='text-lg hidden lg:flex'>Search</p>
                 </Link>
-                <Link className='flex items-center gap-2 hover:text-secondary' to={("/timeline")}>
+                <Link className='flex items-center gap-2 hover:text-secondary' to={("/cart")}>
                     <MdShoppingCart />
                     <p className='text-lg hidden lg:flex'>Cart</p>
                 </Link>
