@@ -8,6 +8,7 @@ import LoadingSpinner from '../Components/LoadingSpinner'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const Timeline = () => {
     const [cookies, setCookie] = useCookies(['user'])
@@ -18,7 +19,7 @@ const Timeline = () => {
         if (cookies.user == undefined) {
             navigate('/login')
         }
-    },[])
+    }, [])
 
     // Get Recipe Data
     const [recipes, setRecipes] = useState([])
@@ -49,6 +50,28 @@ const Timeline = () => {
         fetchRecipes();
     }, [endpoint, limit]);
 
+    // add to cart
+    const handleCart = (id: number, quantity: number) => {
+        axios.post(`https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/users/carts`, {
+            "ingredient_id": id,
+            "quantity": quantity
+        }, {
+            headers: {
+                Authorization: `Bearer ${cookies.user.token}`
+            }
+        })
+            .then((response) => {
+                console.log(response.data);
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'successful add to cart',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            })
+            .catch((err) => { console.log(err) })
+    }
 
     return (
         <Layout>
@@ -56,6 +79,7 @@ const Timeline = () => {
 
             {loading ? <LoadingSpinner /> : <>
                 {recipes.map((post: any) => {
+                    console.log('g', recipes)
                     return (
                         <CardPost
                             key={post.id}
@@ -71,6 +95,7 @@ const Timeline = () => {
                             likeAmt={post.total_like}
                             handleToPost={() => navigate(`/recipe/${post.id}`)}
                             handleToProfile={() => navigate(`/profile/${post.user_id}`)}
+                            handleCart={() => handleCart(1, 2)}
                         />
                     )
                 })}

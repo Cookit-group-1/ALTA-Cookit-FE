@@ -40,7 +40,7 @@ const ItemCart: FC<myProps> = ({ sellerName, cartItems, increment, decrement, de
                                     <p>{item.quantity}</p>
                                     <p onClick={() => increment(item.price, item.id, item.quantity)} className='cursor-pointer'>+</p>
                                 </div>
-                                <RiDeleteBin6Line onClick={() => deleteCartItem(item.id)} className='absolute md:absolute lg:static cursor-pointer text-xl md:text-2xl lg:text-xl lg:mt-[20%] right-0 md:right-3 top-2/3 text-red-600' />
+                                <RiDeleteBin6Line id={`${index}`} onClick={() => deleteCartItem(item.id)} className='absolute md:absolute lg:static cursor-pointer text-xl md:text-2xl lg:text-xl lg:mt-[20%] right-0 md:right-3 top-2/3 text-red-600' />
                             </div>
                         </div>
                     </div>
