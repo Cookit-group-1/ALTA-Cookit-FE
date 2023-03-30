@@ -15,7 +15,7 @@ const Timeline = () => {
         if (cookies.user == undefined) {
             navigate('/login')
         }
-    })
+    },[])
 
     return (
         <Layout>

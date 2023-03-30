@@ -1,0 +1,75 @@
+{
+    "data": [
+        {
+            "transaction_details": [
+                {
+                    "id": 1,
+                    "id_seller": 3,
+                    "seller_name": "ucup",
+                    "recipe_name": "Soto Rawon",
+                    "ingredient_name": "Paket Couple",
+                    "price": 100000,
+                    "quantity": 2
+                },
+                {
+                    "id": 2,
+                    "id_seller": 3,
+                    "seller_name": "udin",
+                    "recipe_name": "Soto Rawon",
+                    "ingredient_name": "Paket 5 Orang",
+                    "price": 350000,
+                    "quantity": 1
+                },
+                {
+                    "id": 3,
+                    "id_seller": 4,
+                    "seller_name": "abdul",
+                    "recipe_name": "Soto bandung",
+                    "ingredient_name": "Paket 5 Orang",
+                    "price": 30000,
+                    "quantity": 2
+                }
+            ],
+            "customer_id": 2,
+            "payment_method": "cash on delivery",
+            "total_price": 40000,
+            "created_at": "23-03-2023"
+        },
+        {
+            "transaction_details": [
+                {
+                    "id": 3,
+                    "id_seller": 3,
+                    "seller_name": "udin",
+                    "recipe_name": "Milky Cheese Cake",
+                    "ingredient_name": "Paket Mini",
+                    "price": 75000,
+                    "quantity": 1
+                },
+                {
+                    "id": 5,
+                    "id_seller": 4,
+                    "seller_name": "abdul",
+                    "recipe_name": "Soto bandung",
+                    "ingredient_name": "Paket 5 Orang",
+                    "price": 30000,
+                    "quantity": 2
+                },
+                {
+                    "id": 4,
+                    "id_seller": 3,
+                    "seller_name": "udin",
+                    "recipe_name": "sate tikus",
+                    "ingredient_name": "Paket Original",
+                    "price": 225000,
+                    "quantity": 1
+                }
+            ],
+            "customer_id": 2,
+            "payment_method": "cash on delivery",
+            "total_price": 300000,
+            "created_at": "24-03-2023"
+        }
+    ],
+    "message": "succesfully read list of user's transactions"
+}
