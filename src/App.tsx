@@ -6,11 +6,16 @@ import Login from './Pages/Login'
 import Register from './Pages/Register'
 import Cart from './Pages/Cart'
 import Follow from './Pages/Follow'
+import Search from './Pages/Search'
+import Recipe from './Pages/Recipe'
+
 import Payment from './Pages/Payment'
 import { useParams } from 'react-router-dom'
 import History from './Pages/History'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import DetailHostory from './Pages/DetailHostory'
+import RecipeForm from './Pages/RecipeForm'
+import Profile from './Pages/Profile'
 
 
 
@@ -24,6 +29,11 @@ function App() {
           <Route path="/timeline" element={<Timeline />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/recipe/:recipeID" element={<Recipe />} />
+          <Route path="/recipe/:recipeID/edit" element={<RecipeForm />} />
+          <Route path="/recipe/new" element={<RecipeForm />} />
+          <Route path="/profile/:userID" element={<Profile />} />
 
 
           <Route path="/cart" element={<Cart />} />
@@ -31,7 +41,6 @@ function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/history" element={<History />} />
           <Route path="/detailhistory" element={<DetailHostory />} />
-
         </Routes>
       </BrowserRouter>
     </GoogleOAuthProvider>

@@ -1,5 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie'
+import axios from 'axios';
 
 interface NavTopProps {
     handleTimeline?: React.MouseEventHandler
@@ -8,6 +10,37 @@ interface NavTopProps {
 
 const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
     const navigate = useNavigate()
+    const [cookies, setCookie, removeCookie] = useCookies(['user']);
+
+    // Profile Picture
+    const [img, setImg] = React.useState<any>()
+    
+    const [loading, setLoading] = React.useState(true)
+    const endpoint = `https://cookit.my-extravaganza.site/users`
+    const fetchDataUser = async () => {
+        try {
+            const response = await axios.get(endpoint, {
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${cookies.user.token}`
+                }
+            });
+            setImg(response.data.data.profile_picture)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchDataUser();
+    }, [endpoint]);
+
+    // Scroll to Top
+    const handleScrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     // Sticky Navbar
     const [stickyOffset, setStickyOffset] = useState<string>('-top-16')
@@ -57,19 +90,19 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
         : ''; // inactive style
 
     return (
-        <div className={`w-full text-xl text-white z-0 bg-primary sticky ${stickyOffset} sm:top-0`}>
+        <div className={`w-full text-xl text-white z-20 bg-primary sticky ${stickyOffset} sm:top-0`}>
 
             <div className='w-full h-16 flex flex-col items-center justify-between sm:hidden'>
                 <div className='w-full grid grid-cols-3 justify-items-center items-center mt-6 px-4'>
-                    <div className='w-10 justify-self-start'>
+                    <Link to={(`/profile/${cookies.user.id}`)} className={`w-10 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
                         <div onClick={() => navigate("/")} className='h-0 pb-1/1 relative hover:cursor-pointer'>
                             <img
-                                src="https://media.juiceonline.com/2020/03/af3fd7d2-62fa-4512-b289-0f95748c09ab_169-600x339.jpeg"
+                                src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
                                 className='inset-0 absolute w-full h-full object-cover rounded-full'
                             />
                         </div>
-                    </div>
-                    <p className='font-semibold'>Cookit</p>
+                    </Link>
+                    <button onClick={handleScrollToTop} className='font-semibold'>Cookit</button>
                     <div></div>
                 </div>
             </div>
