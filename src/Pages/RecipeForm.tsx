@@ -116,57 +116,75 @@ const RecipeForm = () => {
     }
 
     // Handle Submit
-    const [loading, setLoading] = React.useState(true)
-    const [recipeID, setRecipeID] = React.useState(27)
+    const [loading, setLoading] = React.useState(false)
+    const [recipeID, setRecipeID] = React.useState(109)
     const endpoint = `https://cookit.my-extravaganza.site`
     // const endpoint = `https://a670-2001-448a-20e0-3ddf-e52b-c1b9-12aa-ad85.ap.ngrok.io`
 
+    const postImage = async (recipeID: number) => {
+        if (newRecipeDetails.images) {
+            try {
+                const formData = new FormData();
+                formData.append('images', newRecipeDetails.images[0]);
 
+                console.log("Form Data: ", formData)
+
+                const response = await axios.post(`${endpoint}/recipes/${recipeID}/images`,
+                    {
+                        "image": newRecipeDetails.images
+                    },
+                    // formData,
+                    {
+                        headers: {
+                            Accept: 'application/json',
+                            "Content-Type": 'multipart/form-data',
+                            Authorization: `Bearer ${cookies.user.token}`
+                        }
+                    });
+                console.log("Post Image: ", response)
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        }
+    }
 
     const postRecipe = async () => {
+        setLoading(true)
         try {
             const steps = newRecipeDetails.steps.map(str => ({ name: str }));
             const status = showPrice ? "OpenForSale" : "None"
             const ingredients = [
                 {
-                    "name": "Original",
-                    "price": newRecipeDetails.price,
-                    "ingredient_details": newRecipeDetails.ingredients
+                    name: "Original",
+                    price: newRecipeDetails.price,
+                    ingredient_details: newRecipeDetails.ingredients
                 }
             ];
-            let formdata = new FormData();
-            formdata.append('name', newRecipeDetails.name)
-            formdata.append('description', newRecipeDetails.description)
-            formdata.append('status', status)
-            formdata.append('steps', JSON.stringify(steps))
-            formdata.append('ingredients', JSON.stringify(ingredients))
-            console.log("Form Data: ", formdata)
+            const data =
+            {
+                name: newRecipeDetails.name,
+                description: newRecipeDetails.description,
+                status: status,
+                steps: steps,
+                ingredients: ingredients
+            }
 
-            console.log("Steps: ", steps);
-            console.log("Ingredients: ", ingredients);
             const response = await axios.post(`${endpoint}/recipes`,
-                // formdata,
-                {
-                    name: newRecipeDetails.name,
-                    description: newRecipeDetails.description,
-                    status: status,
-                    image: newRecipeDetails.images ? newRecipeDetails.images[0] : null,
-                    steps: steps,
-                    ingredients: ingredients
-                },
+                data,
                 {
                     headers: {
                         Accept: 'application/json',
-                        "Content-Type": 'multipart/form-data',
+                        // "Content-Type": 'multipart/form-data',
                         Authorization: `Bearer ${cookies.user.token}`
                     }
                 });
             setRecipeID(response.data.data.id)
-            console.log(response)
+            postImage(response.data.data.id)
+            console.log("Post Recipe: ", response)
         } catch (error) {
             console.error(error);
-        } finally {
-            setLoading(false);
         }
     };
 
