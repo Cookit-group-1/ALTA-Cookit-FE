@@ -63,7 +63,9 @@ const CardQuote: FC<CardQuoteProps> =
 
                             {/* Shopping Cart for Verified Recipes */}
                             {verifiedRecipe ?
-                                <MdAddShoppingCart className='text-accent text-2xl' /> :
+                                <button onClick={handleCart}>
+                                    <MdAddShoppingCart className='text-accent text-2xl hover:text-secondary' />
+                                </button> :
                                 <></>
                             }
                         </div>

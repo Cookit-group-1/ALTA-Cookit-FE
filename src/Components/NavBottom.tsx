@@ -1,12 +1,38 @@
 import React, { useEffect } from 'react'
 import { MdHome, MdSearch, MdShoppingCart, MdAddBox } from 'react-icons/md'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useCookies } from 'react-cookie'
 
 const NavBottom = () => {
+    const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const [modalOpen, setModalOpen] = useState<boolean>(false)
-    const navigate = useNavigate()
+
+    // Profile Picture
+    const [loading, setLoading] = React.useState(true)
+    const endpoint = `https://cookit.my-extravaganza.site/users`
+    const [img, setImg] = React.useState<any>()
+    const fetchDataUser = async () => {
+        try {
+            const response = await axios.get(endpoint, {
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${cookies.user.token}`
+                }
+            });
+            setImg(response.data.data.profile_picture)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchDataUser();
+    }, [endpoint]);
 
     // Scroll to Top
     const handleScrollToTop = () => {
@@ -36,11 +62,11 @@ const NavBottom = () => {
             '>
                 <button onClick={handleScrollToTop} className='font-bold hidden sm:flex sm:text-sm lg:font-semibold lg:text-4xl'>Cookit</button>
 
-                <Link className='hidden sm:flex items-center gap-2 hover:text-secondary' to={("/timeline")}>
+                <Link className={`hidden ${loading ? 'animate-pulse' : ''} sm:flex items-center gap-2 hover:text-secondary`} to={(`/profile/${cookies.user.id}`)}>
                     <div className='w-9 justify-self-start'>
                         <div className='h-0 pb-1/1 relative hover:cursor-pointer'>
                             <img
-                                src="https://media.juiceonline.com/2020/03/af3fd7d2-62fa-4512-b289-0f95748c09ab_169-600x339.jpeg"
+                                src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
                                 className='inset-0 absolute w-full h-full object-cover rounded-full'
                             />
                         </div>
@@ -48,7 +74,7 @@ const NavBottom = () => {
                     <p className='text-lg hidden lg:flex'>Profile</p>
                 </Link>
 
-                <Link className='flex items-center gap-2 hover:text-secondary' to={("/timeline/1")}>
+                <Link className='flex items-center gap-2 hover:text-secondary' to={("/timeline")}>
                     <MdHome />
                     <p className='text-lg hidden lg:flex'>Home</p>
                 </Link>
@@ -74,14 +100,17 @@ const NavBottom = () => {
                 <>
                     <div onClick={() => setModalOpen(!modalOpen)} className='w-full h-full fixed inset-0 z-40 bg-black opacity-50'></div>
                     <div className='
-                    w-full absolute bottom-0 z-50 bg-white flex flex-col p-4 py-8 gap-4 rounded-t-3xl max-w-xl
-                    sm:fixed sm:w-2/3 sm:h-1/2 sm:inset-0 sm:m-auto sm:rounded-3xl
+                    w-full absolute bottom-0 z-50 bg-white grid p-4 py-8 gap-4 rounded-t-3xl max-w-xl
+                    sm:fixed sm:w-2/3 sm:h-64 sm:inset-0 sm:m-auto sm:rounded-3xl sm:grid-cols-2
                     lg:w-1/2
                     '>
-                        <p>What type of Post would you like to make?</p>
+                        <p className='hidden sm:flex font-semibold col-span-2 my-10'>What type of Post would you like to make?</p>
                         <button className='btn btn-primary rounded-full'>New Cooking</button>
-                        <button className='btn btn-primary rounded-full'>New Recipe</button>
-                        <button onClick={() => setModalOpen(!modalOpen)} className='btn btn-outline btn-primary rounded-full'>Cancel</button>
+                        <Link to={"/recipe/new"} className='btn btn-primary rounded-full'>New Recipe</Link>
+                        <button onClick={() => setModalOpen(!modalOpen)} className='btn btn-outline sm:btn-circle btn-primary rounded-full sm:absolute sm:right-4 sm:top-4'>
+                            <span className="sm:hidden">Cancel</span>
+                            <span className="hidden sm:block">X</span>
+                        </button>
                     </div>
                 </> :
                 <></>

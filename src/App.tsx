@@ -11,6 +11,8 @@ import Recipe from './Pages/Recipe'
 
 import Payment from './Pages/Payment'
 import { useParams } from 'react-router-dom'
+import RecipeForm from './Pages/RecipeForm'
+import Profile from './Pages/Profile'
 function App() {
   const params = useParams()
   return (
@@ -22,12 +24,15 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/search" element={<Search />} />
         <Route path="/recipe/:recipeID" element={<Recipe />} />
+        <Route path="/recipe/:recipeID/edit" element={<RecipeForm />} />
+        <Route path="/recipe/new" element={<RecipeForm />} />
+        <Route path="/profile/:userID" element={<Profile />} />
 
 
         <Route path="/cart" element={<Cart />} />
         <Route path="/follow" element={<Follow />} />
         <Route path="/payment" element={<Payment />} />
-        
+
       </Routes>
     </BrowserRouter>
   )

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 interface Image {
     id: number;
@@ -32,44 +33,24 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
 
             <div className="overflow-hidden">
                 <div
-                    className="grid grid-cols-2 transition-transform duration-500 ease-in-out"
-                    style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+                    className="flex w-2/1 transition-transform duration-500 ease-in-out"
+                    style={{ transform: `translateX(-${activeIndex * 50}%)` }}
                 >
                     {images.map((image, index) => (
                         <div key={image.id} className="w-2/1">
-                            <div className={`h-0 pb-2/3 relative ${index !== activeIndex ? '' : ''}`}>
-                                <img src={image.url_image} className="inset-0 absolute  object-cover" alt="" />
+                            <div className='h-0 pb-2/3 relative '>
+                                <img src={image.url_image} className="rounded-2xl inset-0 w-full h-full absolute  object-cover" alt="" />
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
-
-            <div className="overflow-hidden">
-                <div
-                    className="flex transition-transform duration-500 ease-in-out"
-                    style={{ transform: `translateX(-${activeIndex * (100 / images.length)}%)` }}
-                >
-                    {images.map((image) => (
-                        <div key={image.id} className={`w-${100 / images.length} overflow-hidden`}>
-                            <div className={`h-0 pb-2/3 relative ${image.id !== activeIndex ? '' : ''}`}>
-                                <img src={image.url_image} className="inset-0 absolute w-full h-full object-cover" alt="" />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-
-
-
-
 
             <div className="absolute bottom-0 left-0 right-0 flex justify-center mb-4">
                 {images.map((_, index) => (
                     <button
                         key={index}
-                        className={`${index === activeIndex ? "bg-gray-900" : "bg-gray-300"
+                        className={`${index === activeIndex ? "bg-primary" : "bg-neutral"
                             } h-2 w-2 mx-2 rounded-full`}
                         onClick={() => jumpToSlide(index)}
                     ></button>
@@ -77,22 +58,22 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
             </div>
 
 
-            <div className="absolute top-1/2 left-0 transform -translate-y-1/2">
+            <div className="absolute top-1/2 left-2 transform -translate-y-1/2">
                 <button
-                    className="bg-gray-800 text-white px-3 py-2 rounded-l-md"
+                    className="btn btn-circle btn-primary text-4xl text-bold"
                     onClick={prevSlide}
                 >
-                    Prev
+                    <IoIosArrowBack />
                 </button>
             </div>
 
 
-            <div className="absolute top-1/2 right-0 transform -translate-y-1/2">
+            <div className="absolute top-1/2 right-2 transform -translate-y-1/2">
                 <button
-                    className="bg-gray-800 text-white px-3 py-2 rounded-r-md"
+                    className="btn btn-circle btn-primary text-4xl text-bold"
                     onClick={nextSlide}
                 >
-                    Next
+                    <IoIosArrowForward />
                 </button>
             </div>
 

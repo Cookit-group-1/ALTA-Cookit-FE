@@ -2,10 +2,12 @@ import React, { FC } from 'react'
 import { IoIosCheckmarkCircle } from 'react-icons/io'
 import { MdAddShoppingCart, MdModeComment, MdFavorite } from 'react-icons/md'
 import { ImLoop2 } from 'react-icons/im'
+import { useNavigate } from 'react-router-dom'
 
 interface CardPostProps {
     children?: React.ReactNode
     username: string
+    profileID: number
     profilePicture: string
     postType: string
     postPicture?: string
@@ -28,6 +30,7 @@ const CardPost: FC<CardPostProps> =
     ({
         children,
         username,
+        profileID,
         profilePicture,
         postType,
         postPicture,
@@ -45,11 +48,13 @@ const CardPost: FC<CardPostProps> =
         handleRecook,
         handleRemix
     }) => {
+        const navigate = useNavigate()
+
         return (
             <div className="w-full bg-base-100 border-2 border-t-0 flex gap-2 p-4">
                 {/* Profile Picture */}
                 <div className='w-2/12'>
-                    <div onClick={handleToProfile} className='h-0 pb-1/1 relative hover:cursor-pointer'>
+                    <div onClick={() => navigate(`/profile/${profileID}`)} className='h-0 pb-1/1 relative hover:cursor-pointer'>
                         <img
                             src={profilePicture}
                             className='inset-0 absolute w-full h-full object-cover rounded-full'
@@ -92,12 +97,14 @@ const CardPost: FC<CardPostProps> =
                     <p className='font-light'>{description}</p>
 
                     {/* Recipe Photo */}
+                    {postPicture !== null ?
                     <div onClick={handleToPost} className='h-0 pb-2/3 relative hover:cursor-pointer mt-4'>
                         <img
                             src={postPicture}
                             className='inset-0 absolute w-full h-full object-cover rounded-lg'
                         />
-                    </div>
+                    </div> : <></>}
+
 
                     {/* Quoted Recipe */}
                     <div>{children}</div>

@@ -5,10 +5,24 @@ import { IoIosCheckmarkCircle, IoIosArrowBack } from 'react-icons/io'
 interface NavSearchProps {
     handleTimeline?: React.MouseEventHandler
     handleRecipe?: React.MouseEventHandler
+    onSubmit: (query: string) => void
 }
 
-const NavSearch: FC<NavSearchProps> = ({ handleTimeline, handleRecipe }) => {
+const NavSearch: FC<NavSearchProps> = ({ handleTimeline, handleRecipe, onSubmit }) => {
     const navigate = useNavigate()
+
+    // Handle Searcbar
+    const [query, setQuery] = useState('');
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setQuery(event.target.value);
+    };
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        onSubmit(query);
+        setQuery('');
+    };
 
     // Sticky Navbar
     const [stickyOffset, setStickyOffset] = useState<string>('-top-16')
@@ -47,6 +61,7 @@ const NavSearch: FC<NavSearchProps> = ({ handleTimeline, handleRecipe }) => {
     const handleRecipeClick = () => {
         setIsTimelineActive(false);
         setIsRecipeActive(true);
+        handleRecipe
     };
 
     const timelineButtonStyle = isTimelineActive
@@ -65,7 +80,20 @@ const NavSearch: FC<NavSearchProps> = ({ handleTimeline, handleRecipe }) => {
                     <button onClick={() => navigate(-1)} className='justify-self-start text-2xl'>
                         <IoIosArrowBack />
                     </button>
-                    <input type="search" placeholder='Search Cookit' className='input h-8 rounded-full text-black w-full col-span-4' />
+                    <form  className='col-span-4 w-full' onSubmit={handleSubmit}>
+                        <input
+                            type="search"
+                            placeholder='Search Cookit'
+                            className='input h-8 rounded-full text-black w-full'
+                            value={query}
+                            onChange={handleChange}
+                        // onKeyDown={(e) => {
+                        //     if (e.key === 'Enter') {
+                        //         handleSubmit;
+                        //     }
+                        // }}
+                        />
+                    </form>
                     <button onClick={() => navigate(-1)} className='justify-self-end hover:text-secondary text-2xl'>
                         <IoIosCheckmarkCircle />
                     </button>
