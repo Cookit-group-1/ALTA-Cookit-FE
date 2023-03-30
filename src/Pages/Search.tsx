@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import CardPost from '../Components/CardPost'
 import CardQuote from '../Components/CardQuote'
-import NavBottom from '../Components/NavBottom'
-import NavTop from '../Components/NavTop'
 import Layout from '../Components/Layout'
-import LoadingSpinner from '../Components/LoadingSpinner'
-import { useCookies } from 'react-cookie'
+import NavBottom from '../Components/NavBottom'
+import NavSearch from '../Components/NavSearch'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { useCookies } from 'react-cookie'
+import LoadingSpinner from '../Components/LoadingSpinner'
 
-const Timeline = () => {
+const Search = () => {
     const [cookies, setCookie] = useCookies(['user'])
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
@@ -24,35 +24,34 @@ const Timeline = () => {
     const [recipes, setRecipes] = useState([])
     const endpoint = `https://cookit.my-extravaganza.site`
     const [limit, setLimit] = useState(10)
-    const [loadnew, setLoadnew] = useState(false)
 
-    const fetchRecipes = async () => {
-        setLoadnew(true)
+    const fetchRecipes = async (query: string) => {
+        setLoading(true)
         try {
-            const response = await axios.get(`${endpoint}/recipes?page=0&limit=${limit}`, {
+            const response = await axios.get(`${endpoint}/recipes?page=0&limit=${limit}&name=${query}`, {
                 headers: {
                     Accept: 'application/json',
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
-            console.log("user posts: ", response.data.data)
+            console.log("queried: ", response.data.data)
             setRecipes(response.data.data)
         } catch (error) {
             console.error(error);
         } finally {
             setLoading(false);
-            setLoadnew(false);
         }
     };
 
     useEffect(() => {
-        fetchRecipes();
-    }, [endpoint, limit]);
-
+        fetchRecipes("");
+    }, [endpoint]);
 
     return (
         <Layout>
-            <NavTop />
+            <NavSearch
+                onSubmit={(query) => fetchRecipes(query)}
+            />
 
             {loading ? <LoadingSpinner /> : <>
                 {recipes.map((post: any) => {
@@ -74,37 +73,11 @@ const Timeline = () => {
                         />
                     )
                 })}
-
-                <button
-                    className={`w-full ${loadnew ? 'animate-pulse bg-neutral-100' : ''} border-x-2 text-neutral-400 py-2 text-light hover:bg-neutral-100`}
-                    onClick={() => setLimit(limit + 10)}
-                > Load More </button>
-
-                {/* <CardPost
-                verifiedUser={false}
-                verifiedRecipe={false}
-                username={"Ucup"}
-                profilePicture={"https://static.mothership.sg/1/2018/12/karna-polly-indonesian-man-english-woman-married-02.jpg"}
-                postType={"cooked"}
-                postPicture={"https://img-global.cpcdn.com/recipes/9a65f25a4a512839/1200x630cq70/photo.jpg"}
-                description={"Akhirnya bisa masak juga ini, hasilnya lumayan lah"}
-                commentAmt={5}
-                likeAmt={13}
-            >
-                <CardQuote
-                    verifiedUser={true}
-                    verifiedRecipe={true}
-                    username={"Udin"}
-                    profilePicture={"https://www.journeyera.com/wp-content/uploads/2016/09/portraits-indonesia-08569-1024x683.jpg.webp"}
-                    postType={"new recipe"}
-                    recipeName={"Soto Betawi"}
-                    recipePicture={"https://www.unileverfoodsolutions.co.id/dam/global-ufs/mcos/SEA/calcmenu/recipes/ID-recipes/soups/soto-betawi/main-header.jpg"}
-                />
-            </CardPost> */}
             </>}
+
             <NavBottom />
         </Layout>
     )
 }
 
-export default Timeline
+export default Search

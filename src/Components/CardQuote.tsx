@@ -28,7 +28,7 @@ const CardQuote: FC<CardQuoteProps> =
     }) => {
         return (
             <div className="w-full bg-base-100 border mt-2 rounded-lg">
-                <div className='flex gap-2 p-2'>
+                <div className='flex gap-2 p-4'>
 
 
                     {/* Profile Picture */}
@@ -63,7 +63,9 @@ const CardQuote: FC<CardQuoteProps> =
 
                             {/* Shopping Cart for Verified Recipes */}
                             {verifiedRecipe ?
-                                <MdAddShoppingCart className='text-accent text-2xl' /> :
+                                <button onClick={handleCart}>
+                                    <MdAddShoppingCart className='text-accent text-2xl hover:text-secondary' />
+                                </button> :
                                 <></>
                             }
                         </div>
