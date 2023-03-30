@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom'
 import LoadingSpinner from '../Components/LoadingSpinner'
 import CardComment from '../Components/CardComment'
 import PostBox from '../Components/PostBox'
+import Swal from 'sweetalert2'
 
 interface Ingredients {
     id: number,
@@ -143,6 +144,29 @@ const Recipe = () => {
     const handleChangeServing = (amount: number) => {
         // setRecipeDetails({ ...recipeDetails, serving: Math.max(0, amount) })
         setServing(Math.max(0, amount))
+    }
+
+    // add to cart
+    const addToCart = (id: number, quantity: number) => {
+        axios.post(`https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/users/carts`, {
+            "ingredient_id": id,
+            "quantity": quantity
+        }, {
+            headers: {
+                Authorization: `Bearer ${cookies.user.token}`
+            }
+        })
+            .then((response) => {
+                console.log(response.data);
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'successful add to cart',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            })
+            .catch((err) => { console.log(err) })
     }
 
     // Fetch Comments
@@ -358,7 +382,7 @@ const Recipe = () => {
                                             onClick={() => handleChangeServing(serving + 1)}
                                         >+</button>
                                     </div>
-                                    <button className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button>
+                                    <button onClick={() => addToCart(1, 2)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button>
                                 </div>
                             </div> :
                             <></>}
