@@ -254,7 +254,7 @@ const Recipe = () => {
 
             {loading ? <LoadingSpinner /> : <>
 
-                <div className='flex flex-col items-center px-4 gap-4 py-4 border-x-2'>
+                <div className='flex w-full flex-col items-center px-4 gap-4 py-4 border-x-2'>
                     {/* Title Block */}
                     <div className='flex flex-col justify-center items-center text-center'>
                         {/* Recipe Name */}
@@ -344,7 +344,7 @@ const Recipe = () => {
                         {/* Table */}
                         <table className="table table-auto table-zebra -z-10 w-full">
                             <tbody>
-                                {recipeDetails.ingredients.map((ingredient: Ingredients) => {
+                                {recipe.ingredients[0].ingredient_details.map((ingredient: Ingredients) => {
                                     return (
                                         <tr key={ingredient.id}>
                                             <td className='whitespace-normal py-2'>{ingredient.name}</td>
@@ -357,7 +357,7 @@ const Recipe = () => {
                         </table>
 
                         {/* Purchase */}
-                        {recipeDetails.verified ?
+                        {recipe.status !== "None" ?
                             <div className='flex flex-col border-2 border-primary mt-1 px-2 pb-2'>
                                 <p className='self-center text-primary font-semibold bg-white -mt-3 px-2'>Buy Ingredients</p>
                                 <p>This is a verified recipe, you can directly purchase the ingredients for
@@ -392,7 +392,7 @@ const Recipe = () => {
                     <div className="w-full flex flex-col gap-2">
                         <h3 className='text-primary font-semibold'>Preparation</h3>
                         <ol className='list-decimal ml-6'>
-                            {recipeDetails.steps.map((step: Steps) => {
+                            {recipe.steps.map((step: Steps) => {
                                 return (
                                     <li key={step.id} className='mb-2'>{step.name}</li>
                                 )
