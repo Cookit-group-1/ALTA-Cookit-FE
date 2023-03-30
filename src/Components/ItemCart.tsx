@@ -8,11 +8,12 @@ interface myProps {
     cartItems: any
     increment: (price: any, id: number, quantity: number) => void
     decrement: (price: any, id: number, quantity: number) => void
+    deleteCartItem : (id:number) => void
 }
 
 
 
-const ItemCart: FC<myProps> = ({ sellerName, cartItems, increment, decrement }) => {
+const ItemCart: FC<myProps> = ({ sellerName, cartItems, increment, decrement, deleteCartItem }) => {
 
     return (
         <div className='bg-white'>
@@ -39,7 +40,7 @@ const ItemCart: FC<myProps> = ({ sellerName, cartItems, increment, decrement }) 
                                     <p>{item.quantity}</p>
                                     <p onClick={() => increment(item.price, item.id, item.quantity)} className='cursor-pointer'>+</p>
                                 </div>
-                                <RiDeleteBin6Line className='absolute md:absolute lg:static text-xl md:text-2xl lg:text-xl lg:mt-[20%] right-0 md:right-3 top-2/3 text-red-600' />
+                                <RiDeleteBin6Line onClick={() => deleteCartItem(item.id)} className='absolute md:absolute lg:static cursor-pointer text-xl md:text-2xl lg:text-xl lg:mt-[20%] right-0 md:right-3 top-2/3 text-red-600' />
                             </div>
                         </div>
                     </div>

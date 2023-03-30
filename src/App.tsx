@@ -11,30 +11,39 @@ import Recipe from './Pages/Recipe'
 
 import Payment from './Pages/Payment'
 import { useParams } from 'react-router-dom'
+import History from './Pages/History'
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import DetailHostory from './Pages/DetailHostory'
 import RecipeForm from './Pages/RecipeForm'
 import Profile from './Pages/Profile'
+
+
+
 function App() {
   const params = useParams()
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandinPage />} />
-        <Route path="/timeline" element={<Timeline />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/recipe/:recipeID" element={<Recipe />} />
-        <Route path="/recipe/:recipeID/edit" element={<RecipeForm />} />
-        <Route path="/recipe/new" element={<RecipeForm />} />
-        <Route path="/profile/:userID" element={<Profile />} />
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LandinPage />} />
+          <Route path="/timeline" element={<Timeline />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/recipe/:recipeID" element={<Recipe />} />
+          <Route path="/recipe/:recipeID/edit" element={<RecipeForm />} />
+          <Route path="/recipe/new" element={<RecipeForm />} />
+          <Route path="/profile/:userID" element={<Profile />} />
 
 
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/follow" element={<Follow />} />
-        <Route path="/payment" element={<Payment />} />
-
-      </Routes>
-    </BrowserRouter>
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/follow" element={<Follow />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/detailhistory" element={<DetailHostory />} />
+        </Routes>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   )
 }
 

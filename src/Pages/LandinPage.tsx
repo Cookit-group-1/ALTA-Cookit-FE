@@ -2,7 +2,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { AiFillHeart } from 'react-icons/ai'
 import { MdModeComment } from 'react-icons/md'
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import ScrollAnimation from "../Components/ScrollAnimation";
 
 import pic1 from '../assets/pic1.jpg'
@@ -14,6 +14,9 @@ import pic6 from '../assets/pic2.png'
 import pic7 from '../assets/pic3.png'
 import pic8 from '../assets/pic4.png'
 import pic9 from '../assets/pp1.jpg'
+import pic10 from '../assets/pp2.jpg'
+import pic12 from '../assets/pp3.jpg'
+
 import pic11 from '../assets/bg2.png'
 import { Link, useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
@@ -21,7 +24,7 @@ import { useCookies } from 'react-cookie';
 
 const LandingPage: React.FC = () => {
     const responsive = screen.width
-    const [cookies,setCookie ] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user'])
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -74,14 +77,14 @@ const LandingPage: React.FC = () => {
                         <div className='w-full h-fit lg:pb-10 bg-white rounded-md relative shadow-md overflow-hidden '>
                             <img src={pic2} alt="" />
                             <p className='text-xs lg:text-2xl md:font-bold mt-1 '>Franch Sausage</p>
-                            <div className='mt-5 text-sm md:text-xl lg:text-xl grid grid-cols-2 md:grid-cols-3 gap-2 items-center'>
+                            <div className='mt-5 pl-5 text-sm md:text-xl lg:text-xl grid grid-cols-2 md:grid-cols-3 gap-2 items-center'>
                                 <div className='flex items-center'>
                                     <MdModeComment className=' text-orange-500 ' />
-                                    <p>693</p>
+                                    <p>757</p>
                                 </div>
                                 <div className='flex items-center' >
                                     <AiFillHeart className='text-red-500' />
-                                    <p>7500</p>
+                                    <p>1250</p>
                                 </div>
                             </div>
                         </div>
@@ -90,14 +93,14 @@ const LandingPage: React.FC = () => {
                         <div className='w-full h-fit mt-8 lg:pb-10 bg-white rounded-md relative shadow-md overflow-hidden'>
                             <img src={pic3} alt="" />
                             <p className='text-xs lg:text-2xl md:font-bold mt-1 '>Franch Sausage</p>
-                            <div className='mt-5 text-sm md:text-xl lg:text-xl grid grid-cols-2 md:grid-cols-3 gap-2 items-center'>
+                            <div className='mt-5 pl-5 text-sm md:text-xl lg:text-xl grid grid-cols-2 md:grid-cols-3 gap-2 items-center'>
                                 <div className='flex items-center'>
                                     <MdModeComment className=' text-orange-500 ' />
-                                    <p>693</p>
+                                    <p>983</p>
                                 </div>
                                 <div className='flex items-center' >
                                     <AiFillHeart className='text-red-500' />
-                                    <p>7500</p>
+                                    <p>3500</p>
                                 </div>
                             </div>
                         </div>
@@ -106,14 +109,14 @@ const LandingPage: React.FC = () => {
                         <div className='w-full h-fit lg:pb-10 bg-white rounded-md relative shadow-md overflow-hidden '>
                             <img src={pic4} alt="" />
                             <p className='text-xs lg:text-2xl md:font-bold mt-1 '>Franch Sausage</p>
-                            <div className='mt-5 text-sm md:text-xl lg:text-xl grid grid-cols-2 md:grid-cols-3 gap-2 items-center'>
+                            <div className='mt-5 pl-5 text-sm md:text-xl lg:text-xl grid grid-cols-2 md:grid-cols-3 gap-2 items-center'>
                                 <div className='flex items-center'>
                                     <MdModeComment className=' text-orange-500 ' />
-                                    <p>693</p>
+                                    <p>703</p>
                                 </div>
                                 <div className='flex items-center' >
                                     <AiFillHeart className='text-red-500' />
-                                    <p>7500</p>
+                                    <p>1200</p>
                                 </div>
                             </div>
                         </div>
@@ -190,33 +193,27 @@ const LandingPage: React.FC = () => {
                                     <img className='rounded-full w-10' src={pic9} alt="" />
                                     <p className='col-span-3 font-bold'>Mary Luketch</p>
                                 </div>
-                                <p className='md:text-xl lg:text-2xl '>“ Keep healthy food readily available. When you get hungry, you're
-                                    mroe likely to eat Keep healthy food readily available. When you
-                                    get hungry, you're mroe likely to eat "
+                                <p className='md:text-xl lg:text-2xl '>“ really good for those who are just learning to cook, the recipe is very complete, simple, you can recook too, very happy, thank you "
                                 </p>
                             </div>
                         </SwiperSlide>
                         <SwiperSlide>
                             <div className='md:px-16 lg:px-24'>
                                 <div className='mt-10 mb-5'>
-                                    <img className='rounded-full w-10' src={pic9} alt="" />
-                                    <p className='col-span-3 font-bold'>Mary Luketch</p>
+                                    <img className='rounded-full w-10' src={pic10} alt="" />
+                                    <p className='col-span-3 font-bold'>Tom Michle</p>
                                 </div>
-                                <p className='md:text-xl lg:text-2xl '>“ Keep healthy food readily available. When you get hungry, you're
-                                    mroe likely to eat Keep healthy food readily available. When you
-                                    get hungry, you're mroe likely to eat "
+                                <p className='md:text-xl lg:text-2xl '>“ Thank you; it's not in vain that I use this application. At first I couldn't cook, but I learned from here for a long time, so I can cook. "
                                 </p>
                             </div>
                         </SwiperSlide>
                         <SwiperSlide>
                             <div className='md:px-16 lg:px-24'>
                                 <div className='mt-10 mb-5'>
-                                    <img className='rounded-full w-10' src={pic9} alt="" />
-                                    <p className='col-span-3 font-bold'>Mary Luketch</p>
+                                    <img className='rounded-full w-10 ' src={pic12} alt="" />
+                                    <p className='col-span-3 font-bold'>William boy</p>
                                 </div>
-                                <p className='md:text-xl lg:text-2xl '>“ Keep healthy food readily available. When you get hungry, you're
-                                    mroe likely to eat Keep healthy food readily available. When you
-                                    get hungry, you're mroe likely to eat "
+                                <p className='md:text-xl lg:text-2xl '>“ so it's easy if you want to cook, just open Cookit, before I couldn't cook but now I can"
                                 </p>
                             </div>
                         </SwiperSlide>

@@ -18,7 +18,7 @@ const Timeline = () => {
         if (cookies.user == undefined) {
             navigate('/login')
         }
-    })
+    },[])
 
     // Get Recipe Data
     const [recipes, setRecipes] = useState([])

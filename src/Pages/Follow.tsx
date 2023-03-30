@@ -1,17 +1,28 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
+import { useNavigate } from 'react-router-dom'
 import { IoIosArrowBack } from 'react-icons/io'
 import Followers from '../Components/Followers'
 import Following from '../Components/Following'
 import Header from '../Components/Header'
 
 const Follow = () => {
+    const navigate = useNavigate()
     const [isNavigate, setIsNavigate] = useState('')
     const [followers, setFollowers] = useState<any>([])
     const [following, setFollowing] = useState<any>([])
     const [cookies, setCookies] = useCookies(['user'])
     const token = cookies.user.token
+
+    useEffect(() => {
+        if (cookies.user == undefined) {
+            navigate('/login')
+        }
+    }, [])
+
+
+
 
     // get followers
     const getFollowers = async () => {
