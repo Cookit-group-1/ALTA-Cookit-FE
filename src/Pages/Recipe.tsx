@@ -65,10 +65,10 @@ const Recipe = () => {
     }
 
     // add to cart
-    const addToCart = (id: number, quantity: number) => {
+    const addToCart = (id: number) => {
         axios.post(`https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/users/carts`, {
             "ingredient_id": id,
-            "quantity": quantity
+            "quantity": 1
         }, {
             headers: {
                 Authorization: `Bearer ${cookies.user.token}`
@@ -317,6 +317,7 @@ const Recipe = () => {
                                         <li key={step.id} className='mb-2'>{step.name}</li>
                                     )
                                 })}
+
                             </ol>
                         </div>
                         : <></>}
