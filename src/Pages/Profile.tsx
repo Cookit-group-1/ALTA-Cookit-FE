@@ -93,11 +93,12 @@ const Profile = () => {
                             </div>
                         </div>
                         {userID == cookies.user.id ?
-                            <button className='btn btn-primary btn-sm rounded-full'>Edit Profile</button> :
+                            <button onClick={() => navigate('/editprofile')} className='btn btn-primary btn-sm rounded-full'>Edit Profile</button> :
                             <button className='btn btn-primary btn-sm rounded-full'>Follow</button>}
                     </div>
 
                     {userPosts.map((post: any) => {
+                        console.log('gt',post )
                         return (
                             <CardPost
                                 key={post.id}

@@ -7,8 +7,9 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie'
 
 const NavBottom = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['user']);
+    const [cookies, setCookie, removeCookie] = useCookies(['user', 'cart']);
     const [modalOpen, setModalOpen] = useState<boolean>(false)
+    const [cartsLength, setCartsLength] = useState()
 
     // Profile Picture
     const [loading, setLoading] = React.useState(true)
@@ -48,6 +49,7 @@ const NavBottom = () => {
         }
     }, [modalOpen]);
 
+
     return (
         <div className='
         w-full sticky relative bottom-0
@@ -83,7 +85,11 @@ const NavBottom = () => {
                     <p className='text-lg hidden lg:flex'>Search</p>
                 </Link>
                 <Link className='flex items-center gap-2 hover:text-secondary' to={("/cart")}>
-                    <MdShoppingCart />
+                    <div className="indicator">
+                        <span className="indicator-item badge text-white badge-secondary">{cookies.cart ? cookies.cart : 0}</span>
+                        <MdShoppingCart />
+                    </div>
+
                     <p className='text-lg hidden lg:flex'>Cart</p>
                 </Link>
                 <button className='
@@ -94,6 +100,7 @@ const NavBottom = () => {
                     <p className='text-lg hidden lg:flex'>New Post</p>
                 </button>
             </div>
+
 
             {/* Modal */}
             {modalOpen ?

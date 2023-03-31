@@ -105,7 +105,7 @@ const Payment = () => {
                         })}
                     </div>
                     {/* delivery */}
-                    <div className='bg-gray-100 mt-5 rounded-md px-3'>
+                    <div className='bg-gray-100 mt-5 pb-8 rounded-md px-3'>
                         <p className='my-5 font-semibold'>Delivery</p>
                         <div className='grid grid-cols-1 gap-5 md:grid-cols-2'>
                             {delivery.map((item: any, index: number) => {
@@ -122,7 +122,7 @@ const Payment = () => {
                 </div>
 
                 {/* payment */}
-                <div className='bg-gray-100 realtive px-3 py-2 rounded-md'>
+                <div className='bg-gray-100 realtive px-3 pb-8 rounded-md'>
                     <p className='my-5 font-semibold'>Payment methods</p>
                     <div className=''>
                         <label htmlFor="my-modal-6" className="btn w-full px-2 py-2 grid grid-cols-5 items-center justify-center text-start rounded-md hover:bg-gray-100 bg-gray-100 shadow-md ">

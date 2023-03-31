@@ -16,6 +16,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import DetailHostory from './Pages/DetailHostory'
 import RecipeForm from './Pages/RecipeForm'
 import Profile from './Pages/Profile'
+import EditProfile from './Pages/EditProfile'
 
 
 
@@ -36,6 +37,8 @@ function App() {
           <Route path="/profile/:userID" element={<Profile />} />
 
 
+          
+          <Route path="/editprofile" element={<EditProfile />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/follow" element={<Follow />} />
           <Route path="/payment" element={<Payment />} />

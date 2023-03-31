@@ -18,18 +18,16 @@ const Login = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [alert, setAlert] = useState('')
+    const [token, setToken] = useState('')
 
     const handleInputChange = (inputValues: string[]) => {
         setUsername(inputValues[0]);
         setPassword(inputValues[1]);
     }
 
-    // Oauth 
-    const [token, setToken] = useState('')
-
+    // oauth
     const login = useGoogleLogin({
         onSuccess: tokenResponse => {
-            // console.log(tokenResponse.access_token)
             setToken(tokenResponse.access_token)
         },
     });
@@ -41,22 +39,18 @@ const Login = () => {
                     "token": `${token}`
                 })
                 .then((response) => {
-                    console.log(response.data)
                     setCookie('user', JSON.stringify(response.data.data), { path: "/" });
                     navigate(`/timeline`)
-
                 })
                 .catch((error) => console.log(error))
         }
     }
-
 
     useEffect(() => {
         handleOauth()
         // axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${token}`)
         //     .then((res) => console.log('res', res.data))
     }, [token])
-
 
     useEffect(() => {
         if (cookies.user) {
@@ -94,14 +88,13 @@ const Login = () => {
                 // set value alert to active alert and call isAlert to remove alert (5 seconds)
                 setAlert('error')
                 const result = await isAlert();
-                console.log(err)
             })
     }
 
     const responsive = screen.width
     return (
         <div className='grid grid-cols-1 lg:grid-cols-3 row-end-3 h-screen relative overflow-hidden justify-center items-center '>
-            <Alert type={alert} message='Please enter a valid email or password..' />
+            <Alert type={alert} message='Please enter a valid username or password..' />
             <div className='w-full flex lg:col-span-2 justify-center items-center px-16 md:px-20'>
                 <img className='md:h-[50vh] lg:h-[90vh] ' src={loginImg} alt="" />
             </div>

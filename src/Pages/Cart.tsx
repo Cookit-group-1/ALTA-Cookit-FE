@@ -11,44 +11,28 @@ import Swal from 'sweetalert2'
 
 const Cart = () => {
     const navigate = useNavigate()
-    const [cookies, setCookies] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user', 'cart'])
     const token = cookies.user.token
-    //put the response from api into carts 
-    const carts: any = CartData.data;
+    const [carts, setCarts] = useState([])
     const cartsBySeller: any = {};
     const [totalPrice, setTotalPrice] = useState<number>(0)
 
-    useEffect(() => {
-        if(cookies.user == undefined){
-            navigate('/login')
-        }
-    })
-
+    // get cart data
     const getCartData = () => {
-        axios.get('https://cookit.my-extravaganza.site/users/carts?page=1', {
+        axios.get('https://cookit.my-extravaganza.site/users/carts', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
             .then((response) => {
-                console.log('b',response)
+                setCarts(response.data.data)
             })
             .catch((error) => console.log(error))
     }
 
     // collect price data to array
     let dataPrice: any = []
-    const arr = carts.map((item: any) => dataPrice.push(item.price))
-
-    // total price
-    useEffect(() => {
-        getCartData()
-        let sum: number = 0;
-        for (let i = 0; i < dataPrice.length; i++) {
-            sum += dataPrice[i]
-        }
-        setTotalPrice(sum)
-    }, [])
+    const arr = carts?.map((item: any) => dataPrice.push(item.price))
 
     for (const cart of carts) {
         const { id_seller } = cart;
@@ -58,9 +42,9 @@ const Cart = () => {
         cartsBySeller[id_seller].push(cart);
     }
 
-    // handle quantity changes
+    // handle quantity changes +
     const handleIncrement = (price: any, id: number, quantity: number) => {
-        axios.put(`https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/users/carts/${id}`, {
+        axios.put(`https://cookit.my-extravaganza.site/users/carts/${id}`, {
             "quantity": quantity + 1
         }, {
             headers: {
@@ -68,34 +52,34 @@ const Cart = () => {
             }
         })
             .then((response) => {
-                console.log(response.data)
                 setTotalPrice(totalPrice + price)
             })
     }
 
+    // handle quantity changes -
     const handleDecrement = (price: any, id: number, quantity: number) => {
-        axios.put(`https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/users/carts/${id}`, {
-            "quantity": quantity + 1
+        axios.put(`https://cookit.my-extravaganza.site/users/carts/${id}`, {
+            "quantity": quantity - 1
         }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
             .then((response) => {
-                console.log(response.data)
                 setTotalPrice(totalPrice - price)
             })
     }
 
+    // delete cart
     const deleteCartItem = (id: number) => {
-        console.log(id)
-        axios.delete(`https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/users/carts/${id}`, {
+        axios.delete(`https://cookit.my-extravaganza.site/users/carts/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
             .then((response) => {
-                console.log(response.data)
+                let sum: any = cookies.cart - 1
+                setCookie('cart', sum, { path: "/" })
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -109,16 +93,23 @@ const Cart = () => {
     }
 
     const goToPayment = () => {
-
-        console.log(totalPrice)
-
-        navigate(`/payment`,{
+        navigate(`/payment`, {
             state: {
-                data : carts,
-                total : totalPrice
+                data: carts,
+                total: totalPrice
             }
         })
     }
+
+    // total price
+    useEffect(() => {
+        getCartData()
+        let sum: number = 0;
+        for (let i = 0; i < dataPrice.length; i++) {
+            sum += dataPrice[i]
+        }
+        setTotalPrice(sum)
+    }, [deleteCartItem])
 
     const responsive = screen.width
     return (
@@ -133,10 +124,9 @@ const Cart = () => {
                 : ''
             }
             <div className='bg-gray-100 flex flex-col gap-5'>
-                {Object.keys(cartsBySeller).map((key, index) => {
+                {Object.keys(cartsBySeller)?.map((key, index) => {
                     const cartItems = cartsBySeller[key];
-                    const sellerName = cartsBySeller[key][0].seller_name
-                    console.log('e',cartItems)
+                    const sellerName = cartsBySeller[key][0].seller_user_username
                     return (
                         <div key={key}>
                             <ItemCart cartItems={cartItems} sellerName={sellerName} increment={(price, id, quantity) => handleIncrement(price, id, quantity)} decrement={(price, id, quantity) => handleDecrement(price, id, quantity)} deleteCartItem={deleteCartItem} />
@@ -144,7 +134,7 @@ const Cart = () => {
                     );
                 })}
             </div>
-            <div className='w-full h-16 px-5 lg:px-10 grid grid-cols-3 place-content-center items-center sticky bottom-0 bg-gray-100'>
+            <div className='w-full h-16 px-5 lg:px-10 grid grid-cols-3 place-content-center items-center fixed bottom-0 bg-gray-100'>
                 <p className='col-span-2 font-semibold '>Total : <span className='text-Primary'>Rp{totalPrice}</span> </p>
                 <button onClick={goToPayment} className='w-full md:w-2/3 lg:w-1/3 py-2 place-self-end text-white font-semibold rounded-md bg-primary'>Checkout</button>
             </div>
