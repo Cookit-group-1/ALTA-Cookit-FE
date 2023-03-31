@@ -13,102 +13,20 @@ import LoadingSpinner from '../Components/LoadingSpinner'
 import CardComment from '../Components/CardComment'
 import PostBox from '../Components/PostBox'
 import Swal from 'sweetalert2'
-
 interface Ingredients {
     id: number,
     name: string,
     quantity: number,
     unit: string
 }
-
 interface Steps {
     id: number,
     name: string
 }
 
-interface Images {
-    id: number,
-    url_image: string
-}
-
-interface RecipeVariables {
-    id: number
-    verified: boolean
-    username: string
-    name: string
-    description: string
-    ingredients: Ingredients[]
-    serving: number
-    price: number
-    steps: Steps[]
-    total_like: number
-    total_comment: number
-    images: Images[]
-}
-
-const initialRecipe: RecipeVariables = {
-    id: 1,
-    verified: true,
-    username: "Benjamin29",
-    name: "Indomie Spesial",
-    description:
-        "Indomie is a brand of instant noodle produced by the Indonesian company Indofood. Indofood itself is the largest instant noodle producer in the world with 16 factories. Over 15 billion packets of Indomie are produced annually. Indomie is also exported to more than 90 countries around the world.",
-    ingredients: [
-        {
-            "id": 1,
-            "name": "Bumbu Indomie (Original)",
-            "quantity": 1,
-            "unit": "pcs"
-        },
-        {
-            "id": 2,
-            "name": "Minyak Indomie (Original)",
-            "quantity": 1,
-            "unit": "pcs"
-        }
-    ],
-    serving: 1,
-    price: 5000,
-    steps: [
-        {
-            "id": 1,
-            "name": "Rebus air sebanyak 300ml dengan api sedang hingga mendidih"
-        },
-        {
-            "id": 2,
-            "name": "Sembari menunggu air yang mendidih, siapkan piring dan tuangkan bumbu ke piring tersebut"
-        },
-        {
-            "id": 3,
-            "name": "Setelah air mendidih, masukan mie"
-        },
-        {
-            "id": 4,
-            "name": "Setelah matang, tuangkan mie ke dalam mangkuk yang telah diisi bumbu"
-        },
-        {
-            "id": 5,
-            "name": "Indomie siap disajikan"
-        }
-    ],
-    total_like: 120,
-    total_comment: 32,
-    images: [
-        {
-            "id": 1,
-            "url_image": "https://awsimages.detik.net.id/community/media/visual/2022/10/24/duplikat-indomie-goreng_43.jpeg?w=1200"
-        },
-        {
-            "id": 2,
-            "url_image": "https://www.indomie.com/uploads/product/indomie-mi-goreng-special_detail_094906814.png"
-        }
-    ],
-}
-
 const Recipe = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['user'])
     const { recipeID } = useParams();
-    const [recipeDetails, setRecipeDetails] = useState<RecipeVariables>(initialRecipe)
     const [recipe, setRecipe] = useState<any>([])
     const [serving, setServing] = useState(1)
 
@@ -157,7 +75,7 @@ const Recipe = () => {
             }
         })
             .then((response) => {
-                console.log(response.data);
+                console.log("add to cart: ", response.data);
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -179,7 +97,7 @@ const Recipe = () => {
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
-            console.log(response.data.data)
+            console.log("Comments: ", response.data.data)
             setComments(response.data.data)
         } catch (error) {
             console.error(error);
@@ -298,107 +216,111 @@ const Recipe = () => {
 
                     {/* Image Carousel */}
                     {recipe.images ?
-                        // <Carousel
-                        //     images={recipe.images}
-                        // />
-
-                        <div className='w-full'>
-                            <div className='h-0 pb-2/3 relative mt-4'>
-                                <img
-                                    src={recipe.images[0].url_image}
-                                    className='inset-0 absolute w-full h-full object-cover rounded-lg'
-                                />
-                            </div>
-                        </div>
-
-
+                        (recipe.images.length > 1 ?
+                                <Carousel
+                                    images={recipe.images}
+                                /> :
+                                <div className='w-full'>
+                                    <div className='h-0 pb-2/3 relative mt-4'>
+                                        <img
+                                            src={recipe.images[0].url_image}
+                                            className='inset-0 absolute w-full h-full object-cover rounded-lg'
+                                        />
+                                    </div>
+                                </div>
+                        )
                         : <></>
                     }
 
 
                     {/* Ingredients */}
-                    <div className="w-full flex flex-col gap-2">
-                        <h3 className='text-primary font-semibold'>Ingredients</h3>
+                    {recipe.ingredients ?
+                        <div className="w-full flex flex-col gap-2">
+                            <h3 className='text-primary font-semibold'>Ingredients</h3>
 
-                        {/* Servings */}
-                        <div className='flex items-center font-bold'>
-                            <button
-                                className='btn rounded-l-lg rounded-r-none text-primary text-2xl'
-                                onClick={() => handleChangeServing(serving - 1)}
-                            >-</button>
-                            <input
-                                type="number"
-                                name='serving'
-                                value={serving.toString()}
-                                className='input input-neutral w-14 border-neutral rounded-none text-center'
-                                onChange={(event) => handleChangeServing(Number(event.target.value))}
-                                min={1}
-                            />
-                            <button
-                                className='btn rounded-r-lg rounded-l-none text-primary text-2xl'
-                                onClick={() => handleChangeServing(serving + 1)}
-                            >+</button>
-                            <p className='ml-4 font-semibold'>Servings</p>
-                        </div>
+                            {/* Servings */}
+                            <div className='flex items-center font-bold'>
+                                <button
+                                    className='btn rounded-l-lg rounded-r-none text-primary text-2xl'
+                                    onClick={() => handleChangeServing(serving - 1)}
+                                >-</button>
+                                <input
+                                    type="number"
+                                    name='serving'
+                                    value={serving.toString()}
+                                    className='input input-neutral w-14 border-neutral rounded-none text-center'
+                                    onChange={(event) => handleChangeServing(Number(event.target.value))}
+                                    min={1}
+                                />
+                                <button
+                                    className='btn rounded-r-lg rounded-l-none text-primary text-2xl'
+                                    onClick={() => handleChangeServing(serving + 1)}
+                                >+</button>
+                                <p className='ml-4 font-semibold'>Servings</p>
+                            </div>
 
-                        {/* Table */}
-                        <table className="table table-auto table-zebra -z-10 w-full">
-                            <tbody>
-                                {recipe.ingredients[0].ingredient_details.map((ingredient: Ingredients) => {
-                                    return (
-                                        <tr key={ingredient.id}>
-                                            <td className='whitespace-normal py-2'>{ingredient.name}</td>
-                                            <td className='py-2'>{ingredient.quantity * serving}</td>
-                                            <td className='py-2'>{ingredient.unit}</td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
+                            {/* Table */}
+                            <table className="table table-auto table-zebra -z-10 w-full">
+                                <tbody>
+                                    {recipe.ingredients[0].ingredient_details.map((ingredient: Ingredients) => {
+                                        return (
+                                            <tr key={ingredient.id}>
+                                                <td className='whitespace-normal py-2'>{ingredient.name}</td>
+                                                <td className='py-2'>{ingredient.quantity * serving}</td>
+                                                <td className='py-2'>{ingredient.unit}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
 
-                        {/* Purchase */}
-                        {recipe.status !== "None" ?
-                            <div className='flex flex-col border-2 border-primary mt-1 px-2 pb-2'>
-                                <p className='self-center text-primary font-semibold bg-white -mt-3 px-2'>Buy Ingredients</p>
-                                <p>This is a verified recipe, you can directly purchase the ingredients for
-                                    <span className='text-primary'> {recipeDetails.price} / batch</span>
-                                </p>
-                                <div className='grid grid-cols-2 items-center font-bold'>
-                                    <div className='flex'>
-                                        <button
-                                            className='btn rounded-l-lg rounded-r-none text-primary text-2xl'
-                                            onClick={() => handleChangeServing(serving - 1)}
-                                        >-</button>
-                                        <input
-                                            type="number"
-                                            name='serving'
-                                            value={serving.toString()}
-                                            className='input input-neutral w-14 border-neutral rounded-none text-center'
-                                            onChange={(event) => handleChangeServing(Number(event.target.value))}
-                                            min={1}
-                                        />
-                                        <button
-                                            className='btn rounded-r-lg rounded-l-none text-primary text-2xl'
-                                            onClick={() => handleChangeServing(serving + 1)}
-                                        >+</button>
+                            {/* Purchase */}
+                            {recipe.status !== "None" ?
+                                <div className='flex flex-col border-2 border-primary mt-1 px-2 pb-2'>
+                                    <p className='self-center text-primary font-semibold bg-white -mt-3 px-2'>Buy Ingredients</p>
+                                    <p>This is a verified recipe, you can directly purchase the ingredients for
+                                        <span className='text-primary'> {recipe.ingredients[0].price} / batch</span>
+                                    </p>
+                                    <div className='grid grid-cols-2 items-center font-bold'>
+                                        <div className='flex'>
+                                            <button
+                                                className='btn rounded-l-lg rounded-r-none text-primary text-2xl'
+                                                onClick={() => handleChangeServing(serving - 1)}
+                                            >-</button>
+                                            <input
+                                                type="number"
+                                                name='serving'
+                                                value={serving.toString()}
+                                                className='input input-neutral w-14 border-neutral rounded-none text-center'
+                                                onChange={(event) => handleChangeServing(Number(event.target.value))}
+                                                min={1}
+                                            />
+                                            <button
+                                                className='btn rounded-r-lg rounded-l-none text-primary text-2xl'
+                                                onClick={() => handleChangeServing(serving + 1)}
+                                            >+</button>
+                                        </div>
+                                        <button onClick={() => addToCart(recipe.id, serving)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button>
                                     </div>
-                                    <button onClick={() => addToCart(1)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button>
-                                </div>
-                            </div> :
-                            <></>}
-                    </div>
+                                </div> :
+                                <></>}
+                        </div>
+                        : <></>}
 
                     {/* Steps */}
-                    <div className="w-full flex flex-col gap-2">
-                        <h3 className='text-primary font-semibold'>Preparation</h3>
-                        <ol className='list-decimal ml-6'>
-                            {recipe.steps.map((step: Steps) => {
-                                return (
-                                    <li key={step.id} className='mb-2'>{step.name}</li>
-                                )
-                            })}
-                        </ol>
-                    </div>
+                    {recipe.steps ?
+                        <div className="w-full flex flex-col gap-2">
+                            <h3 className='text-primary font-semibold'>Preparation</h3>
+                            <ol className='list-decimal ml-6'>
+                                {recipe.steps.map((step: Steps) => {
+                                    return (
+                                        <li key={step.id} className='mb-2'>{step.name}</li>
+                                    )
+                                })}
+
+                            </ol>
+                        </div>
+                        : <></>}
 
                     {/* Comments */}
                     <div className="w-full flex flex-col gap-2">

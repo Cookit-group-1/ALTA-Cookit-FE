@@ -75,7 +75,7 @@ const Timeline = () => {
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
-                    title: 'successful add to cart',
+                    title: 'successfuly added to cart',
                     showConfirmButton: false,
                     timer: 1500
                 })
