@@ -81,13 +81,13 @@ const CardPost: FC<CardPostProps> =
                         </div>
 
                         {/* Shopping Cart for Verified Recipes */}
-                        {/* {verifiedRecipe ? */}
+                        {verifiedRecipe ?
                             <button onClick={handleCart}>
                                 <MdAddShoppingCart className='text-accent text-2xl hover:text-secondary' />
                             </button>
                             :
                             <></>
-                        {/* } */}
+                        }
                     </div>
 
                     {/* Recipe Name */}

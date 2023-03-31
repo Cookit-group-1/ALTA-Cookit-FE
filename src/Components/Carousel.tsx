@@ -33,11 +33,11 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
 
             <div className="overflow-hidden">
                 <div
-                    className="flex w-2/1 transition-transform duration-500 ease-in-out"
-                    style={{ transform: `translateX(-${activeIndex * 50}%)` }}
+                    className={`flex w-${images.length}/1 transition-transform duration-500 ease-in-out`}
+                    style={{ transform: `translateX(-${activeIndex * 100 / images.length}%)` }}
                 >
                     {images.map((image, index) => (
-                        <div key={image.id} className="w-2/1">
+                        <div key={image.id} className="w-full">
                             <div className='h-0 pb-2/3 relative '>
                                 <img src={image.url_image} className="rounded-2xl inset-0 w-full h-full absolute  object-cover" alt="" />
                             </div>

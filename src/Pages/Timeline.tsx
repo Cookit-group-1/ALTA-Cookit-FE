@@ -65,7 +65,7 @@ const Timeline = () => {
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
-                    title: 'successful add to cart',
+                    title: 'successfuly added to cart',
                     showConfirmButton: false,
                     timer: 1500
                 })
@@ -79,7 +79,6 @@ const Timeline = () => {
 
             {loading ? <LoadingSpinner /> : <>
                 {recipes.map((post: any) => {
-                    console.log('g', recipes)
                     return (
                         <CardPost
                             key={post.id}
