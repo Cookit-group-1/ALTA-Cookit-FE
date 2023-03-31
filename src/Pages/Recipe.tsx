@@ -217,17 +217,17 @@ const Recipe = () => {
                     {/* Image Carousel */}
                     {recipe.images ?
                         (recipe.images.length > 1 ?
-                                <Carousel
-                                    images={recipe.images}
-                                /> :
-                                <div className='w-full'>
-                                    <div className='h-0 pb-2/3 relative mt-4'>
-                                        <img
-                                            src={recipe.images[0].url_image}
-                                            className='inset-0 absolute w-full h-full object-cover rounded-lg'
-                                        />
-                                    </div>
+                            <Carousel
+                                images={recipe.images}
+                            /> :
+                            <div className='w-full'>
+                                <div className='h-0 pb-2/3 relative mt-4'>
+                                    <img
+                                        src={recipe.images[0].url_image}
+                                        className='inset-0 absolute w-full h-full object-cover rounded-lg'
+                                    />
                                 </div>
+                            </div>
                         )
                         : <></>
                     }
