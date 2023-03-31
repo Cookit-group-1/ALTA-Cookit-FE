@@ -11,7 +11,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 
 const Timeline = () => {
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user', 'cart'])
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
 
@@ -19,6 +19,7 @@ const Timeline = () => {
         if (cookies.user == undefined) {
             navigate('/login')
         }
+        console.log(cookies.user.token)
     }, [])
 
     // Get Recipe Data
@@ -51,17 +52,26 @@ const Timeline = () => {
     }, [endpoint, limit]);
 
     // add to cart
-    const handleCart = (id: number, quantity: number) => {
-        axios.post(`https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/users/carts`, {
+    const handleCart = (id: number) => {
+        console.log('y', id)
+        axios.post(`https://cookit.my-extravaganza.site/users/carts`, {
             "ingredient_id": id,
-            "quantity": quantity
+            "quantity": 1
         }, {
             headers: {
                 Authorization: `Bearer ${cookies.user.token}`
             }
         })
             .then((response) => {
-                console.log(response.data);
+                console.log('re', response.data);
+                let sum:any = 0
+                if (cookies.cart) {
+                    sum = parseInt(cookies.cart) + 1
+                } else {
+                    sum = 1
+                }
+                console.log('s', sum)
+                setCookie('cart', sum, { path: "/" })
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -78,8 +88,7 @@ const Timeline = () => {
             <NavTop />
 
             {loading ? <LoadingSpinner /> : <>
-                {recipes.map((post: any) => {
-                    console.log('g', recipes)
+                {recipes.map((post: any, index) => {
                     return (
                         <CardPost
                             key={post.id}
@@ -95,7 +104,7 @@ const Timeline = () => {
                             likeAmt={post.total_like}
                             handleToPost={() => navigate(`/recipe/${post.id}`)}
                             handleToProfile={() => navigate(`/profile/${post.user_id}`)}
-                            handleCart={() => handleCart(1, 2)}
+                            handleCart={() => handleCart(post.ingredients[0].id)}
                         />
                     )
                 })}

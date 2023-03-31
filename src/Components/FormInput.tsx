@@ -47,7 +47,7 @@ function FormInput({ inputCount, inputType, placeholder, onChange, width, mdWidt
                         key={i}
                         type={showPassword && inputType[i] === "password" ? "text" : inputType[i]}
                         placeholder={placeholder[i]}
-                        className={`w-${width} md:w-${mdWidth} lg:w-${lgWidth} xl:w-${xlWidth} 2xl:w-${xxlWidth} px-2 py-1 border mt-5 border-black rounded-md focus:outline-none focus:ring focus:ring-white`}
+                        className={`w-${width} md:w-${mdWidth} lg:w-${lgWidth} xl:w-${xlWidth} 2xl:w-${xxlWidth} px-2 py-1 border mt-5 border-primary rounded-md focus:outline-none focus:ring focus:ring-white`}
                         value={inputValues[i]}
                         onChange={(e: ChangeEvent<HTMLInputElement>) =>
                             handleChange(i, e.target.value)

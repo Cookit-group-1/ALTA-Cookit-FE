@@ -147,10 +147,10 @@ const Recipe = () => {
     }
 
     // add to cart
-    const addToCart = (id: number, quantity: number) => {
+    const addToCart = (id: number) => {
         axios.post(`https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/users/carts`, {
             "ingredient_id": id,
-            "quantity": quantity
+            "quantity": 1
         }, {
             headers: {
                 Authorization: `Bearer ${cookies.user.token}`
@@ -382,7 +382,7 @@ const Recipe = () => {
                                             onClick={() => handleChangeServing(serving + 1)}
                                         >+</button>
                                     </div>
-                                    <button onClick={() => addToCart(1, 2)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button>
+                                    <button onClick={() => addToCart(1)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button>
                                 </div>
                             </div> :
                             <></>}

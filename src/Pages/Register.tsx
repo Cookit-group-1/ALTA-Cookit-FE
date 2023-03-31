@@ -3,7 +3,6 @@ import FormInput from '../Components/FormInput'
 
 import signupImg from '../assets/signup.jpg'
 import graph from '../assets/graph.png'
-import googleImg from '../assets/google.png'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Swal from 'sweetalert2'
@@ -22,7 +21,7 @@ const Register = () => {
     const [oneNumber, setOneNumber] = useState(false)
     const [upperCase, setUpperCase] = useState(false)
 
-
+    // handle validation password
     const handleInputChange = (inputValues: string[]) => {
         setUsername(inputValues[0])
         setEmail(inputValues[1])
@@ -67,7 +66,6 @@ const Register = () => {
                 // set value alert to active alert and call isAlert to remove alert (5 seconds)
                 setAlert('error')
                 const result = await isAlert();
-                console.log(err);
             })
     }
 
@@ -76,7 +74,6 @@ const Register = () => {
             navigate('/timeline')
         }
     }, [cookies.user])
-
 
     const responsive = screen.width
     return (
@@ -107,10 +104,6 @@ const Register = () => {
                     <button onClick={(e) => handleRegister(e)} className='w-full md:w-96 lg:w-full h-8 my-5 rounded-lg text-white font-semibold bg-orange-500'>Sign up</button>
                     <p className='text-sm'>Already have an account <span className='font-bold cursor-pointer' onClick={() => navigate('/login')}>Login</span></p>
                 </form>
-                {/* <div className='w-56 h-12 mt-5 flex flex-row bg-white items-center border-2 rounded-md '>
-                    <img className='w-auto h-full' src={googleImg} alt="" />
-                    <p>Continue with Google</p>
-                </div> */}
             </div>
             {responsive < 767
                 ? < img className=' -z-10 mt-[95vh] ml-[20vw] absolute' src={graph} alt="" />

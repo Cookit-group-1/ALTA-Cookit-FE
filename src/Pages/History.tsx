@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Header from '../Components/Header'
 import { Swiper, SwiperSlide } from 'swiper/react';
-import ToPay from '../Components/ToPay';
-import ToShip from '../Components/ToShip';
-import ToReceive from '../Components/ToReceive';
 import Completed from '../Components/Completed';
 import CardHistory from '../Components/CardHistory';
 import { useCookies } from 'react-cookie';
