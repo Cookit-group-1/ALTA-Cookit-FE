@@ -17,6 +17,7 @@ import DetailHostory from './Pages/DetailHostory'
 import RecipeForm from './Pages/RecipeForm'
 import Profile from './Pages/Profile'
 import EditProfile from './Pages/EditProfile'
+import NewCooking from './Pages/NewCooking'
 
 
 
@@ -31,13 +32,16 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/search" element={<Search />} />
-          <Route path="/recipe/:recipeID" element={<Recipe />} />
-          <Route path="/recipe/:recipeID/edit" element={<RecipeForm />} />
-          <Route path="/recipe/new" element={<RecipeForm />} />
+
+          <Route path="/:postType/:recipeID" element={<Recipe />} />
+
+          <Route path="/recipes/:recipeID/edit" element={<RecipeForm />} />
+          <Route path="/recipes/new" element={<RecipeForm />} />
+
+          <Route path="/newcooking" element={<NewCooking />} />
+          <Route path="/recipes/:recipeID/reply" element={<NewCooking />} />
+
           <Route path="/profile/:userID" element={<Profile />} />
-
-
-          
           <Route path="/editprofile" element={<EditProfile />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/follow" element={<Follow />} />

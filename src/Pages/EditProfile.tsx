@@ -8,6 +8,7 @@ import { useCookies } from 'react-cookie'
 import Swal from 'sweetalert2'
 import { BiCheck } from 'react-icons/bi'
 import Alert from '../Components/Alert'
+import NavBack from '../Components/NavBack';
 
 const EditProfile = () => {
     const [isHover, setIsHover] = useState(false)
@@ -165,10 +166,10 @@ const EditProfile = () => {
     }, [updateProfile])
 
     return (
-        <>
+        <div className='bg-gray-100'>
             <Alert type={alert} message='Please input the password correctly' />
-            <Header title='Edit Profile' />
-            <div className='grid grid-cols-1 px-5 gap-3 lg:grid-cols-2 bg-gray-100'>
+            <NavBack title='Edit Profile' />
+            <div className='grid grid-cols-1 px-5 gap-3 lg:grid-cols-2 bg-gray-100 max-w-5xl mx-auto'>
                 {data?.map((item: any, index: number) => {
                     return (
                         <div className='p-3 mb-5 bg-white rounded-lg my-4'>
@@ -223,7 +224,7 @@ const EditProfile = () => {
                     </section>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 
