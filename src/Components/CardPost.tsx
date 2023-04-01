@@ -48,7 +48,7 @@ const CardPost: FC<CardPostProps> =
         handleCart,
         // handleToPost,
         handleToProfile,
-        handleComment,
+        // handleComment,
         handleLike,
         handleRecook,
         handleRemix
@@ -165,7 +165,7 @@ const CardPost: FC<CardPostProps> =
                         <div className='flex justify-self-start'>
                             <button
                                 className='flex items-center gap-1 hover:text-accent hover:cursor-pointer'
-                                onClick={handleComment}
+                                onClick={handleToPost}
                             >
                                 <MdModeComment className='text-lg' />
                                 {commentAmt}

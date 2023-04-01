@@ -95,16 +95,18 @@ const NewCooking = () => {
                         <div className='w-10/12 p-4 self-end'>
                             <CardQuote
                                 username={recipe.username}
+                                profileID={recipe.user_id}
+                                recipeID={recipe.id}
                                 profilePicture={recipe.profile_picture}
                                 postType={recipe.type}
                                 recipeName={recipe.name}
-                                recipePicture={recipe.images[0].url_image}
+                                description={recipe.description}
+                                recipePicture={recipe.images ? recipe.images[0].url_image : null}
                                 verifiedUser={recipe.user_role === "Verified"}
                                 verifiedRecipe={recipe.status === "OpenForSale"}
                             />
                         </div> : <></>}
                 </>}
-
 
             <NavBottom />
         </Layout>

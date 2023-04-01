@@ -62,10 +62,12 @@ const Search = () => {
                             verifiedRecipe={post.status === "OpenForSale"}
                             username={post.username}
                             profileID={post.user_id}
+                            recipeID={post.id}
                             profilePicture={post.profile_picture}
                             postType={post.type}
                             postPicture={post.images ? post.images[0].url_image : null}
                             recipeName={post.name}
+                            description={post.description}
                             commentAmt={post.total_comment}
                             likeAmt={post.total_like}
                             handleToPost={() => navigate(`/recipe/${post.id}`)}

@@ -52,7 +52,8 @@ const NavBottom = () => {
 
     return (
         <div className='
-        w-full sticky relative bottom-0
+        w-full bottom-0 mt-auto
+        sticky relative
         sm:absolute sm:h-full sm:top-0 sm:-left-20 lg:-left-64 sm:w-20 lg:w-64
         '>
             {/* Bottom Navbar */}

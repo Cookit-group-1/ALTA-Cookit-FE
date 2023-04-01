@@ -9,6 +9,7 @@ import CardPost from '../Components/CardPost'
 import { useNavigate } from 'react-router-dom'
 import LoadingSpinner from '../Components/LoadingSpinner'
 import { IoIosCheckmarkCircle } from 'react-icons/io'
+import CardQuote from '../Components/CardQuote'
 
 const Profile = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
@@ -17,9 +18,11 @@ const Profile = () => {
 
     // Get User Data
     const [loading, setLoading] = useState(true)
+    const [loadnew, setLoadnew] = useState(false)
     const [userData, setUserData] = useState<any>()
     const [userPosts, setUserPosts] = useState<any[]>([])
     const endpoint = `https://cookit.my-extravaganza.site`
+    const [limit, setLimit] = useState(10)
     const fetchUserData = async () => {
         try {
             const response = await axios.get(`${endpoint}/users/${userID}`, {
@@ -34,12 +37,13 @@ const Profile = () => {
             console.error(error);
         } finally {
             setLoading(false);
+            setLoadnew(false);
         }
     };
 
     const fetchUserPosts = async () => {
         try {
-            const response = await axios.get(`${endpoint}/recipes?page=0&limit=3&user_id=${userID}`, {
+            const response = await axios.get(`${endpoint}/recipes?page=0&limit=${limit}&user_id=${userID}`, {
                 headers: {
                     Accept: 'application/json',
                     Authorization: `Bearer ${cookies.user.token}`
@@ -48,16 +52,14 @@ const Profile = () => {
             setUserPosts(response.data.data)
         } catch (error) {
             console.error(error);
-        } finally {
-            setLoading(false);
         }
     };
 
     useEffect(() => {
-        setLoading(true)
+        setLoadnew(true);
         fetchUserData();
         fetchUserPosts();
-    }, [endpoint, userID]);
+    }, [endpoint, userID, limit]);
 
     return (
         <Layout>
@@ -98,7 +100,7 @@ const Profile = () => {
                     </div>
 
                     {userPosts.map((post: any) => {
-                        console.log('gt',post )
+                        console.log('gt', post)
                         return (
                             <CardPost
                                 key={post.id}
@@ -106,16 +108,41 @@ const Profile = () => {
                                 verifiedRecipe={post.status === "OpenForSale"}
                                 username={post.username}
                                 profileID={post.user_id}
+                                recipeID={post.id}
                                 profilePicture={post.profile_picture}
                                 postType={post.type}
                                 postPicture={post.images ? post.images[0].url_image : null}
                                 recipeName={post.name}
+                                description={post.description}
                                 commentAmt={post.total_comment}
                                 likeAmt={post.total_like}
                                 handleToPost={() => navigate(`/recipe/${post.id}`)}
-                            />
+                                handleToProfile={() => navigate(`/profile/${post.user_id}`)}
+                            >
+                                {post.replied_recipe !== undefined ?
+                                    <>
+                                        <CardQuote
+                                            username={post.replied_recipe.username}
+                                            profileID={post.replied_recipe.user_id}
+                                            recipeID={post.replied_recipe.id}
+                                            profilePicture={post.replied_recipe.profile_picture}
+                                            postType={post.replied_recipe.type}
+                                            recipeName={post.replied_recipe.name}
+                                            description={post.replied_recipe.description}
+                                            recipePicture={post.replied_recipe.images[0].url_image}
+                                            verifiedUser={post.replied_recipe.user_role === "Verified"}
+                                            verifiedRecipe={post.replied_recipe.status === "OpenForSale"}
+                                        />
+                                    </> :
+                                    <></>}
+                            </CardPost>
                         )
                     })}
+
+                    <button
+                        className={`w-full ${loadnew ? 'animate-pulse bg-neutral-100' : ''} border-x-2 text-neutral-400 py-2 text-light hover:bg-neutral-100`}
+                        onClick={() => setLimit(limit + 10)}
+                    > Load More </button>
 
                 </>}
 
