@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import Header from '../Components/Header'
 import { useCookies } from 'react-cookie'
 import Swal from 'sweetalert2'
+import NavBack from '../Components/NavBack'
 
 
 const Cart = () => {
@@ -114,7 +115,7 @@ const Cart = () => {
     const responsive = screen.width
     return (
         <div className='bg-gray-100'>
-            <Header title='Cart' />
+            <NavBack title='Cart' />
             {responsive > 1024
                 ? <div className='w-full sticky top-0 z-50 h-12 grid grid-cols-5 lg:mb-3 items-center bg-white font-semibold text-center'>
                     <p className='col-span-2'>Product</p>

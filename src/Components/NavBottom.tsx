@@ -112,8 +112,8 @@ const NavBottom = () => {
                     lg:w-1/2
                     '>
                         <p className='hidden sm:flex font-semibold col-span-2 my-10'>What type of Post would you like to make?</p>
-                        <button className='btn btn-primary rounded-full'>New Cooking</button>
-                        <Link to={"/recipe/new"} className='btn btn-primary rounded-full'>New Recipe</Link>
+                        <Link to={"/newcooking"} onClick={() => setModalOpen(!modalOpen)} className='btn btn-primary rounded-full'>New Cooking</Link>
+                        <Link to={"/recipe/new"} onClick={() => setModalOpen(!modalOpen)} className='btn btn-primary rounded-full'>New Recipe</Link>
                         <button onClick={() => setModalOpen(!modalOpen)} className='btn btn-outline sm:btn-circle btn-primary rounded-full sm:absolute sm:right-4 sm:top-4'>
                             <span className="sm:hidden">Cancel</span>
                             <span className="hidden sm:block">X</span>

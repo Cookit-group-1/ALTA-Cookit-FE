@@ -4,11 +4,11 @@ import NavBack from '../Components/NavBack'
 import NavBottom from '../Components/NavBottom'
 import { useState } from 'react'
 import { IoIosCheckmarkCircle } from 'react-icons/io'
-import { MdModeComment, MdFavorite } from 'react-icons/md'
+import { MdModeComment, MdFavorite, MdModeEdit } from 'react-icons/md'
 import Carousel from '../Components/Carousel'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
-import { useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import LoadingSpinner from '../Components/LoadingSpinner'
 import CardComment from '../Components/CardComment'
 import PostBox from '../Components/PostBox'
@@ -26,7 +26,9 @@ interface Steps {
 
 const Recipe = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['user'])
+    const navigate = useNavigate();
     const { recipeID } = useParams();
+    const { postType } = useParams();
     const [recipe, setRecipe] = useState<any>([])
     const [serving, setServing] = useState(1)
 
@@ -108,31 +110,16 @@ const Recipe = () => {
 
 
     // New Comment
-    const [profilePicture, setProfilePicture] = useState<any>()
-    const fetchDataUser = async () => {
-        try {
-            const response = await axios.get(`${endpoint}/users`, {
-                headers: {
-                    Accept: 'application/json',
-                    Authorization: `Bearer ${cookies.user.token}`
-                }
-            });
-            console.log(response.data.data)
-            setProfilePicture(response.data.data.profile_picture)
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const postComment = async (post: string) => {
+    const postComment = async (post: string, postImage: File | null) => {
         setLoading(true)
         try {
+            const formData = new FormData();
+            formData.append('comment', post)
+            if (postImage !== null) {
+                formData.append('image', postImage)
+            }
             const response = await axios.post(`${endpoint}/recipes/${recipeID}/comments`,
-                {
-                    comment: post
-                },
+                formData,
                 {
                     headers: {
                         Accept: 'application/json',
@@ -140,35 +127,40 @@ const Recipe = () => {
                     }
                 });
             console.log(response.data.data)
-            setProfilePicture(response.data.data.profile_picture)
         } catch (error) {
             console.error(error);
         } finally {
             fetchRecipeDetails();
-            fetchDataUser();
             fetchComments();
         }
     };
 
 
-    const handleSubmitComment = (post: string) => {
-        postComment(post)
+    const handleSubmitComment = (post: string, postImage: File | null) => {
+        postComment(post, postImage)
         console.log("New Comment", post)
 
     }
 
     // Fetching Data
     useEffect(() => {
+        if (postType !== "posts" && postType !== "recipes") {
+            navigate(-1)
+        }
         fetchRecipeDetails();
-        fetchDataUser();
         fetchComments();
     }, [endpoint]);
 
     return (
         <Layout>
-            <NavBack
-                title={"Recipe"}
-            />
+            {postType === "recipe" ?
+                <NavBack
+                    title={"Recipe"}
+                /> :
+                <NavBack
+                    title={"Post"}
+                />}
+
 
             {loading ? <LoadingSpinner /> : <>
 
@@ -183,6 +175,13 @@ const Recipe = () => {
                                 <IoIosCheckmarkCircle className='text-accent text-xl' /> :
                                 <></>
                             }
+
+                            {recipe.user_id === cookies.user.id ?
+                                <Link to={`edit`} className='text-lg ml-2 self-start text-secondary'>
+                                    <MdModeEdit />
+                                </Link>
+                                : <></>}
+
                         </h1>
                         <h2>{`by ${recipe.username}`}</h2>
 
@@ -300,7 +299,7 @@ const Recipe = () => {
                                                 onClick={() => handleChangeServing(serving + 1)}
                                             >+</button>
                                         </div>
-                                        <button onClick={() => addToCart(recipe.id, serving)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button>
+                                        <button onClick={() => addToCart(recipe.id)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button>
                                     </div>
                                 </div> :
                                 <></>}
@@ -320,14 +319,15 @@ const Recipe = () => {
 
                             </ol>
                         </div>
-                        : <></>}
+                        : <></>
+                    }
 
                     {/* Comments */}
                     <div className="w-full flex flex-col gap-2">
                         <h3 className='text-primary font-semibold'>Comments</h3>
                         <PostBox
+                            placeholderText='Add your comment'
                             onSubmit={handleSubmitComment}
-                            profilePicture={profilePicture}
                         />
                     </div>
 
@@ -342,6 +342,7 @@ const Recipe = () => {
                             userRole={comment.user_role}
                             profilePicture={comment.profile_picture}
                             comment={comment.comment}
+                            image={comment.comment_image}
                         />
                     )
                 })}

@@ -14,7 +14,7 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
 
     // Profile Picture
     const [img, setImg] = React.useState<any>()
-    
+
     const [loading, setLoading] = React.useState(true)
     const endpoint = `https://cookit.my-extravaganza.site/users`
     const fetchDataUser = async () => {

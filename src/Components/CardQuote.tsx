@@ -78,12 +78,14 @@ const CardQuote: FC<CardQuoteProps> =
                 </div>
 
                 {/* Recipe Photo */}
+                {recipePicture !== undefined ?
                 <div className='h-0 w-full pb-2/3 relative'>
                     <img
                         src={recipePicture}
                         className='inset-0 absolute w-full h-full object-cover rounded-b-lg'
                     />
-                </div>
+                </div> :
+                <></> }
             </div>
         )
     }

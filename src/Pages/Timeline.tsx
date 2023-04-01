@@ -64,7 +64,7 @@ const Timeline = () => {
         })
             .then((response) => {
                 console.log('re', response.data);
-                let sum:any = 0
+                let sum: any = 0
                 if (cookies.cart) {
                     sum = parseInt(cookies.cart) + 1
                 } else {
@@ -96,16 +96,33 @@ const Timeline = () => {
                             verifiedRecipe={post.status === "OpenForSale"}
                             username={post.username}
                             profileID={post.user_id}
+                            recipeID={post.id}
                             profilePicture={post.profile_picture}
                             postType={post.type}
                             postPicture={post.images ? post.images[0].url_image : null}
                             recipeName={post.name}
+                            description={post.description}
                             commentAmt={post.total_comment}
                             likeAmt={post.total_like}
                             handleToPost={() => navigate(`/recipe/${post.id}`)}
                             handleToProfile={() => navigate(`/profile/${post.user_id}`)}
                             handleCart={() => handleCart(post.ingredients[0].id)}
-                        />
+                        >
+                            {post.replied_recipe !== undefined ?
+                                <>
+                                    <CardQuote
+                                        username={post.replied_recipe.username}
+                                        profilePicture={post.replied_recipe.profile_picture}
+                                        postType={post.replied_recipe.type}
+                                        recipeName={post.replied_recipe.name}
+                                        recipePicture={""}
+                                        verifiedUser={post.replied_recipe.user_role === "Verified"}
+                                        verifiedRecipe={post.replied_recipe.status === "OpenForSale"}
+                                    />
+                                    {post.replied_recipe.images}
+                                </> :
+                                <></>}
+                        </CardPost>
                     )
                 })}
 

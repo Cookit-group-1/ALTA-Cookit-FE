@@ -1,18 +1,22 @@
 import React, { FC } from 'react'
 import { IoIosCheckmarkCircle } from 'react-icons/io'
-import { MdAddShoppingCart, MdModeComment, MdFavorite } from 'react-icons/md'
+import { MdAddShoppingCart, MdModeComment, MdFavorite, MdMoreVert, MdDeleteForever, MdOutlineReply } from 'react-icons/md'
 import { ImLoop2 } from 'react-icons/im'
 import { useNavigate } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
 interface CardPostProps {
     children?: React.ReactNode
     username: string
     profileID: number
+    recipeID: number
     profilePicture: string
     postType: string
     postPicture?: string
-    recipeName?: string
-    description?: string
+    recipeName: string | null
+    description: string | null
     commentAmt: number
     likeAmt: number
     verifiedUser: boolean
@@ -31,6 +35,7 @@ const CardPost: FC<CardPostProps> =
         children,
         username,
         profileID,
+        recipeID,
         profilePicture,
         postType,
         postPicture,
@@ -41,7 +46,7 @@ const CardPost: FC<CardPostProps> =
         verifiedUser,
         verifiedRecipe,
         handleCart,
-        handleToPost,
+        // handleToPost,
         handleToProfile,
         handleComment,
         handleLike,
@@ -49,6 +54,52 @@ const CardPost: FC<CardPostProps> =
         handleRemix
     }) => {
         const navigate = useNavigate()
+        const [cookies, setCookie] = useCookies(['user'])
+        const handleToPost = () => {
+            if (postType === "Cooked") {
+                navigate(`/posts/${recipeID}`)
+            } else {
+                navigate(`/recipes/${recipeID}`)
+            }
+        }
+
+        // Delete Post
+        const handleDeletePost = () => {
+            Swal.fire({
+                title: `Are you sure you want to delete this post?`,
+                text: "You cannot undo this action!",
+                icon: "warning",
+                iconColor: "#DC2F02",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+                // color: '#ffffff',
+                // background: '#0B3C95 ',
+                confirmButtonColor: "#D9D9D9",
+                cancelButtonColor: "#E85D04",
+            }).then((willDelete) => {
+                if (willDelete.isConfirmed) {
+                    axios.delete(`https://cookit.my-extravaganza.site/recipes/${recipeID}`, {
+                        headers: {
+                            Authorization: `Bearer ${cookies.user.token}`,
+                            Accept: 'application/json'
+                        }
+                    }).then((response) => {
+                        Swal.fire({
+                            icon: 'success',
+                            iconColor: '#04e885',
+                            padding: '1em',
+                            title: 'Successfuly Deleted Post',
+                            // color: '#ffffff',
+                            // background: '#0B3C95 ',
+                            showConfirmButton: false,
+                            timer: 1200
+                        })
+                    })
+                }
+            })
+        }
+
 
         return (
             <div className="w-full bg-base-100 border-2 border-t-0 flex gap-2 p-4">
@@ -77,7 +128,7 @@ const CardPost: FC<CardPostProps> =
                             </p>
 
                             {/* Post Type */}
-                            <p className='font-light text-neutral-500'>{`· ${postType}`}</p>
+                            <p className='font-light text-neutral-500'>{`· ${postType === "Original" ? "new recipe" : (postType === "Cooked" ? "new cooking" : "recooked")}`}</p>
                         </div>
 
                         {/* Shopping Cart for Verified Recipes */}
@@ -90,20 +141,20 @@ const CardPost: FC<CardPostProps> =
                         }
                     </div>
 
-                    {/* Recipe Name */}
-                    <p onClick={handleToPost} className='font-semibold text-primary hover:text-accent hover:cursor-pointer'>{recipeName}</p>
-
-                    {/* Post Description */}
-                    <p className='font-light'>{description}</p>
+                    {/* Recipe Name / Description*/}
+                    {postType === "Original" || postType === "Mixed" ?
+                        <p onClick={handleToPost} className='font-semibold text-primary hover:text-accent hover:cursor-pointer'>{recipeName}</p> :
+                        <p className='font-light'>{description}</p>
+                    }
 
                     {/* Recipe Photo */}
                     {postPicture !== null ?
-                    <div onClick={handleToPost} className='h-0 pb-2/3 relative hover:cursor-pointer mt-4'>
-                        <img
-                            src={postPicture}
-                            className='inset-0 absolute w-full h-full object-cover rounded-lg'
-                        />
-                    </div> : <></>}
+                        <div onClick={handleToPost} className='h-0 pb-2/3 relative hover:cursor-pointer mt-4'>
+                            <img
+                                src={postPicture}
+                                className='inset-0 absolute w-full h-full object-cover rounded-lg'
+                            />
+                        </div> : <></>}
 
 
                     {/* Quoted Recipe */}
@@ -111,7 +162,7 @@ const CardPost: FC<CardPostProps> =
 
                     <div className='grid grid-cols-3 text-secondary mt-1'>
                         {/* Comments */}
-                        <div className='flex'>
+                        <div className='flex justify-self-start'>
                             <button
                                 className='flex items-center gap-1 hover:text-accent hover:cursor-pointer'
                                 onClick={handleComment}
@@ -122,7 +173,7 @@ const CardPost: FC<CardPostProps> =
                         </div>
 
                         {/* Likes */}
-                        <div className='flex'>
+                        <div className='flex justify-self-center'>
                             <button
                                 className='flex items-center gap-1 hover:text-accent hover:cursor-pointer'
                                 onClick={handleLike}
@@ -132,11 +183,36 @@ const CardPost: FC<CardPostProps> =
                             </button>
                         </div>
 
-                        {/* Recook/Remix */}
-                        <div className='flex'>
-                            <button className='flex items-center gap-1 hover:text-accent hover:cursor-pointer'>
-                                <ImLoop2 className='text-lg' />
-                            </button>
+                        {/* More */}
+                        <div className='flex justify-self-end dropdown dropdown-end'>
+                            <label tabIndex={0} className='flex items-center gap-1 hover:text-accent hover:cursor-pointer'>
+                                <MdMoreVert className='text-lg' />
+                            </label>
+                            <ul tabIndex={0} className='dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52'>
+                                <li onClick={() => navigate(`/recipe/${recipeID}/reply`)}>
+                                    <p>
+                                        <MdOutlineReply />
+                                        Reply
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        <ImLoop2 />
+                                        Remix
+                                    </p>
+                                </li>
+                                <li
+                                    onClick={handleDeletePost}
+                                    className={`text-error ${profileID == cookies.user.id ? 'block' : 'hidden'}`}>
+                                    <p>
+                                        <MdDeleteForever />
+                                        Delete Post
+
+                                    </p>
+
+                                </li>
+
+                            </ul>
                         </div>
                     </div>
 

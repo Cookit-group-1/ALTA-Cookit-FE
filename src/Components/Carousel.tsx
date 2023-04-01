@@ -27,8 +27,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
         setActiveIndex(index);
     };
 
-    console.log("images: ", images.length.toString())
-
     return (
         <div className="relative w-full">
 
@@ -38,6 +36,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ images }) => {
                     style={{ transform: `translateX(-${activeIndex * (100 / images.length)}%)` }}
                 >
                     {images.map((image, index) => (
+                        // <div key={image.id} className={`w-${images.length}/1`}>
                         <div key={image.id} className={`w-${images.length}/1`}>
                             <div className='h-0 pb-2/3 relative '>
                                 <img src={image.url_image} className="rounded-2xl inset-0 w-full h-full absolute  object-cover" alt="" />
