@@ -35,11 +35,11 @@ function App() {
 
           <Route path="/:postType/:recipeID" element={<Recipe />} />
 
-          <Route path="/recipe/:recipeID/edit" element={<RecipeForm />} />
-          <Route path="/recipe/new" element={<RecipeForm />} />
+          <Route path="/recipes/:recipeID/edit" element={<RecipeForm />} />
+          <Route path="/recipes/new" element={<RecipeForm />} />
 
           <Route path="/newcooking" element={<NewCooking />} />
-          <Route path="/recipe/:recipeID/reply" element={<NewCooking />} />
+          <Route path="/recipes/:recipeID/reply" element={<NewCooking />} />
 
           <Route path="/profile/:userID" element={<Profile />} />
           <Route path="/editprofile" element={<EditProfile />} />
