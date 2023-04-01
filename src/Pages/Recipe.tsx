@@ -65,7 +65,7 @@ const Recipe = () => {
     }
 
     // add to cart
-    const addToCart = (id: number) => {
+    const addToCart = (id: number, serving:any) => {
         axios.post(`https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/users/carts`, {
             "ingredient_id": id,
             "quantity": 1

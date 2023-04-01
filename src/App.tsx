@@ -13,7 +13,7 @@ import Payment from './Pages/Payment'
 import { useParams } from 'react-router-dom'
 import History from './Pages/History'
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import DetailHostory from './Pages/DetailHostory'
+import DetailHostory from './Pages/DetailHistory'
 import RecipeForm from './Pages/RecipeForm'
 import Profile from './Pages/Profile'
 import EditProfile from './Pages/EditProfile'

@@ -17,7 +17,7 @@ const CardHistory: FC<myProps> = ({ title, titleBtn, route, transactionDetails, 
         <>
             <div className='bg-white pb-10 mb-5'>
                 <div className='w-full h-12  flex items-center border-b-2 '>
-                    <h1 className='text-xl lg:ml-5 font-semibold px-4'>{transactionDetails[0].seller_name}</h1>
+                    <h1 className='text-xl lg:ml-5 font-semibold px-4'>{transactionDetails[0].seller_user_username}</h1>
                 </div>
                 {/* card product */}
                 <div className='py-2 px-3'>
@@ -38,7 +38,7 @@ const CardHistory: FC<myProps> = ({ title, titleBtn, route, transactionDetails, 
                     </div>
                 </div>
                 <div className='w-full h-16 px-5 grid grid-cols-2'>
-                    <p className='text-start font-semibold'>{transactionDetails.length} more products</p>
+                    <p className='text-start font-regular lg:font-semibold'>{transactionDetails.length} {transactionDetails.length > 1 ? 'more products' : 'product' } </p>
                     <p className='text-end'>Order Total: <span className='text-primary'>Rp{totalPrice}</span> </p>
                     {route == 'toShip'
                         ? <button disabled className='w-44 col-start-2 bg-gray-200 py-1 place-self-end rounded-md text-gray-400'>{titleBtn}</button>

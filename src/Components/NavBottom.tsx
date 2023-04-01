@@ -7,9 +7,9 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie'
 
 const NavBottom = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['user', 'cart']);
+    const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const [modalOpen, setModalOpen] = useState<boolean>(false)
-    const [cartsLength, setCartsLength] = useState()
+    const [cartLength, setCartLength] = useState()
 
     // Profile Picture
     const [loading, setLoading] = React.useState(true)
@@ -30,6 +30,18 @@ const NavBottom = () => {
             setLoading(false);
         }
     };
+
+    const getcart = () => {
+        axios.get('https://cookit.my-extravaganza.site/users/carts', {
+            headers: {
+                Authorization: `Bearer ${cookies.user.token}`
+            }
+        }).then((response) => { setCartLength(response.data.data.length) })
+    }
+
+    useEffect(() => {
+        getcart()
+    },[cookies.user])
 
     useEffect(() => {
         fetchDataUser();
@@ -86,7 +98,7 @@ const NavBottom = () => {
                 </Link>
                 <Link className='flex items-center gap-2 hover:text-secondary' to={("/cart")}>
                     <div className="indicator">
-                        <span className="indicator-item badge text-white badge-secondary">{cookies.cart ? cookies.cart : 0}</span>
+                        <span className="indicator-item badge text-white badge-secondary">{cartLength}</span>
                         <MdShoppingCart />
                     </div>
 
