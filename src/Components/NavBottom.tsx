@@ -5,6 +5,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCookies } from 'react-cookie'
+import { GiKnifeFork } from 'react-icons/gi'
+import { IoIosPaper } from 'react-icons/io'
 
 const NavBottom = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['user', 'cart']);
@@ -112,12 +114,18 @@ const NavBottom = () => {
                     sm:fixed sm:w-2/3 sm:h-64 sm:inset-0 sm:m-auto sm:rounded-3xl sm:grid-cols-2
                     lg:w-1/2
                     '>
-                        <p className='hidden sm:flex font-semibold col-span-2 my-10'>What type of Post would you like to make?</p>
-                        <Link to={"/newcooking"} onClick={() => setModalOpen(!modalOpen)} className='btn btn-primary rounded-full'>New Cooking</Link>
-                        <Link to={"/recipe/new"} onClick={() => setModalOpen(!modalOpen)} className='btn btn-primary rounded-full'>New Recipe</Link>
-                        <button onClick={() => setModalOpen(!modalOpen)} className='btn btn-outline sm:btn-circle btn-primary rounded-full sm:absolute sm:right-4 sm:top-4'>
+                        <p className='hidden justify-self-center sm:flex text-xl text-center font-semibold col-span-2 my-10'>What type of Post would you like to make?</p>
+                        <Link to={"/newcooking"} onClick={() => setModalOpen(!modalOpen)} className='btn flex gap-2 btn-primary rounded-full'>
+                            <GiKnifeFork />
+                            New Cooking
+                        </Link>
+                        <Link to={"/recipe/new"} onClick={() => setModalOpen(!modalOpen)} className='btn flex gap-2 btn-primary rounded-full'>
+                            <IoIosPaper />
+                            New Recipe
+                        </Link>
+                        <button onClick={() => setModalOpen(!modalOpen)} className='btn btn-outline sm:btn-sm sm:btn-circle btn-primary rounded-full sm:absolute sm:right-4 sm:top-4'>
                             <span className="sm:hidden">Cancel</span>
-                            <span className="hidden sm:block">X</span>
+                            <span className="hidden sm:block">x</span>
                         </button>
                     </div>
                 </> :
