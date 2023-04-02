@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Layout from '../Components/Layout'
 import NavBack from '../Components/NavBack'
 import NavBottom from '../Components/NavBottom'
@@ -45,6 +45,7 @@ const RecipeForm = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const [loading, setLoading] = React.useState(true)
     const endpoint = `https://cookit.my-extravaganza.site`
+    // const endpoint = 'https://82d3-2001-448a-20e0-4958-d97e-b05f-e535-46c3.ap.ngrok.io'
     const navigate = useNavigate()
 
     // Edit Recipe
@@ -85,9 +86,9 @@ const RecipeForm = () => {
                 images: response.data.data.images,
                 editMode: true
             })
-            urlsToFiles(response.data.data.images).then((files) => {
-                setImages(files);
-            });
+            // urlsToFiles(response.data.data.images).then((files) => {
+            //     setImages(files);
+            // });
             setRecipe(response.data.data)
         } catch (error) {
             console.error(error);
@@ -116,21 +117,6 @@ const RecipeForm = () => {
     };
 
     // Images
-
-    // Convert From url to Files
-    async function urlsToFiles(images: Array<{ id: string, url_image: string }>): Promise<File[]> {
-        const files: File[] = [];
-
-        for (const image of images) {
-            const response = await axios.get(image.url_image, { responseType: 'blob' });
-            const blob = response.data;
-            const file = new File([blob], image.id, { type: blob.type });
-            files.push(file);
-        }
-
-        return files;
-    }
-
     const [images, setImages] = useState<File[]>([]);
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,8 +176,6 @@ const RecipeForm = () => {
         setNewRecipeDetails({ ...newRecipeDetails, steps: newSteps })
     };
 
-    console.log(newRecipeDetails.steps)
-
     // Handle Price
     const [showPrice, setShowPrice] = useState(false);
 
@@ -227,6 +211,8 @@ const RecipeForm = () => {
             } finally {
                 navigate(`/recipes/${recipeID}`);
             }
+        } else {
+            navigate(`/recipes/${recipeID}`);
         }
     }
 
@@ -294,7 +280,7 @@ const RecipeForm = () => {
                 steps: steps,
                 ingredients: ingredients,
                 recipe_id: editType === "recook" && recipeID !== undefined ? parseInt(recipeID) : null,
-                type: editType === "recook" ? "Mixed" : "Original"
+                type: recipe.type
             }
 
             const response = await axios.put(`${endpoint}/recipes/${recipeID}`,
@@ -310,7 +296,65 @@ const RecipeForm = () => {
         } catch (error) {
             console.error(error);
         } finally {
-            navigate(`/recipes/${recipeID}`);
+            if (images !== undefined) {
+                deleteAllImages()
+            } else {
+                navigate(`/recipes/${recipeID}`);
+            }
+        }
+    };
+
+    const deleteAllSteps = async () => {
+        setLoading(true)
+        try {
+            const response = await axios.delete(`${endpoint}/recipes/${recipeID}/steps`,
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${cookies.user.token}`
+                    }
+                });
+            console.log("Deleting Steps... ", response)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            deleteAllIngredients()
+        }
+    };
+
+    const deleteAllIngredients = async () => {
+        setLoading(true)
+        try {
+            const response = await axios.delete(`${endpoint}/recipes/${recipeID}/ingredients`,
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${cookies.user.token}`
+                    }
+                });
+            console.log("Deleting Ingredients... ", response)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            editRecipe()
+        }
+    };
+
+    const deleteAllImages = async () => {
+        setLoading(true)
+        try {
+            const response = await axios.delete(`${endpoint}/recipes/${recipeID}/images`,
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${cookies.user.token}`
+                    }
+                });
+            console.log("Deleting Images... ", response)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            postImage(recipe.id)
         }
     };
 
@@ -318,7 +362,7 @@ const RecipeForm = () => {
         e.preventDefault()
         setLoading(true)
         if (editType === "edit") {
-            editRecipe()
+            deleteAllSteps()
         } else {
             postRecipe()
         }
@@ -377,7 +421,11 @@ const RecipeForm = () => {
 
                     {/* Images */}
                     <div className='flex flex-col'>
-                        <label className='font-semibold' htmlFor="imageInput">Choose Images <span className='font-light'>(Optional)</span></label>
+                        <label className='font-semibold' htmlFor="imageInput">
+                            {(editType === "edit" || editType === "recook") && recipe.images !== undefined ?
+                                'Replace Images ' : 'Choose Images '}
+                            <span className='font-light'>(Optional)</span>
+                        </label>
                         <div className='flex flex-col gap-2 border border-primary rounded-lg min-h-40 px-4 py-4'>
                             <input
                                 type="file"
@@ -388,6 +436,16 @@ const RecipeForm = () => {
                             {images.map((image, index) => (
                                 <img className='rounded-lg' key={index} src={URL.createObjectURL(image)} alt={`Selected image ${index}`} />
                             ))}
+
+                            {images.length === 0 && recipe != undefined ?
+                                (
+                                    recipe.images?.map((image: any) => (
+                                        <div>
+                                            <img className='rounded-lg' key={image.id} src={image.url_image} alt={`Selected image ${image.id}`} />
+                                        </div>
+                                    ))
+                                ) : <></>
+                            }
                         </div>
                     </div>
 
