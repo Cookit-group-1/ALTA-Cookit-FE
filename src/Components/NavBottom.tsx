@@ -119,7 +119,7 @@ const NavBottom = () => {
                             <GiKnifeFork />
                             New Cooking
                         </Link>
-                        <Link to={"/recipe/new"} onClick={() => setModalOpen(!modalOpen)} className='btn flex gap-2 btn-primary rounded-full'>
+                        <Link to={"/recipes/new"} onClick={() => setModalOpen(!modalOpen)} className='btn flex gap-2 btn-primary rounded-full'>
                             <IoIosPaper />
                             New Recipe
                         </Link>

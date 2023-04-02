@@ -189,16 +189,18 @@ const CardPost: FC<CardPostProps> =
                                 <MdMoreVert className='text-lg' />
                             </label>
                             <ul tabIndex={0} className='dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52'>
-                                <li onClick={() => navigate(`/recipe/${recipeID}/reply`)}>
+                                <li onClick={() => navigate(`/recipes/${recipeID}/reply`)}>
                                     <p>
                                         <MdOutlineReply />
                                         Reply
                                     </p>
                                 </li>
-                                <li>
+                                <li
+                                    onClick={() => navigate(`/recipes/${recipeID}/recook`)}
+                                    className={`${postType === 'Cooked' ? 'hidden' : 'block'}`}>
                                     <p>
                                         <ImLoop2 />
-                                        Remix
+                                        Recook
                                     </p>
                                 </li>
                                 <li

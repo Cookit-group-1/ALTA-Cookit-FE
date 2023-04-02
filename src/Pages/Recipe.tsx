@@ -356,7 +356,7 @@ const Recipe = () => {
                         description={recipe.description}
                         commentAmt={recipe.total_comment}
                         likeAmt={recipe.total_like}
-                        handleToPost={() => navigate(`/recipe/${recipe.id}`)}
+                        handleToPost={() => navigate(`/recipes/${recipe.id}`)}
                         handleToProfile={() => navigate(`/profile/${recipe.user_id}`)}
                     >
                         {recipe.replied_recipe !== undefined ?

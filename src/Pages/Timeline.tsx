@@ -104,7 +104,7 @@ const Timeline = () => {
                             description={post.description}
                             commentAmt={post.total_comment}
                             likeAmt={post.total_like}
-                            handleToPost={() => navigate(`/recipe/${post.id}`)}
+                            handleToPost={() => navigate(`/recipes/${post.id}`)}
                             handleToProfile={() => navigate(`/profile/${post.user_id}`)}
                             handleCart={() => handleCart(post.ingredients[0].id)}
                         >

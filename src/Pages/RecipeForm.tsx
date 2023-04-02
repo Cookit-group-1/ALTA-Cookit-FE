@@ -49,6 +49,8 @@ const RecipeForm = () => {
 
     // Edit Recipe
     const { recipeID } = useParams()
+    const { editType } = useParams()
+    console.log("post type", editType)
     const [recipe, setRecipe] = useState<any>()
 
     const fetchRecipeDetails = async () => {
@@ -60,8 +62,16 @@ const RecipeForm = () => {
                 }
             });
             console.log("recipe: ", response.data.data)
-            if (cookies.user.id !== response.data.data.user_id) {
-                navigate(`/recipe/${recipeID}`)
+            if ((cookies.user.id !== response.data.data.user_id && editType === "edit") ||
+                (editType !== "edit" && editType !== "recook")) {
+                navigate(`/recipes/${recipeID}`)
+            }
+            const steps = response.data.data.steps.map((item: any) => item.name)
+            setSteps(steps)
+            const ingredients = response.data.data.ingredients[0].ingredient_details.map(({ id, ...rest }: any) => rest)
+            setIngredients(ingredients)
+            if (response.data.data.status === "OpenForSale") {
+                setShowPrice(true)
             }
             setNewRecipeDetails({
                 verified: false,
@@ -69,13 +79,16 @@ const RecipeForm = () => {
                 name: response.data.data.name,
                 type: "Original",
                 description: response.data.data.description,
-                ingredients: response.data.data.ingredients,
+                ingredients: ingredients,
                 serving: 1,
                 price: response.data.data.ingredients[0].price,
                 steps: response.data.data.steps,
                 images: response.data.data.images,
                 editMode: true
             })
+            urlsToFiles(response.data.data.images).then((files) => {
+                setImages(files);
+            });
             setRecipe(response.data.data)
         } catch (error) {
             console.error(error);
@@ -103,6 +116,21 @@ const RecipeForm = () => {
     };
 
     // Images
+
+    // Convert From url to Files
+    async function urlsToFiles(images: Array<{ id: string, url_image: string }>): Promise<File[]> {
+        const files: File[] = [];
+
+        for (const image of images) {
+            const response = await axios.get(image.url_image, { responseType: 'blob' });
+            const blob = response.data;
+            const file = new File([blob], image.id, { type: blob.type });
+            files.push(file);
+        }
+
+        return files;
+    }
+
     const [images, setImages] = useState<File[]>([]);
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,6 +141,7 @@ const RecipeForm = () => {
             setNewRecipeDetails({ ...newRecipeDetails, images: files })
         }
     };
+
 
     // Recipe Ingredients
     const [ingredients, setIngredients] = useState<Ingredient[]>([{ name: '', quantity: 0, unit: '' }]);
@@ -180,9 +209,6 @@ const RecipeForm = () => {
                 console.log("Images: ", newRecipeDetails.images)
 
                 const response = await axios.post(`${endpoint}/recipes/${recipeID}/images`,
-                    // {
-                    //     "image": newRecipeDetails.images[0]
-                    // },
                     formData,
                     {
                         headers: {
@@ -195,7 +221,7 @@ const RecipeForm = () => {
             } catch (error) {
                 console.error(error);
             } finally {
-                setLoading(false);
+                navigate(`/recipes/${recipeID}`);
             }
         }
     }
@@ -220,7 +246,9 @@ const RecipeForm = () => {
                 description: newRecipeDetails.description,
                 status: status,
                 steps: steps,
-                ingredients: ingredients
+                ingredients: ingredients,
+                recipe_id: editType === "recook" && recipeID !== undefined ? parseInt(recipeID) : null,
+                type: editType === "recook" ? "Mixed" : "Original"
             }
 
             const response = await axios.post(`${endpoint}/recipes`,
@@ -241,16 +269,24 @@ const RecipeForm = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        postRecipe()
+        if (editType === "edit") {
+
+        } else {
+            postRecipe()
+        }
     }
 
     return (
         <Layout>
             {/* Todo: edit mode using useparam */}
             {recipeID !== undefined ?
-                <NavBack
-                    title='Edit Recipe'
-                /> :
+                (editType === "edit" ?
+                    <NavBack
+                        title='Edit Recipe'
+                    /> :
+                    <NavBack
+                        title='Recook Recipe'
+                    />) :
                 <NavBack
                     title='New Recipe'
                 />}
@@ -393,26 +429,10 @@ const RecipeForm = () => {
                         ))}
                     </div>
 
-                    {/* Servings */}
-                    {/* <div className='flex flex-col'>
-                    <label htmlFor='serving' className='font-semibold'>
-                        Servings
-                    </label>
-                    <input
-                        className='input input-primary'
-                        name='serving'
-                        id='serving'
-                        type="number"
-                        placeholder='e.g. 2'
-                        value={newRecipeDetails.serving}
-                        onChange={handleInputChange}
-                    />
-                </div> */}
-
                     {/* Sell Price */}
                     <div className='flex items-center gap-1 mt-2'>
                         <p className='font-light'>Sell ingredients for your recipe?</p>
-                        <input onClick={handleShowPrice} type="checkbox" className='checkbox checkbox-primary rounded-full checkbox-sm' />
+                        <input readOnly onClick={handleShowPrice} checked={showPrice} type="checkbox" className='checkbox checkbox-primary rounded-full checkbox-sm' />
                     </div>
 
                     {showPrice ?
