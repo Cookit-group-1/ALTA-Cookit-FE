@@ -8,7 +8,7 @@ import food1 from '../assets/food1.jpg'
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import { MdFileCopy } from 'react-icons/md'
-import Format from '../Components/'
+import Format from '../Components/Format'
 
 
 
