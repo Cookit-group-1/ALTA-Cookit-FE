@@ -22,6 +22,8 @@ const Timeline = () => {
         console.log(cookies.user.token)
     }, [])
 
+    console.log(cookies.user.token)
+
     // Get Recipe Data
     const [recipes, setRecipes] = useState([])
     const endpoint = `https://cookit.my-extravaganza.site`

@@ -50,7 +50,6 @@ const RecipeForm = () => {
     // Edit Recipe
     const { recipeID } = useParams()
     const { editType } = useParams()
-    console.log("post type", editType)
     const [recipe, setRecipe] = useState<any>()
 
     const fetchRecipeDetails = async () => {
@@ -82,7 +81,7 @@ const RecipeForm = () => {
                 ingredients: ingredients,
                 serving: 1,
                 price: response.data.data.ingredients[0].price,
-                steps: response.data.data.steps,
+                steps: steps,
                 images: response.data.data.images,
                 editMode: true
             })
@@ -106,6 +105,7 @@ const RecipeForm = () => {
     }, [endpoint]);
 
     const [newRecipeDetails, setNewRecipeDetails] = useState<NewRecipeVariables>(initialNewRecipe)
+
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewRecipeDetails({ ...newRecipeDetails, [e.target.name]: e.target.value });
@@ -171,6 +171,7 @@ const RecipeForm = () => {
     // Recipe Steps
     const [steps, setSteps] = useState<string[]>(['']);
 
+
     const handleStepChange = (index: number, value: string) => {
         const newSteps = [...steps];
         newSteps[index] = value;
@@ -185,8 +186,11 @@ const RecipeForm = () => {
     const handleDeleteStep = (index: number) => {
         const newSteps = [...steps];
         newSteps.splice(index, 1);
-        setSteps(newSteps);
+        setSteps(newSteps)
+        setNewRecipeDetails({ ...newRecipeDetails, steps: newSteps })
     };
+
+    console.log(newRecipeDetails.steps)
 
     // Handle Price
     const [showPrice, setShowPrice] = useState(false);
@@ -267,10 +271,54 @@ const RecipeForm = () => {
         }
     };
 
+    const editRecipe = async () => {
+        setLoading(true)
+        try {
+            const steps = newRecipeDetails.steps.map(str => ({ name: str }));
+            const status = showPrice ? "OpenForSale" : "None"
+            const price = parseInt(newRecipeDetails.price.toString())
+            const ingredients = [
+                {
+                    name: newRecipeDetails.name,
+                    price: price,
+                    ingredient_details: newRecipeDetails.ingredients
+                }
+            ];
+            console.log("Steps: ", steps)
+            console.log("Ingredients: ", ingredients)
+            const data =
+            {
+                name: newRecipeDetails.name,
+                description: newRecipeDetails.description,
+                status: status,
+                steps: steps,
+                ingredients: ingredients,
+                recipe_id: editType === "recook" && recipeID !== undefined ? parseInt(recipeID) : null,
+                type: editType === "recook" ? "Mixed" : "Original"
+            }
+
+            const response = await axios.put(`${endpoint}/recipes/${recipeID}`,
+                data,
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        // "Content-Type": 'multipart/form-data',
+                        Authorization: `Bearer ${cookies.user.token}`
+                    }
+                });
+            console.log("Edit Recipe: ", response)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            navigate(`/recipes/${recipeID}`);
+        }
+    };
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setLoading(true)
         if (editType === "edit") {
-
+            editRecipe()
         } else {
             postRecipe()
         }

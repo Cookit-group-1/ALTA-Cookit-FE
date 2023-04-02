@@ -38,7 +38,7 @@ const Recipe = () => {
     // Draggable scroll
     // const ref = useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
     // const { events } = useDraggable(ref);
-    
+
 
     // Get Recipe
     const [loading, setLoading] = useState(true)
@@ -178,18 +178,20 @@ const Recipe = () => {
                         <div className='flex flex-col justify-center items-center text-center'>
                             {/* Recipe Name */}
                             <h1 className='font-bold flex text-3xl'>
-                                {recipe.name}
+                                <p className='flex'>
+                                    {recipe.name}
+                                    {recipe.status === "OpenForSale" ?
+                                        <IoIosCheckmarkCircle className='text-accent text-xl' /> :
+                                        <></>
+                                    }
 
-                                {recipe.status === "OpenForSale" ?
-                                    <IoIosCheckmarkCircle className='text-accent text-xl' /> :
-                                    <></>
-                                }
 
-                                {recipe.user_id === cookies.user.id ?
-                                    <Link to={`edit`} className='text-lg ml-2 self-start text-secondary'>
-                                        <MdModeEdit />
-                                    </Link>
-                                    : <></>}
+                                    {recipe.user_id === cookies.user.id ?
+                                        <Link to={`edit`} className='text-lg ml-2 self-start text-secondary'>
+                                            <MdModeEdit />
+                                        </Link>
+                                        : <></>}
+                                </p>
 
                             </h1>
                             <h2>{`by ${recipe.username}`}</h2>
