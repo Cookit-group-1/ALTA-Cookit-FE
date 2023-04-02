@@ -8,6 +8,7 @@ import Header from '../Components/Header'
 import { useCookies } from 'react-cookie'
 import Swal from 'sweetalert2'
 import NavBack from '../Components/NavBack'
+import Format from '../Components/Format'
 
 
 const Cart = () => {
@@ -33,8 +34,12 @@ const Cart = () => {
 
     // collect price data to array
     let dataPrice: any = []
-    const arr = carts?.map((item: any) => dataPrice.push(item.price))
+    const arr = carts?.map((item: any) => {
+        let oneProduct = item.price * item.quantity
+        dataPrice.push(oneProduct)
+    })
 
+    // collect carts data to array
     for (const cart of carts) {
         const { id_seller } = cart;
         if (!cartsBySeller[id_seller]) {
@@ -117,17 +122,18 @@ const Cart = () => {
         <div className='bg-gray-100'>
             <NavBack title='Cart' />
             {responsive > 1024
-                ? <div className='w-full sticky top-0 z-50 h-12 grid grid-cols-5 lg:mb-3 items-center bg-white font-semibold text-center'>
+                ? <div className='w-full fixed mt-16 top-0 z-50 h-16 grid grid-cols-5 lg:mb-3 items-center bg-white font-semibold text-center'>
                     <p className='col-span-2'>Product</p>
                     <p>Unit Price </p>
                     <p>Quantity</p>
                 </div>
                 : ''
             }
-            <div className='bg-gray-100 flex flex-col gap-5'>
+            <div className='bg-gray-100 lg:mt-20 flex flex-col gap-5'>
                 {Object.keys(cartsBySeller)?.map((key, index) => {
                     const cartItems = cartsBySeller[key];
                     const sellerName = cartsBySeller[key][0].seller_user_username
+
                     return (
                         <div key={key}>
                             <ItemCart cartItems={cartItems} sellerName={sellerName} increment={(price, id, quantity) => handleIncrement(price, id, quantity)} decrement={(price, id, quantity) => handleDecrement(price, id, quantity)} deleteCartItem={deleteCartItem} />
@@ -136,8 +142,11 @@ const Cart = () => {
                 })}
             </div>
             <div className='w-full h-16 px-5 lg:px-10 grid grid-cols-3 place-content-center items-center fixed bottom-0 bg-gray-100'>
-                <p className='col-span-2 font-semibold '>Total : <span className='text-Primary'>Rp{totalPrice}</span> </p>
-                <button onClick={goToPayment} className='w-full md:w-2/3 lg:w-1/3 py-2 place-self-end text-white font-semibold rounded-md bg-primary'>Checkout</button>
+                <p className='col-span-2 font-semibold '>Total : <span className='text-Primary'> <Format>{totalPrice}</Format> </span> </p>
+                {carts.length != 0  
+                    ? <button onClick={goToPayment} className='w-full md:w-2/3 lg:w-1/3 py-2 place-self-end text-white font-semibold rounded-md bg-primary'>Checkout</button>
+                    : <button className='w-full md:w-2/3 lg:w-1/3 py-2 place-self-end text-white font-semibold rounded-md bg-gray-400'>Checkout</button>
+                }
             </div>
         </div>
     )

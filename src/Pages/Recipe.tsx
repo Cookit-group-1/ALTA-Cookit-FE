@@ -6,7 +6,6 @@ import { useState } from 'react'
 import { IoIosCheckmarkCircle } from 'react-icons/io'
 import { MdModeComment, MdFavorite, MdModeEdit } from 'react-icons/md'
 import Carousel from '../Components/Carousel'
-import { useDraggable } from 'react-use-draggable-scroll'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
 import { Link, useParams, useNavigate } from 'react-router-dom'
@@ -75,7 +74,7 @@ const Recipe = () => {
     }
 
     // add to cart
-    const addToCart = (id: number) => {
+    const addToCart = (id: number, serving:any) => {
         axios.post(`https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/users/carts`, {
             "ingredient_id": id,
             "quantity": 1
@@ -321,7 +320,7 @@ const Recipe = () => {
                                                     onClick={() => handleChangeServing(serving + 1)}
                                                 >+</button>
                                             </div>
-                                            <button onClick={() => addToCart(recipe.id)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button>
+                                            {/* <button onClick={() => addToCart(recipe.id)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button> */}
                                         </div>
                                     </div> :
                                     <></>}

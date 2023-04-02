@@ -3,7 +3,7 @@ import Layout from '../Components/Layout'
 import NavBack from '../Components/NavBack'
 import NavBottom from '../Components/NavBottom'
 import { useCookies } from 'react-cookie'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 import CardPost from '../Components/CardPost'
 import { useNavigate } from 'react-router-dom'
@@ -69,34 +69,40 @@ const Profile = () => {
 
             {loading ? <LoadingSpinner /> :
                 <>
+                    <div className='border-2'>
+                        <div className='flex gap-2 w-full py-4 px-4 justify-between'>
+                            <div className='flex gap-2'>
+                                {/* Profile Picture */}
+                                <div className={`w-32 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
+                                    <div className='h-0 pb-1/1 relative hover:cursor-pointer'>
+                                        <img
+                                            src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : userData?.profile_picture}
+                                            className='inset-0 absolute w-full h-full object-cover rounded-full'
+                                        />
+                                    </div>
+                                </div>
+                                {/* Username, Following-Follower, Bio */}
+                                <div className='grid grid-cols-2 items-center justify-center'>
+                                    <h1 className='font-bold text-3xl flex'>
+                                        {userData?.username}
+                                        {userData.role == "Verified" ?
+                                            <IoIosCheckmarkCircle className='text-accent' /> :
+                                            <></>
+                                        }
+                                    </h1>
+                                    {userID == cookies.user.id ?
+                                        <button onClick={() => navigate('/editprofile')} className='btn btn-primary btn-sm rounded-full'>Edit Profile</button> :
+                                        <button className='btn btn-primary btn-sm rounded-full'>Follow</button>}
 
-                    <div className='flex gap-2 w-full py-4 px-4 border-2 justify-between'>
-                        <div className='flex gap-2'>
-                            {/* Profile Picture */}
-                            <div className={`w-32 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
-                                <div className='h-0 pb-1/1 relative hover:cursor-pointer'>
-                                    <img
-                                        src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : userData?.profile_picture}
-                                        className='inset-0 absolute w-full h-full object-cover rounded-full'
-                                    />
+                                    <Link to={`/follow/${cookies.user.id}`} className='font-semibold'>2 Following</Link>
+                                    <Link to={`/follow/${cookies.user.id}`} className='font-semibold'>5 Followers</Link>
                                 </div>
                             </div>
-                            {/* Username, Following-Follower, Bio */}
-                            <div className='flex flex-col justify-center'>
-                                <h1 className='font-bold text-3xl flex'>
-                                    {userData?.username}
-                                    {userData.role == "Verified" ?
-                                        <IoIosCheckmarkCircle className='text-accent' /> :
-                                        <></>
-                                    }
-                                </h1>
-                                <p></p>
-                                <p>{userData?.bio}</p>
-                            </div>
                         </div>
-                        {userID == cookies.user.id ?
-                            <button onClick={() => navigate('/editprofile')} className='btn btn-primary btn-sm rounded-full'>Edit Profile</button> :
-                            <button className='btn btn-primary btn-sm rounded-full'>Follow</button>}
+
+                        <div className='w-full h-full pb-10 grid grid-cols-3 px-5 border-b-2'>
+                            <p>{userData?.bio}</p>
+                        </div>
                     </div>
 
                     {userPosts.map((post: any) => {
