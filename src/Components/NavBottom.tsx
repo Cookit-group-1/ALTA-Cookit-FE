@@ -7,11 +7,14 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie'
 import { GiKnifeFork } from 'react-icons/gi'
 import { IoIosPaper } from 'react-icons/io'
+import Swal from 'sweetalert2';
+
 
 const NavBottom = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['user', 'cart']);
+    const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const [modalOpen, setModalOpen] = useState<boolean>(false)
-    const [cartsLength, setCartsLength] = useState()
+    const [cartLength, setCartLength] = useState()
+    const navigate = useNavigate()
 
     // Profile Picture
     const [loading, setLoading] = React.useState(true)
@@ -33,6 +36,18 @@ const NavBottom = () => {
         }
     };
 
+    const getcart = () => {
+        axios.get('https://cookit.my-extravaganza.site/users/carts', {
+            headers: {
+                Authorization: `Bearer ${cookies.user.token}`
+            }
+        }).then((response) => { setCartLength(response.data.data.length) })
+    }
+
+    useEffect(() => {
+        getcart()
+    }, [cookies.user])
+
     useEffect(() => {
         fetchDataUser();
     }, [endpoint]);
@@ -51,6 +66,30 @@ const NavBottom = () => {
         }
     }, [modalOpen]);
 
+    // handle log out
+    const logOut = () => {
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "Yes",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "No",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    text: "Logout successfully",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                removeCookie("user");
+                navigate("/login");
+            }
+        });
+    };
 
     return (
         <div className='
@@ -67,17 +106,24 @@ const NavBottom = () => {
             '>
                 <button onClick={handleScrollToTop} className='font-bold hidden sm:flex sm:text-sm lg:font-semibold lg:text-4xl'>Cookit</button>
 
-                <Link className={`hidden ${loading ? 'animate-pulse' : ''} sm:flex items-center gap-2 hover:text-secondary`} to={(`/profile/${cookies.user.id}`)}>
-                    <div className='w-9 justify-self-start'>
-                        <div className='h-0 pb-1/1 relative hover:cursor-pointer'>
-                            <img
-                                src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
-                                className='inset-0 absolute w-full h-full object-cover rounded-full'
-                            />
+                <div className={`hidden ${loading ? 'animate-pulse' : ''} sm:flex items-center gap-2 hover:text-secondary`} >
+                    <div className={`w-10 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
+                        <div className="dropdown dropdown-bottom">
+                            <label tabIndex={0} className="h-0 pb-1/1 relative hover:cursor-pointer">
+                                <img src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
+                                    className='rounded-full w-full h-full' />
+                            </label>
+                            <ul tabIndex={0} className="dropdown-content md:text-sm menu p-2 text-black shadow-lg bg-base-100 rounded-box w-52">
+                                <li><Link to={`/profile/${cookies.user.id}`}>Profile</Link></li>
+                                <li><Link to="/history">my purchase</Link></li>
+                                <li><span onClick={logOut} >logout</span></li>
+                            </ul>
                         </div>
                     </div>
                     <p className='text-lg hidden lg:flex'>Profile</p>
-                </Link>
+                </div>
+
+
 
                 <Link className='flex items-center gap-2 hover:text-secondary' to={("/timeline")}>
                     <MdHome />
@@ -89,7 +135,7 @@ const NavBottom = () => {
                 </Link>
                 <Link className='flex items-center gap-2 hover:text-secondary' to={("/cart")}>
                     <div className="indicator">
-                        <span className="indicator-item badge text-white badge-secondary">{cookies.cart ? cookies.cart : 0}</span>
+                        <span className="indicator-item badge text-white badge-secondary">{cartLength}</span>
                         <MdShoppingCart />
                     </div>
 
@@ -119,7 +165,7 @@ const NavBottom = () => {
                             <GiKnifeFork />
                             New Cooking
                         </Link>
-                        <Link to={"/recipe/new"} onClick={() => setModalOpen(!modalOpen)} className='btn flex gap-2 btn-primary rounded-full'>
+                        <Link to={"/recipes/new"} onClick={() => setModalOpen(!modalOpen)} className='btn flex gap-2 btn-primary rounded-full'>
                             <IoIosPaper />
                             New Recipe
                         </Link>

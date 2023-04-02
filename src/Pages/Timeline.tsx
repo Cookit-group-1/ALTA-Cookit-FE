@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
+
 const Timeline = () => {
     const [cookies, setCookie] = useCookies(['user', 'cart'])
     const navigate = useNavigate()
@@ -49,11 +50,11 @@ const Timeline = () => {
 
     useEffect(() => {
         fetchRecipes();
+
     }, [endpoint, limit]);
 
     // add to cart
     const handleCart = (id: number) => {
-        console.log('y', id)
         axios.post(`https://cookit.my-extravaganza.site/users/carts`, {
             "ingredient_id": id,
             "quantity": 1
@@ -86,7 +87,6 @@ const Timeline = () => {
     return (
         <Layout>
             <NavTop />
-
             {loading ? <LoadingSpinner /> : <>
                 {recipes.map((post: any, index) => {
                     return (

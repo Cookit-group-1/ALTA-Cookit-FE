@@ -3,16 +3,19 @@
         {
             "img": "../Components/gofood.png",
             "receive": "Receive by 28 Mar - 1 Apr",
+            "name": "gofood",
             "price": 9000
         },
         {
             "img": "../Components/shopeefood.png",
             "receive": "Receive by 25 Mar - 5 Apr",
+            "name": "shopee food",
             "price": 6000
         },
         {
             "img": "../Components/grabfood.pnggofood",
             "receive": "Receive by 27 Mar - 3 Apr",
+            "name": "grab food",
             "price": 2000
         }
     ]

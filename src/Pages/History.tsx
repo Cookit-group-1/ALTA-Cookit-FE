@@ -1,73 +1,174 @@
 import React, { useState, useEffect } from 'react'
 import Header from '../Components/Header'
 import { Swiper, SwiperSlide } from 'swiper/react';
-import Completed from '../Components/Completed';
 import CardHistory from '../Components/CardHistory';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
-import historyData from '../components/historyData.json';
-
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const History = () => {
+    const MAX_TIME = 20;
     const [cookies, setCookies] = useCookies(['user'])
     const navigate = useNavigate()
     const [data, setData] = useState<any>([])
-    const [router, setRouter] = useState('toPay')
+    const [router, setRouter] = useState('Unpaid')
+    const [count, setCount] = useState(0);
+    const [idTransaction, setIdTransaction] = useState<any>([]);
+    let intervalId: any;
+    const [received, setReceived] = useState(false)
 
-    useEffect(() => {
-        getData()
-        if (cookies.user == undefined) {
-            navigate('/login')
-        }
-    }, [])
 
-    const getData = () => {
-        setData(historyData.data)
+    // get data transactions 
+    const getData = async () => {
+        setData([])
+        await axios.get(`https://cookit.my-extravaganza.site/users/transactions?status=${router}`, {
+            headers: {
+                Authorization: `Bearer ${cookies.user.token}`
+            }
+        })
+            .then((response) => {
+                setData(response.data.data)
+            })
+            .catch((error) => { console.error(error) })
     }
-    console.log('b',data)
 
-    const handleDetailHistory = (index:number) => {
-        console.log(index)
-        navigate('/detailhistory',{
-            state : {
-                data : data[index]
+    // go to detail transaction page 
+    const handleDetailHistory = (index: number) => {
+        navigate('/detailhistory', {
+            state: {
+                data: data[index]
             }
         })
     }
 
+    // useEffect will render every second until get data 
+    useEffect(() => {
+        intervalId = setInterval(() => {
+            fetchData();
+        }, 1000);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, []);
+
+    async function fetchData() {
+        const response = await fetch('https://cookit.my-extravaganza.site/users/transactions?status=Shipped', {
+            headers: {
+                Authorization: `Bearer ${cookies.user.token}`
+            }
+        });
+        const data = await response.json();
+        if (data) {
+            setIdTransaction(data.data[0].id);
+            clearInterval(intervalId);
+        }
+    }
+
+    // counts to 20 seconds then changes status 
+    // This count will not be repeated if realoded
+    useEffect(() => {
+        if (idTransaction.length != 0) {
+            let interval: NodeJS.Timeout;
+            const storedCount = localStorage.getItem("count");
+            if (storedCount) {
+                setCount(parseInt(storedCount));
+            }
+
+            if (count < MAX_TIME) {
+                interval = setInterval(() => {
+                    setCount((prevCount) => {
+                        const newCount = prevCount + 1;
+                        localStorage.setItem("count", newCount.toString());
+                        return newCount;
+                    });
+                }, 1000);
+            }
+
+            if (count === MAX_TIME) {
+                const headers = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${cookies.user.token}`
+                    },
+                };
+
+                fetch(`https://cookit.my-extravaganza.site/users/transactions/${idTransaction}/status`, headers)
+                    .then(response => response.json())
+                    .then(data => console.log('fre', data))
+                    .catch(error => console.error(error));
+                localStorage.clear();
+            }
+
+            return () => {
+                clearInterval(interval);
+            };
+        }
+    }, [count, idTransaction]);
+
+    const orderReceived = (id: number) => {
+        const headers = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${cookies.user.token}`
+            },
+        };
+
+        fetch(`https://cookit.my-extravaganza.site/users/transactions/${id}/status`, headers)
+            .then(response => response.json())
+            .then(data => {
+                console.log('fre', data)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Order Received',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                setReceived(!received)
+            })
+            .catch(error => console.error(error));
+    }
+
+    useEffect(() => {
+        getData()
+    }, [router, received])
 
     return (
         <div className='bg-gray-100'>
-            <Header title='My Purchase' />
+            <Header link='timeline' title='My Purchase' />
             {/* navigate */}
-            <div className='w-full h-16 text-white px-3 text-center flex items-center gap-10 bg-primary realtive overflow-hidden'>
+            <div className='w-full h-16 text-gray-100 px-3 text-center flex sticky top-16 z-50 items-center gap-10 bg-primary realtive overflow-hidden'>
                 <Swiper
                     spaceBetween={50}
                     slidesPerView={screen.width > 767 ? 4 : 2.5}
                 >
                     <SwiperSlide>
-                        <p onClick={() => setRouter('toPay')} className={`${router == 'toPay' ? 'border-b-2 border-warning font-bold' : ''} h-9 lg:mx-20 cursor-pointer`}>To pay</p>
+                        <p onClick={() => setRouter('Unpaid')} className={`${router == 'Unpaid' ? 'border-b-2 border-warning font-bold' : ''} h-9 lg:mx-20 cursor-pointer`}>Unpaid</p>
                     </SwiperSlide>
                     <SwiperSlide>
-                        <p onClick={() => setRouter('toShip')} className={`${router == 'toShip' ? 'border-b-2 border-warning font-bold' : ''} h-9 lg:mx-20 cursor-pointer`}>To Ship</p>
+                        <p onClick={() => setRouter('Shipped')} className={`${router == 'Shipped' ? 'border-b-2 border-warning font-bold' : ''} h-9 lg:mx-20 cursor-pointer`}>Shipped</p>
                     </SwiperSlide>
                     <SwiperSlide>
-                        <p onClick={() => setRouter('toReceive')} className={`${router == 'toReceive' ? 'border-b-2 border-warning font-bold' : ''} h-9 lg:mx-20 cursor-pointer`}>To Receive</p>
+                        <p onClick={() => setRouter('Received')} className={`${router == 'Received' ? 'border-b-2 border-warning font-bold' : ''} h-9 lg:mx-20 cursor-pointer`}>Received</p>
                     </SwiperSlide>
                     <SwiperSlide>
-                        <p onClick={() => setRouter('completed')} className={`${router == 'completed' ? 'border-b-2 border-warning font-bold' : ''} h-9 lg:mx-20  cursor-pointer`}>Completed</p>
+                        <p onClick={() => setRouter('Complete')} className={`${router == 'Complete' ? 'border-b-2 border-warning font-bold' : ''} h-9 lg:mx-20  cursor-pointer`}>Complete</p>
                     </SwiperSlide>
                 </Swiper>
             </div>
             {data.map((item: any, index: number) => {
-                // console.log('f',item)
+                console.log('frerre', item)
                 return (
-                    <div key={index} onClick={() => handleDetailHistory(index)} className='bg-gray-100'>
+                    <div key={index} className='bg-white mt-3'>
                         {
-                            router == 'toPay' ? <CardHistory titleBtn='Pay' title='to pay' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
-                                : router == 'toShip' ? <CardHistory titleBtn='Order Received' route='toShip' title='to ship' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
-                                    : router == 'toReceive' ? <CardHistory titleBtn='Order Received' title='to receive' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
-                                        : router == 'completed' ? <CardHistory titleBtn={item.created_at} route='completed' title='completed' transactionDetails={item.transaction_details} totalPrice={item.total_price}/>
+                            router == 'Unpaid' ? <CardHistory handleDetailHistory={() => handleDetailHistory(index)} titleBtn='Pay' route='Unpaid' title='to pay' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
+                                : router == 'Shipped' ? <CardHistory handleDetailHistory={() => handleDetailHistory(index)} titleBtn='Order Received' route='Shipped' title='Shipped' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
+                                    : router == 'Received' ? <CardHistory handleDetailHistory={() => handleDetailHistory(index)} route='Received' orderReceived={() => orderReceived(data[index].id)} titleBtn='Order Received' title='Received' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
+                                        : router == 'Complete' ? <CardHistory handleDetailHistory={() => handleDetailHistory(index)} titleBtn={item.created_at} route='Complete' title='Complete' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
                                             : ''
                         }
                     </div>
