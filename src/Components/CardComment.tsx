@@ -8,7 +8,7 @@ interface CardCommentProps {
     comment: string
     profilePicture: string
     userRole: string
-    image?: string
+    image: string | null
 }
 
 const CardComment: FC<CardCommentProps> = ({
@@ -43,6 +43,15 @@ const CardComment: FC<CardCommentProps> = ({
                     }
                 </h1>
                 <p className='font-light'>{comment}</p>
+                {/* Image */}
+                {image != null ?
+                    <div className='h-0 w-full pb-2/3 relative'>
+                        <img
+                            src={image} alt="Image preview"
+                            className="inset-0 absolute w-full h-full object-cover rounded-lg"
+                        />
+                    </div> :
+                    <></>}
             </div>
         </div>
     )

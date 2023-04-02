@@ -8,6 +8,7 @@ import { useCookies } from 'react-cookie'
 import Swal from 'sweetalert2'
 import { BiCheck } from 'react-icons/bi'
 import Alert from '../Components/Alert'
+import NavBack from '../Components/NavBack';
 
 const EditProfile = () => {
     const [isHover, setIsHover] = useState(false)
@@ -101,15 +102,7 @@ const EditProfile = () => {
                 "Content-Type": "multipart/form-data",
             }
         })
-            .then((response) => {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Update profile picture has been successful',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            })
+            .then((response) => { })
             .catch((err) => { console.log(err) });
 
         axios.put(`https://cookit.my-extravaganza.site/users`, {
@@ -135,16 +128,27 @@ const EditProfile = () => {
 
     // REQUEST UPDATE ROLE  
     const upgradeAccount = () => {
-        axios.post(`https://cookit.my-extravaganza.site/users/upgrade`, {
+        const headers = {
+            method: 'POST',
             headers: {
-                Authorization: `Bearer ${cookies.user.token} `,
-                'Accept': 'application/json'
-            }
-        })
-            .then((response) => {
-                console.log(response.data)
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${cookies.user.token}`
+            },
+        };
+
+        fetch(`https://cookit.my-extravaganza.site/users/upgrade`, headers)
+            .then(response => response.json())
+            .then(data => {
+                console.log('fre', data)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Request has been successful',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
             })
-            .catch((err) => { console.log(err) })
+            .catch(error => console.error(error));
     }
 
     // GET URL IMG
@@ -162,13 +166,13 @@ const EditProfile = () => {
 
     useEffect(() => {
         getData()
-    }, [updateProfile])
+    }, [])
 
     return (
-        <>
+        <div className='bg-gray-100'>
             <Alert type={alert} message='Please input the password correctly' />
-            <Header title='Edit Profile' />
-            <div className='grid grid-cols-1 px-5 gap-3 lg:grid-cols-2 bg-gray-100'>
+            <NavBack title='Edit Profile' />
+            <div className='grid grid-cols-1 px-5 gap-3 lg:grid-cols-2 bg-gray-100 max-w-5xl mx-auto'>
                 {data?.map((item: any, index: number) => {
                     return (
                         <div className='p-3 mb-5 bg-white rounded-lg my-4'>
@@ -178,7 +182,7 @@ const EditProfile = () => {
                                     <BsFileImageFill className={`${isHover ? 'block' : 'hidden'} text-4xl text-white absolute z-30`} />
                                     <img className='rounded-full w-24 h-24' src={imageUrl ? imageUrl : item.profile_picture} alt="" />
                                 </label>
-                                <button onClick={updateProfile} className='w-24 lg:w-32 py-3 rounded-md place-self-center bg-secondary text-white'>Save</button>
+                                <button onClick={updateProfile} className='w-24 lg:w-32 py-1     rounded-md place-self-center bg-secondary text-white'>Save</button>
                             </div>
                             <form action="" className='flex flex-col'>
                                 <label className='mt-5 font-bold'>Username</label>
@@ -223,7 +227,7 @@ const EditProfile = () => {
                     </section>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

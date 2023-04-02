@@ -36,12 +36,12 @@ const Payment = () => {
     const [cookies, setCookies] = useCookies(['user'])
 
     const delivery = DeliveryData.data
-    const handleDelivery = (index: any, price: number, name:string) => {
+    const handleDelivery = (index: any, price: number, name: string) => {
         setDeliveryPrice(price)
         setDeliveryName(name)
         setThisDelivery(index)
-        console.log('g',deliveryPrice)
-        console.log('name',deliveryName)
+        console.log('g', deliveryPrice)
+        console.log('name', deliveryName)
     }
 
     function isAlert() {
@@ -96,7 +96,7 @@ const Payment = () => {
                         data: response.data.data
                     }
                 })
-            
+
             })
         } else {
             setAlert('warning')
@@ -149,7 +149,7 @@ const Payment = () => {
                         <p className='my-5 font-semibold'>Delivery</p>
                         <div className='grid grid-cols-1 gap-5 md:grid-cols-2'>
                             {delivery.map((item: any, index: number) => {
-                                console.log('fr',item)
+                                console.log('fr', item)
                                 return (
                                     <div key={index} onClick={() => handleDelivery(index, item.name, item.price)} className={`${index == thisDelivery ? 'border-2 border-primary shadow-none' : ''} h-16 py-2 px-3 grid gap-2 grid-cols-5 items-center cursor-pointer justify-between rounded-md bg-gray-100 shadow-md`}>
                                         <img src={index == 0 ? gofood : index == 1 ? shopeefood : index == 2 ? grabfood : ''} className='h-auto w-full' alt="" />
@@ -212,6 +212,7 @@ const Payment = () => {
                         </div>
                     </div>
                 </div>
+                
             </div>
         </>
     )

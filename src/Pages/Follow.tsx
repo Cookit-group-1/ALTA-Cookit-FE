@@ -86,7 +86,7 @@ const Follow = () => {
     return (
         <div className='flex justify-center '>
             <div className='w-full h-full flex flex-col items-center'>
-                <Header title={isNavigate ? isNavigate : 'followers'} />
+                <Header link='/timeline' title={isNavigate ? isNavigate : 'followers'} />
                 <nav className='w-full h-12 bg-primary sticky top-0 grid grid-cols-2 justify-center items-center text-center'>
                     <p onClick={() => setIsNavigate('Following')} className={`text-white place-self-center cursor-pointer w-fit py-2  ${isNavigate == 'Following' ? 'border-b-[3px] border-secondary font-semibold' : ''} `} >Following</p>
                     <p onClick={() => setIsNavigate('Followers')} className={`text-white place-self-center cursor-pointer w-fit py-2  ${isNavigate == 'Followers' ? 'border-b-[3px] border-secondary font-semibold' : ''} `} >Followers</p>

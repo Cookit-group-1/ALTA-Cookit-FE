@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie'
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 interface NavTopProps {
     handleTimeline?: React.MouseEventHandler
@@ -14,7 +15,7 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
 
     // Profile Picture
     const [img, setImg] = React.useState<any>()
-    
+
     const [loading, setLoading] = React.useState(true)
     const endpoint = `https://cookit.my-extravaganza.site/users`
     const fetchDataUser = async () => {
@@ -89,21 +90,51 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
         ? 'border-b-4 py-2 border-secondary font-semibold' // active style
         : ''; // inactive style
 
+
+        // handle log out
+    const logOut = () => {
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "Yes",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "No",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    text: "Logout successfully",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                removeCookie("user");
+                navigate("/login");
+            }
+        });
+    };
+
     return (
         <div className={`w-full text-xl text-white z-20 bg-primary sticky ${stickyOffset} sm:top-0`}>
 
             <div className='w-full h-16 flex flex-col items-center justify-between sm:hidden'>
-                <div className='w-full grid grid-cols-3 justify-items-center items-center mt-6 px-4'>
-                    <Link to={(`/profile/${cookies.user.id}`)} className={`w-10 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
-                        <div onClick={() => navigate("/")} className='h-0 pb-1/1 relative hover:cursor-pointer'>
-                            <img
-                                src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
-                                className='inset-0 absolute w-full h-full object-cover rounded-full'
-                            />
+                <div className='w-full grid grid-cols-3 justify-items-center items-center mt-4 px-4'>
+                    <div className={`w-10 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
+                        <div className="dropdown dropdown-bottom">
+                            <label tabIndex={0} className="h-0 pb-1/1 relative hover:cursor-pointer">
+                                <img src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
+                                    className='rounded-full w-full h-full' />
+                            </label>
+                            <ul tabIndex={0} className="dropdown-content menu p-2 text-black shadow-lg bg-base-100 rounded-box w-52">
+                                <li><Link to={`/profile/${cookies.user.id}`}>Profile</Link></li>
+                                <li><Link to="/history">my purchase</Link></li>
+                                <li><span onClick={logOut}>logout</span></li>
+                            </ul>
                         </div>
-                    </Link>
-                    <button onClick={handleScrollToTop} className='font-semibold'>Cookit</button>
-                    <div></div>
+                    </div>
+                    <button onClick={handleScrollToTop} className='font-semibold '>Cookit</button>
                 </div>
             </div>
 
@@ -122,3 +153,4 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
 }
 
 export default NavTop
+

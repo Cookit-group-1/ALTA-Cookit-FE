@@ -96,16 +96,35 @@ const Timeline = () => {
                             verifiedRecipe={post.status === "OpenForSale"}
                             username={post.username}
                             profileID={post.user_id}
+                            recipeID={post.id}
                             profilePicture={post.profile_picture}
                             postType={post.type}
                             postPicture={post.images ? post.images[0].url_image : null}
                             recipeName={post.name}
+                            description={post.description}
                             commentAmt={post.total_comment}
                             likeAmt={post.total_like}
                             handleToPost={() => navigate(`/recipe/${post.id}`)}
                             handleToProfile={() => navigate(`/profile/${post.user_id}`)}
                             handleCart={() => handleCart(post.ingredients[0].id)}
-                        />
+                        >
+                            {post.replied_recipe !== undefined ?
+                                <>
+                                    <CardQuote
+                                        username={post.replied_recipe.username}
+                                        profileID={post.replied_recipe.user_id}
+                                        recipeID={post.replied_recipe.id}
+                                        profilePicture={post.replied_recipe.profile_picture}
+                                        postType={post.replied_recipe.type}
+                                        recipeName={post.replied_recipe.name}
+                                        description={post.replied_recipe.description}
+                                        recipePicture={post.replied_recipe.images[0].url_image}
+                                        verifiedUser={post.replied_recipe.user_role === "Verified"}
+                                        verifiedRecipe={post.replied_recipe.status === "OpenForSale"}
+                                    />
+                                </> :
+                                <></>}
+                        </CardPost>
                     )
                 })}
 
@@ -113,28 +132,6 @@ const Timeline = () => {
                     className={`w-full ${loadnew ? 'animate-pulse bg-neutral-100' : ''} border-x-2 text-neutral-400 py-2 text-light hover:bg-neutral-100`}
                     onClick={() => setLimit(limit + 10)}
                 > Load More </button>
-
-                {/* <CardPost
-                verifiedUser={false}
-                verifiedRecipe={false}
-                username={"Ucup"}
-                profilePicture={"https://static.mothership.sg/1/2018/12/karna-polly-indonesian-man-english-woman-married-02.jpg"}
-                postType={"cooked"}
-                postPicture={"https://img-global.cpcdn.com/recipes/9a65f25a4a512839/1200x630cq70/photo.jpg"}
-                description={"Akhirnya bisa masak juga ini, hasilnya lumayan lah"}
-                commentAmt={5}
-                likeAmt={13}
-            >
-                <CardQuote
-                    verifiedUser={true}
-                    verifiedRecipe={true}
-                    username={"Udin"}
-                    profilePicture={"https://www.journeyera.com/wp-content/uploads/2016/09/portraits-indonesia-08569-1024x683.jpg.webp"}
-                    postType={"new recipe"}
-                    recipeName={"Soto Betawi"}
-                    recipePicture={"https://www.unileverfoodsolutions.co.id/dam/global-ufs/mcos/SEA/calcmenu/recipes/ID-recipes/soups/soto-betawi/main-header.jpg"}
-                />
-            </CardPost> */}
             </>}
             <NavBottom />
         </Layout>

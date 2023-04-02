@@ -5,11 +5,16 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCookies } from 'react-cookie'
+import { GiKnifeFork } from 'react-icons/gi'
+import { IoIosPaper } from 'react-icons/io'
+import Swal from 'sweetalert2';
+
 
 const NavBottom = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const [modalOpen, setModalOpen] = useState<boolean>(false)
     const [cartLength, setCartLength] = useState()
+    const navigate = useNavigate()
 
     // Profile Picture
     const [loading, setLoading] = React.useState(true)
@@ -41,7 +46,7 @@ const NavBottom = () => {
 
     useEffect(() => {
         getcart()
-    },[cookies.user])
+    }, [cookies.user])
 
     useEffect(() => {
         fetchDataUser();
@@ -61,10 +66,35 @@ const NavBottom = () => {
         }
     }, [modalOpen]);
 
+    // handle log out
+    const logOut = () => {
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "Yes",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "No",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    text: "Logout successfully",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                removeCookie("user");
+                navigate("/login");
+            }
+        });
+    };
 
     return (
         <div className='
-        w-full sticky relative bottom-0
+        w-full bottom-0 mt-auto
+        sticky relative
         sm:absolute sm:h-full sm:top-0 sm:-left-20 lg:-left-64 sm:w-20 lg:w-64
         '>
             {/* Bottom Navbar */}
@@ -76,17 +106,24 @@ const NavBottom = () => {
             '>
                 <button onClick={handleScrollToTop} className='font-bold hidden sm:flex sm:text-sm lg:font-semibold lg:text-4xl'>Cookit</button>
 
-                <Link className={`hidden ${loading ? 'animate-pulse' : ''} sm:flex items-center gap-2 hover:text-secondary`} to={(`/profile/${cookies.user.id}`)}>
-                    <div className='w-9 justify-self-start'>
-                        <div className='h-0 pb-1/1 relative hover:cursor-pointer'>
-                            <img
-                                src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
-                                className='inset-0 absolute w-full h-full object-cover rounded-full'
-                            />
+                <div className={`hidden ${loading ? 'animate-pulse' : ''} sm:flex items-center gap-2 hover:text-secondary`} >
+                    <div className={`w-10 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
+                        <div className="dropdown dropdown-bottom">
+                            <label tabIndex={0} className="h-0 pb-1/1 relative hover:cursor-pointer">
+                                <img src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
+                                    className='rounded-full w-full h-full' />
+                            </label>
+                            <ul tabIndex={0} className="dropdown-content md:text-sm menu p-2 text-black shadow-lg bg-base-100 rounded-box w-52">
+                                <li><Link to={`/profile/${cookies.user.id}`}>Profile</Link></li>
+                                <li><Link to="/history">my purchase</Link></li>
+                                <li><span onClick={logOut} >logout</span></li>
+                            </ul>
                         </div>
                     </div>
                     <p className='text-lg hidden lg:flex'>Profile</p>
-                </Link>
+                </div>
+
+
 
                 <Link className='flex items-center gap-2 hover:text-secondary' to={("/timeline")}>
                     <MdHome />
@@ -123,12 +160,18 @@ const NavBottom = () => {
                     sm:fixed sm:w-2/3 sm:h-64 sm:inset-0 sm:m-auto sm:rounded-3xl sm:grid-cols-2
                     lg:w-1/2
                     '>
-                        <p className='hidden sm:flex font-semibold col-span-2 my-10'>What type of Post would you like to make?</p>
-                        <button className='btn btn-primary rounded-full'>New Cooking</button>
-                        <Link to={"/recipe/new"} className='btn btn-primary rounded-full'>New Recipe</Link>
-                        <button onClick={() => setModalOpen(!modalOpen)} className='btn btn-outline sm:btn-circle btn-primary rounded-full sm:absolute sm:right-4 sm:top-4'>
+                        <p className='hidden justify-self-center sm:flex text-xl text-center font-semibold col-span-2 my-10'>What type of Post would you like to make?</p>
+                        <Link to={"/newcooking"} onClick={() => setModalOpen(!modalOpen)} className='btn flex gap-2 btn-primary rounded-full'>
+                            <GiKnifeFork />
+                            New Cooking
+                        </Link>
+                        <Link to={"/recipes/new"} onClick={() => setModalOpen(!modalOpen)} className='btn flex gap-2 btn-primary rounded-full'>
+                            <IoIosPaper />
+                            New Recipe
+                        </Link>
+                        <button onClick={() => setModalOpen(!modalOpen)} className='btn btn-outline sm:btn-sm sm:btn-circle btn-primary rounded-full sm:absolute sm:right-4 sm:top-4'>
                             <span className="sm:hidden">Cancel</span>
-                            <span className="hidden sm:block">X</span>
+                            <span className="hidden sm:block">x</span>
                         </button>
                     </div>
                 </> :
