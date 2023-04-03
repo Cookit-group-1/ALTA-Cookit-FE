@@ -106,21 +106,24 @@ const NavBottom = () => {
             '>
                 <button onClick={handleScrollToTop} className='font-bold hidden sm:flex sm:text-sm lg:font-semibold lg:text-4xl'>Cookit</button>
 
-                <div className={`hidden ${loading ? 'animate-pulse' : ''} sm:flex items-center gap-2 hover:text-secondary`} >
-                    <div className={`w-10 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
-                        <div className="dropdown dropdown-bottom">
-                            <label tabIndex={0} className="h-0 pb-1/1 relative hover:cursor-pointer">
-                                <img src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
-                                    className='rounded-full w-full h-full' />
-                            </label>
-                            <ul tabIndex={0} className="dropdown-content md:text-sm menu p-2 text-black shadow-lg bg-base-100 rounded-box w-52">
-                                <li><Link to={`/profile/${cookies.user.id}`}>Profile</Link></li>
-                                <li><Link to="/history">my purchase</Link></li>
-                                <li><span onClick={logOut} >logout</span></li>
-                            </ul>
+                {/* Profile Picture */}
+                <div className={`hidden dropdown dropdown-bottom sm:block `} >
+                    <label tabIndex={0} className={`hidden ${loading ? 'animate-pulse' : ''} hover:cursor-pointer  sm:flex items-center gap-2 hover:text-secondary`}>
+                        <div className={`w-10 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
+                            <div className='w-10'>
+                                <div className="h-0 pb-1/1 relative ">
+                                    <img src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
+                                        className='inset-0 absolute w-full h-full object-cover rounded-full' />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <p className='text-lg hidden lg:flex'>Profile</p>
+                        <p className='text-lg hidden lg:flex'>Profile</p>
+                    </label>
+                    <ul tabIndex={0} className="dropdown-content md:text-sm menu p-2 text-black shadow-lg bg-base-100 rounded-box w-52">
+                        <li><Link to={`/profile/${cookies.user.id}`}>Profile</Link></li>
+                        <li><Link to="/history">my purchase</Link></li>
+                        <li><span onClick={logOut} >logout</span></li>
+                    </ul>
                 </div>
 
 

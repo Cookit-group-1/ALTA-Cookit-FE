@@ -20,7 +20,6 @@ const Timeline = () => {
         if (cookies.user == undefined) {
             navigate('/login')
         }
-        console.log(cookies.user.token)
     }, [])
 
     // Get Recipe Data
@@ -28,11 +27,15 @@ const Timeline = () => {
     const endpoint = `https://cookit.my-extravaganza.site`
     const [limit, setLimit] = useState(10)
     const [loadnew, setLoadnew] = useState(false)
+    const [timelineMode, setTimelineMode] = useState(false)
 
     const fetchRecipes = async () => {
         setLoadnew(true)
+        const recipeUrl = timelineMode ?
+            'users/recipes/timeline?' :
+            'recipes?type=Original&type=Mixed&'
         try {
-            const response = await axios.get(`${endpoint}/recipes?page=0&limit=${limit}`, {
+            const response = await axios.get(`${endpoint}/${recipeUrl}page=0&limit=${limit}`, {
                 headers: {
                     Accept: 'application/json',
                     Authorization: `Bearer ${cookies.user.token}`
@@ -51,7 +54,7 @@ const Timeline = () => {
     useEffect(() => {
         fetchRecipes();
 
-    }, [endpoint, limit]);
+    }, [endpoint, limit, timelineMode]);
 
     // add to cart
     const handleCart = (id: number) => {
@@ -86,7 +89,10 @@ const Timeline = () => {
 
     return (
         <Layout>
-            <NavTop />
+            <NavTop
+                handleTimeline={() => setTimelineMode(true)}
+                handleRecipe={() => setTimelineMode(false)}
+            />
             {loading ? <LoadingSpinner /> : <>
                 {recipes.map((post: any, index) => {
                     return (
@@ -104,7 +110,7 @@ const Timeline = () => {
                             description={post.description}
                             commentAmt={post.total_comment}
                             likeAmt={post.total_like}
-                            handleToPost={() => navigate(`/recipe/${post.id}`)}
+                            handleToPost={() => navigate(`/recipes/${post.id}`)}
                             handleToProfile={() => navigate(`/profile/${post.user_id}`)}
                             handleCart={() => handleCart(post.ingredients[0].id)}
                         >

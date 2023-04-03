@@ -5,8 +5,8 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 interface NavTopProps {
-    handleTimeline?: React.MouseEventHandler
-    handleRecipe?: React.MouseEventHandler
+    handleTimeline: React.MouseEventHandler
+    handleRecipe: React.MouseEventHandler
 }
 
 const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
@@ -68,18 +68,20 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
     }, [prevScrollPos]);
 
     // Navbar buttons
-    const [isTimelineActive, setIsTimelineActive] = useState(true);
-    const [isRecipeActive, setIsRecipeActive] = useState(false);
+    const [isTimelineActive, setIsTimelineActive] = useState(false);
+    const [isRecipeActive, setIsRecipeActive] = useState(true);
 
-    const handleTimelineClick = () => {
+    const handleTimelineClick = (event: React.MouseEvent) => {
         setIsTimelineActive(true);
         setIsRecipeActive(false);
-        handleTimeline
+        handleTimeline(event)
+
     };
 
-    const handleRecipeClick = () => {
+    const handleRecipeClick = (event: React.MouseEvent) => {
         setIsTimelineActive(false);
         setIsRecipeActive(true);
+        handleRecipe(event)
     };
 
     const timelineButtonStyle = isTimelineActive
@@ -91,7 +93,7 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
         : ''; // inactive style
 
 
-        // handle log out
+    // handle log out
     const logOut = () => {
         Swal.fire({
             title: "Are you sure?",
@@ -121,19 +123,27 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
 
             <div className='w-full h-16 flex flex-col items-center justify-between sm:hidden'>
                 <div className='w-full grid grid-cols-3 justify-items-center items-center mt-4 px-4'>
-                    <div className={`w-10 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
-                        <div className="dropdown dropdown-bottom">
-                            <label tabIndex={0} className="h-0 pb-1/1 relative hover:cursor-pointer">
-                                <img src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
-                                    className='rounded-full w-full h-full' />
-                            </label>
-                            <ul tabIndex={0} className="dropdown-content menu p-2 text-black shadow-lg bg-base-100 rounded-box w-52">
-                                <li><Link to={`/profile/${cookies.user.id}`}>Profile</Link></li>
-                                <li><Link to="/history">my purchase</Link></li>
-                                <li><span onClick={logOut}>logout</span></li>
-                            </ul>
-                        </div>
+                    {/* Profile Picture */}
+                    <div className={`dropdown dropdown-bottom justify-self-start`} >
+                        <label tabIndex={0} className={` ${loading ? 'animate-pulse' : ''} hover:cursor-pointer flex items-center gap-2 hover:text-secondary`}>
+                            <div className={`w-10 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
+                                <div className='w-10'>
+                                    <div className="h-0 pb-1/1 relative ">
+                                        <img src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
+                                            className='inset-0 absolute w-full h-full object-cover rounded-full' />
+                                    </div>
+                                </div>
+                            </div>
+                            <p className='text-lg hidden lg:flex'>Profile</p>
+                        </label>
+                        <ul tabIndex={0} className="dropdown-content md:text-sm menu p-2 text-black shadow-lg bg-base-100 rounded-box w-52">
+                            <li><Link to={`/profile/${cookies.user.id}`}>Profile</Link></li>
+                            <li><Link to="/history">my purchase</Link></li>
+                            <li><span onClick={logOut} >logout</span></li>
+                        </ul>
                     </div>
+
+
                     <button onClick={handleScrollToTop} className='font-semibold '>Cookit</button>
                 </div>
             </div>
@@ -144,7 +154,7 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
                         Timeline
                     </button>
                     <button className={recipeButtonStyle} onClick={handleRecipeClick}>
-                        Recipe
+                        Recipes
                     </button>
                 </nav>
             </div>
