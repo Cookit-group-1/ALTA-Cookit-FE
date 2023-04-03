@@ -4,8 +4,11 @@ import App from './App'
 import './index.css'
 
 import { Provider } from "react-redux"
-import store from "../Store"
+import store from "./store/store"
+import { setStateFromStorage } from './store/features/likeButtonSlice';
 
+// Load state from localStorage
+store.dispatch(setStateFromStorage());
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

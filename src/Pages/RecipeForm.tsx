@@ -66,9 +66,9 @@ const RecipeForm = () => {
                 (editType !== "edit" && editType !== "recook")) {
                 navigate(`/recipes/${recipeID}`)
             }
-            const steps = response.data.data.steps.map((item: any) => item.name)
+            const steps = response.data.data.steps !== undefined ? response.data.data.steps.map((item: any) => item.name) : ['']
             setSteps(steps)
-            const ingredients = response.data.data.ingredients[0].ingredient_details.map(({ id, ...rest }: any) => rest)
+            const ingredients = response.data.data.ingredients !== undefined ? response.data.data.ingredients[0].ingredient_details.map(({ id, ...rest }: any) => rest) : ['', 0, '']
             setIngredients(ingredients)
             if (response.data.data.status === "OpenForSale") {
                 setShowPrice(true)
@@ -86,9 +86,12 @@ const RecipeForm = () => {
                 images: response.data.data.images,
                 editMode: true
             })
-            // urlsToFiles(response.data.data.images).then((files) => {
-            //     setImages(files);
-            // });
+            // setNewRecipeDetails({
+            //     ...newRecipeDetails,
+            //     name: response.data.data.name,
+            //     description: response.data.data.description,
+            //     ingredients: ingredients,
+            // })
             setRecipe(response.data.data)
         } catch (error) {
             console.error(error);
@@ -296,8 +299,12 @@ const RecipeForm = () => {
         } catch (error) {
             console.error(error);
         } finally {
-            if (images !== undefined) {
-                deleteAllImages()
+            if (images.length > 0) {
+                if (recipe.images === undefined) {
+                    postImage(recipe.id)
+                } else {
+                    deleteAllImages()
+                }
             } else {
                 navigate(`/recipes/${recipeID}`);
             }

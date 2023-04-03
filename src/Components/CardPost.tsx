@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { IoIosCheckmarkCircle } from 'react-icons/io'
 import { MdAddShoppingCart, MdModeComment, MdFavorite, MdMoreVert, MdDeleteForever, MdOutlineReply } from 'react-icons/md'
 import { ImLoop2 } from 'react-icons/im'
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import ButtonLike from './ButtonLike'
 
 interface CardPostProps {
     children?: React.ReactNode
@@ -64,6 +65,8 @@ const CardPost: FC<CardPostProps> =
         }
 
         // Delete Post
+        const [deleted, setDeleted] = useState(false)
+
         const handleDeletePost = () => {
             Swal.fire({
                 title: `Are you sure you want to delete this post?`,
@@ -73,8 +76,6 @@ const CardPost: FC<CardPostProps> =
                 showCancelButton: true,
                 confirmButtonText: "Yes",
                 cancelButtonText: "No",
-                // color: '#ffffff',
-                // background: '#0B3C95 ',
                 confirmButtonColor: "#D9D9D9",
                 cancelButtonColor: "#E85D04",
             }).then((willDelete) => {
@@ -90,19 +91,17 @@ const CardPost: FC<CardPostProps> =
                             iconColor: '#04e885',
                             padding: '1em',
                             title: 'Successfuly Deleted Post',
-                            // color: '#ffffff',
-                            // background: '#0B3C95 ',
                             showConfirmButton: false,
                             timer: 1200
                         })
-                    })
+                    }).finally(() => setDeleted(true))
                 }
             })
         }
 
 
         return (
-            <div className="w-full bg-base-100 border-2 border-t-0 flex gap-2 p-4">
+            <div className={`w-full bg-base-100 border-2 border-t-0 gap-2 p-4 ${deleted ? 'hidden' : 'flex'}`}>
                 {/* Profile Picture */}
                 <div className='w-2/12'>
                     <div onClick={() => navigate(`/profile/${profileID}`)} className='h-0 pb-1/1 relative hover:cursor-pointer'>
@@ -174,13 +173,9 @@ const CardPost: FC<CardPostProps> =
 
                         {/* Likes */}
                         <div className='flex justify-self-center'>
-                            <button
-                                className='flex items-center gap-1 hover:text-accent hover:cursor-pointer'
-                                onClick={handleLike}
-                            >
-                                <MdFavorite className='text-xl' />
-                                {likeAmt}
-                            </button>
+                            <ButtonLike
+                                id={recipeID}
+                            />
                         </div>
 
                         {/* More */}

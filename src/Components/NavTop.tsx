@@ -5,8 +5,8 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 interface NavTopProps {
-    handleTimeline?: React.MouseEventHandler
-    handleRecipe?: React.MouseEventHandler
+    handleTimeline: React.MouseEventHandler
+    handleRecipe: React.MouseEventHandler
 }
 
 const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
@@ -68,18 +68,20 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
     }, [prevScrollPos]);
 
     // Navbar buttons
-    const [isTimelineActive, setIsTimelineActive] = useState(true);
-    const [isRecipeActive, setIsRecipeActive] = useState(false);
+    const [isTimelineActive, setIsTimelineActive] = useState(false);
+    const [isRecipeActive, setIsRecipeActive] = useState(true);
 
-    const handleTimelineClick = () => {
+    const handleTimelineClick = (event: React.MouseEvent) => {
         setIsTimelineActive(true);
         setIsRecipeActive(false);
-        handleTimeline
+        handleTimeline(event)
+
     };
 
-    const handleRecipeClick = () => {
+    const handleRecipeClick = (event: React.MouseEvent) => {
         setIsTimelineActive(false);
         setIsRecipeActive(true);
+        handleRecipe(event)
     };
 
     const timelineButtonStyle = isTimelineActive
@@ -152,7 +154,7 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
                         Timeline
                     </button>
                     <button className={recipeButtonStyle} onClick={handleRecipeClick}>
-                        Recipe
+                        Recipes
                     </button>
                 </nav>
             </div>
