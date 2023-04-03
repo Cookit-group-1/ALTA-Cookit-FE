@@ -25,7 +25,7 @@ const Profile = () => {
     const [limit, setLimit] = useState(10)
     const fetchUserData = async () => {
         try {
-            const response = await axios.get(`${endpoint}/users/${userID}`, {
+            const response = await axios.get(`${endpoint}/users`, {
                 headers: {
                     Accept: 'application/json',
                     Authorization: `Bearer ${cookies.user.token}`
@@ -55,10 +55,21 @@ const Profile = () => {
         }
     };
 
+    const goToFollow = (title: string) => {
+        navigate(`/follow/${cookies.user.id}`, {
+            state: {
+                title: title,
+            }
+        })
+    }
+
     useEffect(() => {
+
         setLoadnew(true);
+        // getFollowers
         fetchUserData();
         fetchUserPosts();
+
     }, [endpoint, userID, limit]);
 
     return (
@@ -66,7 +77,6 @@ const Profile = () => {
             <NavBack
                 title='Profile'
             />
-
             {loading ? <LoadingSpinner /> :
                 <>
                     <div className='border-2'>
@@ -94,8 +104,8 @@ const Profile = () => {
                                         <button onClick={() => navigate('/editprofile')} className='btn btn-primary btn-sm rounded-full'>Edit Profile</button> :
                                         <button className='btn btn-primary btn-sm rounded-full'>Follow</button>}
 
-                                    <Link to={`/follow/${cookies.user.id}`} className='font-semibold'>2 Following</Link>
-                                    <Link to={`/follow/${cookies.user.id}`} className='font-semibold'>5 Followers</Link>
+                                    <p onClick={() => goToFollow('Following')} className='font-semibold'>{userData.following} Following</p>
+                                    <p onClick={() => goToFollow('Followers')} className='font-semibold'>{userData.followers} Followers</p>
                                 </div>
                             </div>
                         </div>

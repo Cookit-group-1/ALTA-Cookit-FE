@@ -9,12 +9,13 @@ interface myProps {
     cartItems: any
     increment: (price: any, id: number, quantity: number) => void
     decrement: (price: any, id: number, quantity: number) => void
-    deleteCartItem : (id:number) => void
+    deleteCartItem: (id: number) => void
+    getIdProduct : (id : any) => void
 }
 
 
 
-const ItemCart: FC<myProps> = ({ sellerName, cartItems, increment, decrement, deleteCartItem }) => {
+const ItemCart: FC<myProps> = ({ sellerName, cartItems, increment, decrement, deleteCartItem, getIdProduct }) => {
 
     return (
         <div className='bg-white'>
@@ -23,13 +24,14 @@ const ItemCart: FC<myProps> = ({ sellerName, cartItems, increment, decrement, de
             </div>
             {/* card product */}
             {cartItems?.map((item: any, index: number) => {
-                console.log('s',item);
+                // console.log('s', item);
                 return (
                     <div key={index} className='py-2 px-3'>
                         <div className='grid grid-cols-5 md:grid-cols-4 '>
-                            <figure className='w-full lg:w-2/3 h-5/6 lg:pl-5 col-span-2 md:col-span-1 relative overflow-hidden rounded-md'>
-                            {/* item.recipe_images[0].url_image */}
-                                <img src={food1 } className='' alt="" />
+                            <figure className='w-full lg:w-2/3 h-5/6 lg:pl-5 flex gap-3  col-span-2 md:col-span-1 relative overflow-hidden rounded-md'>
+                                <input className='w-5 h-5 text-secondary bg-secondary cursor-pointer'  value={item.id}  onChange={getIdProduct} type="checkbox" />
+                                {/* item.recipe_images[0].url_image */}
+                                <img src={food1} className='' alt="" />
                             </figure>
                             <div className='col-span-3 pl-5 relative  grid grid-cols-1 md:grid-cols-1 lg:grid-cols-4 md:gap-5'>
                                 <p className='text-md md:text-2xl col-span-1'>
@@ -42,7 +44,7 @@ const ItemCart: FC<myProps> = ({ sellerName, cartItems, increment, decrement, de
                                     <p>{item.quantity}</p>
                                     <p onClick={() => increment(item.price, item.id, item.quantity)} className='cursor-pointer'>+</p>
                                 </div>
-                                <RiDeleteBin6Line id={`${index}`} onClick={() => deleteCartItem(item.id)} className='absolute md:absolute lg:static cursor-pointer text-xl md:text-2xl lg:text-xl lg:mt-[20%] right-0 md:right-3 top-2/3 text-red-600' />
+                                <RiDeleteBin6Line id='1' onClick={() => deleteCartItem(item.id)} className='absolute md:absolute lg:static cursor-pointer text-xl md:text-2xl lg:text-xl lg:mt-[20%] right-0 md:right-3 top-2/3 text-red-600' />
                             </div>
                         </div>
                     </div>
