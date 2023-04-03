@@ -34,6 +34,7 @@ const Payment = () => {
     const [paymentOptions, setPaymentOptions] = useState('')
     const [alert, setAlert] = useState('')
     const [cookies, setCookies] = useCookies(['user'])
+    const [password, setPassword] = useState('')
 
     const delivery = DeliveryData.data
     const handleDelivery = (index: any, price: number, name: string) => {
@@ -69,10 +70,20 @@ const Payment = () => {
     }, [])
     console.log(paymentOptions)
 
+    const handleAlert = async () => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'please select shipping options and payment options',
+        })
+    }
 
     const handlePayment = async () => {
         console.log('gfg', deliveryPrice, paymentOptions)
-        if (deliveryPrice != 0 && paymentOptions != '') {
+        axios.post('https://cookit.my-extravaganza.site/login', {
+            "username": cookies.user.username,
+            "password": password
+        }).then((response) => {
             axios.post('https://cookit.my-extravaganza.site/users/transactions', {
                 "transaction_details": transactionDetails,
                 "payment_method": paymentOptions,
@@ -96,12 +107,14 @@ const Payment = () => {
                         data: response.data.data
                     }
                 })
-
             })
-        } else {
-            setAlert('warning')
-            const result = await isAlert();
-        }
+        }).catch((error) => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please enter the password correctly',
+            })
+        })
     }
 
     // delivery date received 
@@ -180,7 +193,24 @@ const Payment = () => {
                             <p className='text-end'><Format>{totalPrice + deliveryName}</Format></p>
                         </div>
                         <div className='flex w-full mt-10 justify-end'>
-                            <button onClick={handlePayment} className='btn bg-primary hover:bg-secondary text-white'>Place Order</button>
+                            {deliveryPrice != 0 && paymentOptions != ''
+                                ? <label htmlFor="my-modal-7" className='btn bg-primary hover:bg-secondary text-white'>Place Order</label>
+                                : <button onClick={handleAlert} className='btn bg-primary hover:bg-secondary text-white'>Place Order</button>
+                            }
+                        </div>
+
+                        <input type="checkbox" id="my-modal-7" className="modal-toggle " />
+                        <div className="modal modal-bottom sm:modal-middle">
+                            <div className="modal-box flex gap-5 flex-col ">
+                                <p className='text-center'>Please confirm your password</p>
+                                <div className='flex flex-col gap-5 px-10'>
+                                    <input type="password" className='border-2 border-primary px-2 rounded-md' onChange={(e) => setPassword(e.target.value)} placeholder='passord' />
+                                </div>
+                                <div className="modal-action">
+                                    <label htmlFor="my-modal-7" className="btn bg-primary text-white">close</label>
+                                    <label onClick={handlePayment} className="btn bg-primary text-white">Confirm</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -212,10 +242,12 @@ const Payment = () => {
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </>
     )
 }
 
 export default Payment
+
+

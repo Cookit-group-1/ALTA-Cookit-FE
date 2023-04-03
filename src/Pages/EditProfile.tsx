@@ -182,7 +182,7 @@ const EditProfile = () => {
                                     <BsFileImageFill className={`${isHover ? 'block' : 'hidden'} text-4xl text-white absolute z-30`} />
                                     <img className='rounded-full w-24 h-24' src={imageUrl ? imageUrl : item.profile_picture} alt="" />
                                 </label>
-                                <button onClick={updateProfile} className='w-24 lg:w-32 py-1     rounded-md place-self-center bg-secondary text-white'>Save</button>
+                                <button onClick={updateProfile} className='w-24 lg:w-32 py-1 rounded-md place-self-center bg-secondary text-white'>Save</button>
                             </div>
                             <form action="" className='flex flex-col'>
                                 <label className='mt-5 font-bold'>Username</label>

@@ -15,9 +15,12 @@ const Cart = () => {
     const navigate = useNavigate()
     const [cookies, setCookie] = useCookies(['user', 'cart'])
     const token = cookies.user.token
-    const [carts, setCarts] = useState([])
+    const [carts, setCarts] = useState<any>([])
     const cartsBySeller: any = {};
     const [totalPrice, setTotalPrice] = useState<number>(0)
+    const [dataCartChecked, setDataCartChecked] = useState<any[]>([])
+    const [quantity, setQuantity] = useState(0)
+
 
     // get cart data
     const getCartData = () => {
@@ -34,10 +37,19 @@ const Cart = () => {
 
     // collect price data to array
     let dataPrice: any = []
-    const arr = carts?.map((item: any) => {
-        let oneProduct = item.price * item.quantity
+    const arr = dataCartChecked?.map((item: any) => {
+        let oneProduct = 0
+        if (quantity >= 1) {
+            oneProduct = item.price * item.quantity
+        } else {
+            oneProduct = item.price * item.quantity
+        }
         dataPrice.push(oneProduct)
     })
+    useEffect(() => {
+        setQuantity(0)
+    }, [setDataCartChecked])
+
 
     // collect carts data to array
     for (const cart of carts) {
@@ -59,6 +71,7 @@ const Cart = () => {
         })
             .then((response) => {
                 setTotalPrice(totalPrice + price)
+                setQuantity(quantity + 1)
             })
     }
 
@@ -73,6 +86,7 @@ const Cart = () => {
         })
             .then((response) => {
                 setTotalPrice(totalPrice - price)
+                setQuantity(quantity - 1)
             })
     }
 
@@ -101,7 +115,7 @@ const Cart = () => {
     const goToPayment = () => {
         navigate(`/payment`, {
             state: {
-                data: carts,
+                data: dataCartChecked,
                 total: totalPrice
             }
         })
@@ -115,7 +129,24 @@ const Cart = () => {
             sum += dataPrice[i]
         }
         setTotalPrice(sum)
-    }, [deleteCartItem])
+    }, [deleteCartItem, handleIncrement,quantity])
+
+    let idCart = carts.map((item: any) => item.id)
+
+    // remove data unchecked
+    let checkedIndex = dataCartChecked.map((item: any) => item.id)
+    const removeData = (e: any) => {
+        let arr = [...dataCartChecked]
+        let index = checkedIndex.indexOf(e)
+        arr.splice(index, 1);
+        setDataCartChecked(arr)
+    }
+
+    useEffect(() => {
+        carts
+    },[])
+
+
 
     const responsive = screen.width
     return (
@@ -133,20 +164,25 @@ const Cart = () => {
                 {Object.keys(cartsBySeller)?.map((key, index) => {
                     const cartItems = cartsBySeller[key];
                     const sellerName = cartsBySeller[key][0].seller_user_username
-
                     return (
                         <div key={key}>
-                            <ItemCart cartItems={cartItems} sellerName={sellerName} increment={(price, id, quantity) => handleIncrement(price, id, quantity)} decrement={(price, id, quantity) => handleDecrement(price, id, quantity)} deleteCartItem={deleteCartItem} />
+                            <ItemCart
+                                getIdProduct={(e) => { !e.target.checked ? removeData(parseInt(e.target.value)) : setDataCartChecked(dataCartChecked.concat(carts[idCart.indexOf(parseInt(e.target.value))])) }}
+                                cartItems={cartItems} sellerName={sellerName}
+                                increment={(price, id, quantity) => handleIncrement(price, id, quantity)}
+                                decrement={(price, id, quantity) => handleDecrement(price, id, quantity)}
+                                deleteCartItem={deleteCartItem} />
                         </div>
                     );
                 })}
             </div>
             <div className='w-full h-16 px-5 lg:px-10 grid grid-cols-3 place-content-center items-center fixed bottom-0 bg-gray-100'>
                 <p className='col-span-2 font-semibold '>Total : <span className='text-Primary'> <Format>{totalPrice}</Format> </span> </p>
-                {carts.length != 0  
-                    ? <button onClick={goToPayment} className='w-full md:w-2/3 lg:w-1/3 py-2 place-self-end text-white font-semibold rounded-md bg-primary'>Checkout</button>
+                {dataCartChecked.length != 0
+                    ? <button onClick={goToPayment} className='w-full md:w-2/3 lg:w-1/3 py-2 place-self-end text-center text-white font-semibold rounded-md bg-primary'>Checkout</button>
                     : <button className='w-full md:w-2/3 lg:w-1/3 py-2 place-self-end text-white font-semibold rounded-md bg-gray-400'>Checkout</button>
                 }
+
             </div>
         </div>
     )
