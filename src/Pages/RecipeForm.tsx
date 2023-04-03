@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Layout from '../Components/Layout'
 import NavBack from '../Components/NavBack'
 import NavBottom from '../Components/NavBottom'
@@ -45,10 +45,12 @@ const RecipeForm = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const [loading, setLoading] = React.useState(true)
     const endpoint = `https://cookit.my-extravaganza.site`
+    // const endpoint = 'https://82d3-2001-448a-20e0-4958-d97e-b05f-e535-46c3.ap.ngrok.io'
     const navigate = useNavigate()
 
     // Edit Recipe
     const { recipeID } = useParams()
+    const { editType } = useParams()
     const [recipe, setRecipe] = useState<any>()
 
     const fetchRecipeDetails = async () => {
@@ -60,8 +62,16 @@ const RecipeForm = () => {
                 }
             });
             console.log("recipe: ", response.data.data)
-            if (cookies.user.id !== response.data.data.user_id) {
-                navigate(`/recipe/${recipeID}`)
+            if ((cookies.user.id !== response.data.data.user_id && editType === "edit") ||
+                (editType !== "edit" && editType !== "recook")) {
+                navigate(`/recipes/${recipeID}`)
+            }
+            const steps = response.data.data.steps !== undefined ? response.data.data.steps.map((item: any) => item.name) : ['']
+            setSteps(steps)
+            const ingredients = response.data.data.ingredients !== undefined ? response.data.data.ingredients[0].ingredient_details.map(({ id, ...rest }: any) => rest) : ['', 0, '']
+            setIngredients(ingredients)
+            if (response.data.data.status === "OpenForSale") {
+                setShowPrice(true)
             }
             setNewRecipeDetails({
                 verified: false,
@@ -69,13 +79,19 @@ const RecipeForm = () => {
                 name: response.data.data.name,
                 type: "Original",
                 description: response.data.data.description,
-                ingredients: response.data.data.ingredients,
+                ingredients: ingredients,
                 serving: 1,
                 price: response.data.data.ingredients[0].price,
-                steps: response.data.data.steps,
+                steps: steps,
                 images: response.data.data.images,
                 editMode: true
             })
+            // setNewRecipeDetails({
+            //     ...newRecipeDetails,
+            //     name: response.data.data.name,
+            //     description: response.data.data.description,
+            //     ingredients: ingredients,
+            // })
             setRecipe(response.data.data)
         } catch (error) {
             console.error(error);
@@ -93,6 +109,7 @@ const RecipeForm = () => {
     }, [endpoint]);
 
     const [newRecipeDetails, setNewRecipeDetails] = useState<NewRecipeVariables>(initialNewRecipe)
+
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewRecipeDetails({ ...newRecipeDetails, [e.target.name]: e.target.value });
@@ -113,6 +130,7 @@ const RecipeForm = () => {
             setNewRecipeDetails({ ...newRecipeDetails, images: files })
         }
     };
+
 
     // Recipe Ingredients
     const [ingredients, setIngredients] = useState<Ingredient[]>([{ name: '', quantity: 0, unit: '' }]);
@@ -142,6 +160,7 @@ const RecipeForm = () => {
     // Recipe Steps
     const [steps, setSteps] = useState<string[]>(['']);
 
+
     const handleStepChange = (index: number, value: string) => {
         const newSteps = [...steps];
         newSteps[index] = value;
@@ -156,7 +175,8 @@ const RecipeForm = () => {
     const handleDeleteStep = (index: number) => {
         const newSteps = [...steps];
         newSteps.splice(index, 1);
-        setSteps(newSteps);
+        setSteps(newSteps)
+        setNewRecipeDetails({ ...newRecipeDetails, steps: newSteps })
     };
 
     // Handle Price
@@ -180,9 +200,6 @@ const RecipeForm = () => {
                 console.log("Images: ", newRecipeDetails.images)
 
                 const response = await axios.post(`${endpoint}/recipes/${recipeID}/images`,
-                    // {
-                    //     "image": newRecipeDetails.images[0]
-                    // },
                     formData,
                     {
                         headers: {
@@ -195,8 +212,10 @@ const RecipeForm = () => {
             } catch (error) {
                 console.error(error);
             } finally {
-                setLoading(false);
+                navigate(`/recipes/${recipeID}`);
             }
+        } else {
+            navigate(`/recipes/${recipeID}`);
         }
     }
 
@@ -220,7 +239,9 @@ const RecipeForm = () => {
                 description: newRecipeDetails.description,
                 status: status,
                 steps: steps,
-                ingredients: ingredients
+                ingredients: ingredients,
+                recipe_id: editType === "recook" && recipeID !== undefined ? parseInt(recipeID) : null,
+                type: editType === "recook" ? "Mixed" : "Original"
             }
 
             const response = await axios.post(`${endpoint}/recipes`,
@@ -239,18 +260,132 @@ const RecipeForm = () => {
         }
     };
 
+    const editRecipe = async () => {
+        setLoading(true)
+        try {
+            const steps = newRecipeDetails.steps.map(str => ({ name: str }));
+            const status = showPrice ? "OpenForSale" : "None"
+            const price = parseInt(newRecipeDetails.price.toString())
+            const ingredients = [
+                {
+                    name: newRecipeDetails.name,
+                    price: price,
+                    ingredient_details: newRecipeDetails.ingredients
+                }
+            ];
+            console.log("Steps: ", steps)
+            console.log("Ingredients: ", ingredients)
+            const data =
+            {
+                name: newRecipeDetails.name,
+                description: newRecipeDetails.description,
+                status: status,
+                steps: steps,
+                ingredients: ingredients,
+                recipe_id: editType === "recook" && recipeID !== undefined ? parseInt(recipeID) : null,
+                type: recipe.type
+            }
+
+            const response = await axios.put(`${endpoint}/recipes/${recipeID}`,
+                data,
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        // "Content-Type": 'multipart/form-data',
+                        Authorization: `Bearer ${cookies.user.token}`
+                    }
+                });
+            console.log("Edit Recipe: ", response)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            if (images.length > 0) {
+                if (recipe.images === undefined) {
+                    postImage(recipe.id)
+                } else {
+                    deleteAllImages()
+                }
+            } else {
+                navigate(`/recipes/${recipeID}`);
+            }
+        }
+    };
+
+    const deleteAllSteps = async () => {
+        setLoading(true)
+        try {
+            const response = await axios.delete(`${endpoint}/recipes/${recipeID}/steps`,
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${cookies.user.token}`
+                    }
+                });
+            console.log("Deleting Steps... ", response)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            deleteAllIngredients()
+        }
+    };
+
+    const deleteAllIngredients = async () => {
+        setLoading(true)
+        try {
+            const response = await axios.delete(`${endpoint}/recipes/${recipeID}/ingredients`,
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${cookies.user.token}`
+                    }
+                });
+            console.log("Deleting Ingredients... ", response)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            editRecipe()
+        }
+    };
+
+    const deleteAllImages = async () => {
+        setLoading(true)
+        try {
+            const response = await axios.delete(`${endpoint}/recipes/${recipeID}/images`,
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${cookies.user.token}`
+                    }
+                });
+            console.log("Deleting Images... ", response)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            postImage(recipe.id)
+        }
+    };
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        postRecipe()
+        setLoading(true)
+        if (editType === "edit") {
+            deleteAllSteps()
+        } else {
+            postRecipe()
+        }
     }
 
     return (
         <Layout>
             {/* Todo: edit mode using useparam */}
             {recipeID !== undefined ?
-                <NavBack
-                    title='Edit Recipe'
-                /> :
+                (editType === "edit" ?
+                    <NavBack
+                        title='Edit Recipe'
+                    /> :
+                    <NavBack
+                        title='Recook Recipe'
+                    />) :
                 <NavBack
                     title='New Recipe'
                 />}
@@ -293,7 +428,11 @@ const RecipeForm = () => {
 
                     {/* Images */}
                     <div className='flex flex-col'>
-                        <label className='font-semibold' htmlFor="imageInput">Choose Images <span className='font-light'>(Optional)</span></label>
+                        <label className='font-semibold' htmlFor="imageInput">
+                            {(editType === "edit" || editType === "recook") && recipe.images !== undefined ?
+                                'Replace Images ' : 'Choose Images '}
+                            <span className='font-light'>(Optional)</span>
+                        </label>
                         <div className='flex flex-col gap-2 border border-primary rounded-lg min-h-40 px-4 py-4'>
                             <input
                                 type="file"
@@ -304,6 +443,16 @@ const RecipeForm = () => {
                             {images.map((image, index) => (
                                 <img className='rounded-lg' key={index} src={URL.createObjectURL(image)} alt={`Selected image ${index}`} />
                             ))}
+
+                            {images.length === 0 && recipe != undefined ?
+                                (
+                                    recipe.images?.map((image: any) => (
+                                        <div>
+                                            <img className='rounded-lg' key={image.id} src={image.url_image} alt={`Selected image ${image.id}`} />
+                                        </div>
+                                    ))
+                                ) : <></>
+                            }
                         </div>
                     </div>
 
@@ -393,26 +542,10 @@ const RecipeForm = () => {
                         ))}
                     </div>
 
-                    {/* Servings */}
-                    {/* <div className='flex flex-col'>
-                    <label htmlFor='serving' className='font-semibold'>
-                        Servings
-                    </label>
-                    <input
-                        className='input input-primary'
-                        name='serving'
-                        id='serving'
-                        type="number"
-                        placeholder='e.g. 2'
-                        value={newRecipeDetails.serving}
-                        onChange={handleInputChange}
-                    />
-                </div> */}
-
                     {/* Sell Price */}
                     <div className='flex items-center gap-1 mt-2'>
                         <p className='font-light'>Sell ingredients for your recipe?</p>
-                        <input onClick={handleShowPrice} type="checkbox" className='checkbox checkbox-primary rounded-full checkbox-sm' />
+                        <input readOnly onClick={handleShowPrice} checked={showPrice} type="checkbox" className='checkbox checkbox-primary rounded-full checkbox-sm' />
                     </div>
 
                     {showPrice ?

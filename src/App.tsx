@@ -35,7 +35,7 @@ function App() {
 
           <Route path="/:postType/:recipeID" element={<Recipe />} />
 
-          <Route path="/recipes/:recipeID/edit" element={<RecipeForm />} />
+          <Route path="/recipes/:recipeID/:editType" element={<RecipeForm />} />
           <Route path="/recipes/new" element={<RecipeForm />} />
 
           <Route path="/newcooking" element={<NewCooking />} />
