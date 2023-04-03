@@ -63,30 +63,6 @@ const Profile = () => {
         })
     }
 
-    // const getFollowers = () => {
-    //     axios.get(`https://cookit.my-extravaganza.site/users/follower`, {
-    //         headers: {
-    //             Authorization: `Bearer ${cookies.user.token}`
-    //         }
-    //     })
-    //         .then((response) => {
-    //             console.log('w',response.data)
-    //         })
-    // }
-
-    // const getFollowing= () => {
-    //     axios.get(`https://cookit.my-extravaganza.site/users/following`, {
-    //         headers: {
-    //             Authorization: `Bearer ${cookies.user.token}`
-    //         }
-    //     })
-    //         .then((response) => {
-    //             console.log('e',response.data)
-    //         })
-    // }
-
-
-
     useEffect(() => {
 
         setLoadnew(true);
