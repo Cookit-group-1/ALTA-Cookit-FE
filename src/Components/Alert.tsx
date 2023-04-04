@@ -6,7 +6,6 @@ interface myAlert {
 }
 
 const Alert: FC<myAlert> = ({ type, message }) => {
-    console.log(type)
     return (
         <div className='fixed top-2 z-50 w-full'>
             <div className={`${type == 'error' ? 'block' : 'hidden'} alert alert-error shadow-lg`}>

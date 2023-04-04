@@ -375,6 +375,23 @@ const RecipeForm = () => {
         }
     }
 
+    const [userRole, setUserRole ] = useState('')
+    useEffect(() => {
+        const headers = {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${cookies.user.token}`
+            },
+        };
+        fetch(`${endpoint}/users`, headers)
+            .then(response => response.json())
+            .then(response => {
+                console.log(response.data)
+                setUserRole(response.data.role)
+            })
+            .catch(error => console.error(error));
+    })
+
     return (
         <Layout>
             {/* Todo: edit mode using useparam */}
@@ -429,7 +446,7 @@ const RecipeForm = () => {
                     {/* Images */}
                     <div className='flex flex-col'>
                         <label className='font-semibold' htmlFor="imageInput">
-                            {(editType === "edit" || editType === "recook") && recipe.images !== undefined ?
+                            {(editType === "edit" || editType === "recook") && recipe.images !== undefined && editType !== "recook" ?
                                 'Replace Images ' : 'Choose Images '}
                             <span className='font-light'>(Optional)</span>
                         </label>
@@ -444,7 +461,7 @@ const RecipeForm = () => {
                                 <img className='rounded-lg' key={index} src={URL.createObjectURL(image)} alt={`Selected image ${index}`} />
                             ))}
 
-                            {images.length === 0 && recipe != undefined ?
+                            {images.length === 0 && recipe != undefined && editType !== "recook" ?
                                 (
                                     recipe.images?.map((image: any) => (
                                         <div>
@@ -472,6 +489,7 @@ const RecipeForm = () => {
                         <p className='font-light'>List the ingredients needed for your recipe</p>
 
                         {ingredients.map((ingredient, index) => (
+
                             <div className='grid grid-cols-12 gap-2 ' key={index}>
                                 <label className='col-span-12 -mb-2' htmlFor="">
                                     {`Ingredient ${index + 1}`}
@@ -543,7 +561,7 @@ const RecipeForm = () => {
                     </div>
 
                     {/* Sell Price */}
-                    <div className='flex items-center gap-1 mt-2'>
+                    <div className={`items-center gap-1 mt-2 ${userRole === "VerifiedUser" ? 'flex' : 'hidden'}`}>
                         <p className='font-light'>Sell ingredients for your recipe?</p>
                         <input readOnly onClick={handleShowPrice} checked={showPrice} type="checkbox" className='checkbox checkbox-primary rounded-full checkbox-sm' />
                     </div>

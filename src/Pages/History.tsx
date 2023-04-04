@@ -10,7 +10,7 @@ import LoadingSpinner from '../Components/LoadingSpinner';
 import clipboard from '../assets/clipboard.png'
 
 const History = () => {
-    const MAX_TIME = 20;
+    const MAX_TIME = 10;
     let intervalId: any;
     const [cookies, setCookies] = useCookies(['user'])
     const navigate = useNavigate()

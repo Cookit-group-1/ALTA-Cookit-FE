@@ -13,12 +13,42 @@ import CardQuote from '../Components/CardQuote'
 import { BsPencilSquare } from 'react-icons/bs'
 import Swal from 'sweetalert2'
 
-
 const Profile = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['user']);
+    const [cookies, setCookie, removeCookie] = useCookies(['user', 'cart']);
     const navigate = useNavigate()
     const location = useLocation()
     const { userID, profileID } = useParams();
+
+    // add to cart
+    const handleCart = (id: number) => {
+        axios.post(`https://cookit.my-extravaganza.site/users/carts`, {
+            "ingredient_id": id,
+            "quantity": 1
+        }, {
+            headers: {
+                Authorization: `Bearer ${cookies.user.token}`
+            }
+        })
+            .then((response) => {
+                console.log('re', response.data);
+                let sum: any = 0
+                if (cookies.cart) {
+                    sum = parseInt(cookies.cart) + 1
+                } else {
+                    sum = 1
+                }
+                console.log('s', sum)
+                setCookie('cart', sum, { path: "/" })
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'successfuly added to cart',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            })
+            .catch((err) => { console.log(err) })
+    }
 
     // Get User Data
     const [loading, setLoading] = useState(true)
@@ -29,31 +59,34 @@ const Profile = () => {
     const [limit, setLimit] = useState(10)
 
     const fetchUserData = async () => {
-        try {
-            const response = await axios.get(`${endpoint}/users`, {
-                headers: {
-                    Accept: 'application/json',
-                    Authorization: `Bearer ${cookies.user.token}`
-                }
-            });
-            setUserData(response.data.data)
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-            setLoadnew(false);
-        }
+        const headers = {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${cookies.user.token}`
+            },
+        };
+        fetch(`${endpoint}/users`, headers)
+            .then(response => response.json())
+            .then(response => {
+                console.log(response.data)
+                setUserData(response.data)
+                setLoading(false);
+                setLoadnew(false);
+                
+            })
+            .catch(error => console.error(error));
     };
 
     const fetchUserDataId = async () => {
         try {
-            const response = await axios.get(`${endpoint}/users/${location.state.profileID}`, {
+            const response = await axios.get(`${endpoint}/users/${userID}`, {
                 headers: {
                     Accept: 'application/json',
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
             setUserData(response.data.data)
+            console.log(response.data.data)
         } catch (error) {
             console.error(error);
         } finally {
@@ -92,8 +125,7 @@ const Profile = () => {
             },
         };
 
-
-        fetch(`https://cookit.my-extravaganza.site/users/follow/${location.state.profileID}`, headers)
+        fetch(`https://cookit.my-extravaganza.site/users/follow/${userID}`, headers)
             .then(response => response.json())
             .then(data => {
                 if (data.message == 'you already follow this user') {
@@ -126,10 +158,13 @@ const Profile = () => {
 
     useEffect(() => {
         setLoadnew(true);
-        {
-            cookies.user.id == userID
-                ? fetchUserData()
-                : fetchUserDataId()
+        console.log('ret', userID)
+
+        if (cookies.user.id == userID) {
+            fetchUserData()
+            console.log('test')
+        } else {
+            fetchUserDataId()
         }
         fetchUserPosts();
     }, [endpoint, userID, limit]);
@@ -158,7 +193,7 @@ const Profile = () => {
                                 <div className='grid grid-cols-2 place-content-center gap-5 col-span-2 items-center'>
                                     <h1 className='font-bold col-span-2 text-xl md:text-xl flex'>
                                         {userData?.username}
-                                        {userData.role == "Verified" ?
+                                        {userData.role == "VerifiedUser" ?
                                             <IoIosCheckmarkCircle className='text-accent' />
                                             : ''
                                         }
@@ -190,7 +225,7 @@ const Profile = () => {
                             return (
                                 <CardPost
                                     key={post.id}
-                                    verifiedUser={post.user_role === "Verified"}
+                                    verifiedUser={post.user_role === "VerifiedUser"}
                                     verifiedRecipe={post.status === "OpenForSale"}
                                     username={post.username}
                                     profileID={post.user_id}
@@ -204,6 +239,7 @@ const Profile = () => {
                                     likeAmt={post.total_like}
                                     handleToPost={() => navigate(`/recipes/${post.id}`)}
                                     handleToProfile={() => navigate(`/profile/${post.user_id}`)}
+                                    handleCart={() => handleCart(post.ingredients[0].id)}
                                 >
                                     {post.replied_recipe !== undefined ?
                                         <>
@@ -216,7 +252,7 @@ const Profile = () => {
                                                 recipeName={post.replied_recipe.name}
                                                 description={post.replied_recipe.description}
                                                 recipePicture={post.replied_recipe.images[0].url_image}
-                                                verifiedUser={post.replied_recipe.user_role === "Verified"}
+                                                verifiedUser={post.replied_recipe.user_role === "VerifiedUser"}
                                                 verifiedRecipe={post.replied_recipe.status === "OpenForSale"}
                                             />
                                         </> :
@@ -228,7 +264,7 @@ const Profile = () => {
                         </>
                         : <div className='text-center'>
                             <p className='pt-32 text-2xl font-semibold'>Share your recipe now</p>
-                            <p><span onClick={() => navigate('/newcooking')} className='text-primary cursor-pointer'>New recipe</span> or <span onClick={() => navigate('/recipes/new')} className='text-primary cursor-pointer'>New cooking</span></p>
+                            <p><span onClick={() => navigate('/newcooking')} className='text-primary cursor-pointer'>New cooking</span> or <span onClick={() => navigate('/recipes/new')} className='text-primary cursor-pointer'>New recipe</span></p>
                         </div>
                     }
                     {userPosts.length < 3

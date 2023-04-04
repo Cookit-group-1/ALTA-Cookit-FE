@@ -37,7 +37,7 @@ const CardComment: FC<CardCommentProps> = ({
             <div className='w-10/12 flex flex-col'>
                 <h1 className='font-semibold flex'>
                     {username}
-                    {userRole == "Verified" ?
+                    {userRole == "VerifiedUser" ?
                         <IoIosCheckmarkCircle className='text-accent' /> :
                         <></>
                     }

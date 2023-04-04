@@ -1,14 +1,14 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { IoIosCheckmarkCircle, IoIosArrowBack } from 'react-icons/io'
+import { IoIosArrowBack } from 'react-icons/io'
 
 interface NavSearchProps {
-    handleTimeline?: React.MouseEventHandler
-    handleRecipe?: React.MouseEventHandler
+    handlePeople: React.MouseEventHandler
+    handleRecipe: React.MouseEventHandler
     onSubmit: (query: string) => void
 }
 
-const NavSearch: FC<NavSearchProps> = ({ handleTimeline, handleRecipe, onSubmit }) => {
+const NavSearch: FC<NavSearchProps> = ({ handlePeople, handleRecipe, onSubmit }) => {
     const navigate = useNavigate()
 
     // Handle Searcbar
@@ -49,22 +49,22 @@ const NavSearch: FC<NavSearchProps> = ({ handleTimeline, handleRecipe, onSubmit 
     }, [prevScrollPos]);
 
     // Navbar buttons
-    const [isTimelineActive, setIsTimelineActive] = useState(true);
-    const [isRecipeActive, setIsRecipeActive] = useState(false);
+    const [isPeopleActive, setIsPeopleActive] = useState(false);
+    const [isRecipeActive, setIsRecipeActive] = useState(true);
 
-    const handleTimelineClick = () => {
-        setIsTimelineActive(true);
+    const handlePeopleClick = (event: React.MouseEvent) => {
+        setIsPeopleActive(true);
         setIsRecipeActive(false);
-        handleTimeline
+        handlePeople(event)
     };
 
-    const handleRecipeClick = () => {
-        setIsTimelineActive(false);
+    const handleRecipeClick = (event: React.MouseEvent) => {
+        setIsPeopleActive(false);
         setIsRecipeActive(true);
-        handleRecipe
+        handleRecipe(event)
     };
 
-    const timelineButtonStyle = isTimelineActive
+    const peopleButtonStyle = isPeopleActive
         ? 'border-b-4 py-2 border-secondary font-semibold' // active style
         : ''; // inactive style
 
@@ -80,33 +80,29 @@ const NavSearch: FC<NavSearchProps> = ({ handleTimeline, handleRecipe, onSubmit 
                     <button onClick={() => navigate(-1)} className='justify-self-start text-2xl'>
                         <IoIosArrowBack />
                     </button>
-                    <form  className='col-span-4 w-full' onSubmit={handleSubmit}>
+                    <form className='col-span-4 w-full' onSubmit={handleSubmit}>
                         <input
                             type="search"
                             placeholder='Search Cookit'
                             className='input h-8 rounded-full text-black w-full'
                             value={query}
                             onChange={handleChange}
-                        // onKeyDown={(e) => {
-                        //     if (e.key === 'Enter') {
-                        //         handleSubmit;
-                        //     }
-                        // }}
                         />
                     </form>
-                    <button onClick={() => navigate(-1)} className='justify-self-end hover:text-secondary text-2xl'>
+                    {/* <button onClick={() => navigate(-1)} className='justify-self-end hover:text-secondary text-2xl'>
                         <IoIosCheckmarkCircle />
-                    </button>
+                    </button> */}
+                    <div></div>
                 </div>
             </div>
 
             <div className='w-full flex flex-col items-center justify-between '>
                 <nav className='flex w-full gap-2 justify-evenly'>
-                    <button className={timelineButtonStyle} onClick={handleTimelineClick}>
-                        People
-                    </button>
                     <button className={recipeButtonStyle} onClick={handleRecipeClick}>
                         Recipes
+                    </button>
+                    <button className={peopleButtonStyle} onClick={handlePeopleClick}>
+                        People
                     </button>
                 </nav>
             </div>

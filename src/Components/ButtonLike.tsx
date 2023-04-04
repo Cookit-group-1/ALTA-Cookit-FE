@@ -71,11 +71,9 @@ const LikeButton = ({ id }: Props) => {
         if (!likedIds.includes(id)) {
             dispatch(like(id));
             handleLike();
-            setLikes(likes + 1);
         } else {
             dispatch(unlike(id));
             handleUnlike();
-            setLikes(likes - 1);
         }
     };
 
@@ -86,7 +84,7 @@ const LikeButton = ({ id }: Props) => {
             onClick={handleLikeClick}
         >
             <MdFavorite className='text-xl' />
-            {likes}
+            {likedIds.includes(id) ? likes + 1 : likes}
         </button>
     );
 };

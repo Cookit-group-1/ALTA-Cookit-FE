@@ -94,7 +94,7 @@ const NavBottom = () => {
     return (
         <div className='
         w-full bottom-0 mt-auto
-        sticky relative
+        sticky 
         sm:absolute sm:h-full sm:top-0 sm:-left-20 lg:-left-64 sm:w-20 lg:w-64
         '>
             {/* Bottom Navbar */}
@@ -123,6 +123,7 @@ const NavBottom = () => {
                         <li><Link to={`/profile/${cookies.user.id}`}>Profile</Link></li>
                         <li><Link to="/history">my purchase</Link></li>
                         <li><span onClick={logOut} >logout</span></li>
+                        <li className={`${cookies.user.role === "Admin" ? 'block' : 'hidden'}`}><Link to="/verifyusers">verify users</Link></li>
                     </ul>
                 </div>
 

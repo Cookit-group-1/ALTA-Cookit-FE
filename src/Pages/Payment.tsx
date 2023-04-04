@@ -197,7 +197,7 @@ const Payment = () => {
                             <div className="modal-box flex gap-5 flex-col ">
                                 <p className='text-center'>Please confirm your password</p>
                                 <div className='flex flex-col gap-5 px-10'>
-                                    <input type="password" className='border-2 border-black py-2 px-2 rounded-md' onChange={(e) => setPassword(e.target.value)} placeholder='passord' />
+                                    <input type="password" className='border-2 border-black py-2 px-2 rounded-md' onChange={(e) => setPassword(e.target.value)} placeholder='password' />
                                 </div>
                                 <div className="modal-action">
                                     <label htmlFor="my-modal-7" className="btn bg-primary hover:bg-secondary text-white">close</label>

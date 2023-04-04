@@ -18,6 +18,7 @@ import RecipeForm from './Pages/RecipeForm'
 import Profile from './Pages/Profile'
 import EditProfile from './Pages/EditProfile'
 import NewCooking from './Pages/NewCooking'
+import Admin from './Pages/Admin'
 
 
 
@@ -40,6 +41,8 @@ function App() {
 
           <Route path="/newcooking" element={<NewCooking />} />
           <Route path="/recipes/:recipeID/reply" element={<NewCooking />} />
+
+          <Route path="/verifyusers" element={<Admin />} />
 
           <Route path="/profile/:userID" element={<Profile />} />
           <Route path="/editprofile" element={<EditProfile />} />

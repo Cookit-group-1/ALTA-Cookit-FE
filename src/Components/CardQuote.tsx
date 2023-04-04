@@ -11,7 +11,7 @@ interface CardQuoteProps {
     postType: string
     recipeName: string | null
     description: string | null
-    recipePicture: string
+    recipePicture?: string
     verifiedUser: boolean
     verifiedRecipe: boolean
     handleCart?: React.MouseEventHandler
@@ -31,7 +31,6 @@ const CardQuote: FC<CardQuoteProps> =
         verifiedUser,
         verifiedRecipe,
         handleCart,
-        handleRedirect
     }) => {
         const navigate = useNavigate()
 
@@ -46,8 +45,6 @@ const CardQuote: FC<CardQuoteProps> =
         return (
             <div className="w-full bg-base-100 border mt-2 rounded-lg">
                 <div className='flex gap-2 p-4'>
-
-
                     {/* Profile Picture */}
                     <div onClick={() => navigate(`/profile/${profileID}`)} className='w-2/12 hover:cursor-pointer'>
                         <div className='h-0 pb-1/1 relative'>

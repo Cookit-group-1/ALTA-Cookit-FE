@@ -5,7 +5,6 @@ import NavBottom from '../Components/NavBottom'
 import { useState } from 'react'
 import { IoIosCheckmarkCircle } from 'react-icons/io'
 import { MdModeComment, MdFavorite, MdModeEdit, MdDeleteForever, MdMoreVert, MdOutlineReply } from 'react-icons/md'
-import Carousel from '../Components/Carousel'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
 import { Link, useParams, useNavigate } from 'react-router-dom'
@@ -17,6 +16,7 @@ import CardPost from '../Components/CardPost'
 import CardQuote from '../Components/CardQuote'
 import ButtonLike from '../Components/ButtonLike'
 import { ImLoop2 } from 'react-icons/im'
+import Format from '../Components/Format'
 interface Ingredients {
     id: number,
     name: string,
@@ -364,8 +364,8 @@ const Recipe = () => {
                                 {recipe.status !== "None" ?
                                     <div className='flex flex-col gap-5 border-2 border-primary mt-1 px-2 pb-2'>
                                         <p className='self-center text-primary font-semibold bg-white -mt-3 px-2'>Buy Ingredients</p>
-                                        <p>This is a verified recipe, you can directly purchase the ingredients for
-                                            <span className='text-primary'> {recipe.ingredients[0].price} / batch</span>
+                                        <p>{'This is a verified recipe, you can directly purchase the ingredients for '}
+                                            <span className='text-primary'><Format>{recipe.ingredients[0].price}</Format> / batch</span>
                                         </p>
                                         <div className='grid grid-cols-2 items-center font-bold'>
                                             <div className='flex'>
@@ -411,7 +411,7 @@ const Recipe = () => {
                     </div> :
                     <CardPost
                         key={recipe.id}
-                        verifiedUser={recipe.user_role === "Verified"}
+                        verifiedUser={recipe.user_role === "VerifiedUser"}
                         verifiedRecipe={recipe.status === "OpenForSale"}
                         username={recipe.username}
                         profileID={recipe.user_id}
@@ -437,7 +437,7 @@ const Recipe = () => {
                                     recipeName={recipe.replied_recipe.name}
                                     description={recipe.replied_recipe.description}
                                     recipePicture={recipe.replied_recipe.images[0].url_image}
-                                    verifiedUser={recipe.replied_recipe.user_role === "Verified"}
+                                    verifiedUser={recipe.replied_recipe.user_role === "VerifiedUser"}
                                     verifiedRecipe={recipe.replied_recipe.status === "OpenForSale"}
                                 />
                             </> :

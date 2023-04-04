@@ -115,8 +115,14 @@ const Timeline = () => {
     return (
         <Layout>
             <NavTop
-                handleTimeline={() => setTimelineMode(true)}
-                handleRecipe={() => setTimelineMode(false)}
+                handleTimeline={() => {
+                    setLoading(true)
+                    setTimelineMode(true)
+                }}
+                handleRecipe={() => {
+                    setLoading(true)
+                    setTimelineMode(false)
+                }}
             />
             {loading
                 ? <div className='absolute w-full h-full bg-transparent flex items-center justify-center z-50'>
@@ -127,7 +133,7 @@ const Timeline = () => {
                         return (
                             <CardPost
                                 key={post.id}
-                                verifiedUser={post.user_role === "Verified"}
+                                verifiedUser={post.user_role === "VerifiedUser"}
                                 verifiedRecipe={post.status === "OpenForSale"}
                                 username={post.username}
                                 profileID={post.user_id}
@@ -147,15 +153,16 @@ const Timeline = () => {
                                     <>
                                         <CardQuote
                                             username={post.replied_recipe.username}
-                                            profileID={post.replied_recipe.user_id}
+                                            profileID={post.replied_recipe.user_id }
                                             recipeID={post.replied_recipe.id}
                                             profilePicture={post.replied_recipe.profile_picture}
                                             postType={post.replied_recipe.type}
                                             recipeName={post.replied_recipe.name}
                                             description={post.replied_recipe.description}
-                                            recipePicture={post.replied_recipe.images[0].url_image}
-                                            verifiedUser={post.replied_recipe.user_role === "Verified"}
+                                            recipePicture={post.replied_recipe.images ? post.replied_recipe.images[0].url_image : null}
+                                            verifiedUser={post.replied_recipe.user_role === "VerifiedUser"}
                                             verifiedRecipe={post.replied_recipe.status === "OpenForSale"}
+                                            handleCart={() => handleCart(post.replied_recipe.ingredients[0].id)}
                                         />
                                     </> :
                                     <></>}
