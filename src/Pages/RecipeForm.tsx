@@ -429,7 +429,7 @@ const RecipeForm = () => {
                     {/* Images */}
                     <div className='flex flex-col'>
                         <label className='font-semibold' htmlFor="imageInput">
-                            {(editType === "edit" || editType === "recook") && recipe.images !== undefined ?
+                            {(editType === "edit" || editType === "recook") && recipe.images !== undefined && editType !== "recook" ?
                                 'Replace Images ' : 'Choose Images '}
                             <span className='font-light'>(Optional)</span>
                         </label>
@@ -444,7 +444,7 @@ const RecipeForm = () => {
                                 <img className='rounded-lg' key={index} src={URL.createObjectURL(image)} alt={`Selected image ${index}`} />
                             ))}
 
-                            {images.length === 0 && recipe != undefined ?
+                            {images.length === 0 && recipe != undefined && editType !== "recook" ?
                                 (
                                     recipe.images?.map((image: any) => (
                                         <div>
@@ -543,7 +543,7 @@ const RecipeForm = () => {
                     </div>
 
                     {/* Sell Price */}
-                    <div className='flex items-center gap-1 mt-2'>
+                    <div className={`items-center gap-1 mt-2 ${cookies.user.role === "VerifiedUser" ? 'flex' : 'hidden'}`}>
                         <p className='font-light'>Sell ingredients for your recipe?</p>
                         <input readOnly onClick={handleShowPrice} checked={showPrice} type="checkbox" className='checkbox checkbox-primary rounded-full checkbox-sm' />
                     </div>

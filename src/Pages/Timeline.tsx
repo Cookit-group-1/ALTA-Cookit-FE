@@ -90,15 +90,21 @@ const Timeline = () => {
     return (
         <Layout>
             <NavTop
-                handleTimeline={() => setTimelineMode(true)}
-                handleRecipe={() => setTimelineMode(false)}
+                handleTimeline={() => {
+                    setLoading(true)
+                    setTimelineMode(true)
+                }}
+                handleRecipe={() => {
+                    setLoading(true)
+                    setTimelineMode(false)
+                }}
             />
             {loading ? <LoadingSpinner /> : <>
                 {recipes.map((post: any, index) => {
                     return (
                         <CardPost
                             key={post.id}
-                            verifiedUser={post.user_role === "Verified"}
+                            verifiedUser={post.user_role === "VerifiedUser"}
                             verifiedRecipe={post.status === "OpenForSale"}
                             username={post.username}
                             profileID={post.user_id}
@@ -125,8 +131,9 @@ const Timeline = () => {
                                         recipeName={post.replied_recipe.name}
                                         description={post.replied_recipe.description}
                                         recipePicture={post.replied_recipe.images[0].url_image}
-                                        verifiedUser={post.replied_recipe.user_role === "Verified"}
+                                        verifiedUser={post.replied_recipe.user_role === "VerifiedUser"}
                                         verifiedRecipe={post.replied_recipe.status === "OpenForSale"}
+                                        handleCart={() => handleCart(post.replied_recipe.ingredients[0].id)}
                                     />
                                 </> :
                                 <></>}

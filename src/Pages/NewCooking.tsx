@@ -102,7 +102,7 @@ const NewCooking = () => {
                                 recipeName={recipe.name}
                                 description={recipe.description}
                                 recipePicture={recipe.images ? recipe.images[0].url_image : null}
-                                verifiedUser={recipe.user_role === "Verified"}
+                                verifiedUser={recipe.user_role === "VerifiedUser"}
                                 verifiedRecipe={recipe.status === "OpenForSale"}
                             />
                         </div> : <></>}

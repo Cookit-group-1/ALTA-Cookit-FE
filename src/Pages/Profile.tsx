@@ -10,11 +10,43 @@ import { useNavigate } from 'react-router-dom'
 import LoadingSpinner from '../Components/LoadingSpinner'
 import { IoIosCheckmarkCircle } from 'react-icons/io'
 import CardQuote from '../Components/CardQuote'
+import Swal from 'sweetalert2'
 
 const Profile = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['user']);
+    const [cookies, setCookie, removeCookie] = useCookies(['user', 'cart']);
     const navigate = useNavigate()
     const { userID } = useParams();
+
+    // add to cart
+    const handleCart = (id: number) => {
+        axios.post(`https://cookit.my-extravaganza.site/users/carts`, {
+            "ingredient_id": id,
+            "quantity": 1
+        }, {
+            headers: {
+                Authorization: `Bearer ${cookies.user.token}`
+            }
+        })
+            .then((response) => {
+                console.log('re', response.data);
+                let sum: any = 0
+                if (cookies.cart) {
+                    sum = parseInt(cookies.cart) + 1
+                } else {
+                    sum = 1
+                }
+                console.log('s', sum)
+                setCookie('cart', sum, { path: "/" })
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'successfuly added to cart',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            })
+            .catch((err) => { console.log(err) })
+    }
 
     // Get User Data
     const [loading, setLoading] = useState(true)
@@ -79,7 +111,7 @@ const Profile = () => {
             />
             {loading ? <LoadingSpinner /> :
                 <>
-                    <div className='border-2'>
+                    <div className='border-2 border-y-0 w-full'>
                         <div className='flex gap-2 w-full py-4 px-4 justify-between'>
                             <div className='flex gap-2'>
                                 {/* Profile Picture */}
@@ -92,10 +124,10 @@ const Profile = () => {
                                     </div>
                                 </div>
                                 {/* Username, Following-Follower, Bio */}
-                                <div className='grid grid-cols-2 items-center justify-center'>
+                                <div className='grid grid-cols-2 gap-2 items-center justify-center'>
                                     <h1 className='font-bold text-3xl flex'>
                                         {userData?.username}
-                                        {userData.role == "Verified" ?
+                                        {userData.role == "VerifiedUser" ?
                                             <IoIosCheckmarkCircle className='text-accent' /> :
                                             <></>
                                         }
@@ -104,13 +136,13 @@ const Profile = () => {
                                         <button onClick={() => navigate('/editprofile')} className='btn btn-primary btn-sm rounded-full'>Edit Profile</button> :
                                         <button className='btn btn-primary btn-sm rounded-full'>Follow</button>}
 
-                                    <p onClick={() => goToFollow('Following')} className='font-semibold'>{userData.following} Following</p>
-                                    <p onClick={() => goToFollow('Followers')} className='font-semibold'>{userData.followers} Followers</p>
+                                    <p onClick={() => goToFollow('Following')} className='font-semibold hover:cursor-pointer'>{userData.following} Following</p>
+                                    <p onClick={() => goToFollow('Followers')} className='font-semibold hover:cursor-pointer'>{userData.followers} Followers</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className='w-full h-full pb-10 grid grid-cols-3 px-5 border-b-2'>
+                        <div className='w-full h-full pb-5 px-5 border-b-2'>
                             <p>{userData?.bio}</p>
                         </div>
                     </div>
@@ -120,7 +152,7 @@ const Profile = () => {
                         return (
                             <CardPost
                                 key={post.id}
-                                verifiedUser={post.user_role === "Verified"}
+                                verifiedUser={post.user_role === "VerifiedUser"}
                                 verifiedRecipe={post.status === "OpenForSale"}
                                 username={post.username}
                                 profileID={post.user_id}
@@ -134,6 +166,7 @@ const Profile = () => {
                                 likeAmt={post.total_like}
                                 handleToPost={() => navigate(`/recipes/${post.id}`)}
                                 handleToProfile={() => navigate(`/profile/${post.user_id}`)}
+                                handleCart={() => handleCart(post.ingredients[0].id)}
                             >
                                 {post.replied_recipe !== undefined ?
                                     <>
@@ -146,8 +179,9 @@ const Profile = () => {
                                             recipeName={post.replied_recipe.name}
                                             description={post.replied_recipe.description}
                                             recipePicture={post.replied_recipe.images[0].url_image}
-                                            verifiedUser={post.replied_recipe.user_role === "Verified"}
+                                            verifiedUser={post.replied_recipe.user_role === "VerifiedUser"}
                                             verifiedRecipe={post.replied_recipe.status === "OpenForSale"}
+                                            handleCart={() => handleCart(post.replied_recipe.ingredients[0].id)}
                                         />
                                     </> :
                                     <></>}
