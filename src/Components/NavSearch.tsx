@@ -89,9 +89,10 @@ const NavSearch: FC<NavSearchProps> = ({ handlePeople, handleRecipe, onSubmit })
                             onChange={handleChange}
                         />
                     </form>
-                    <button onClick={() => navigate(-1)} className='justify-self-end hover:text-secondary text-2xl'>
+                    {/* <button onClick={() => navigate(-1)} className='justify-self-end hover:text-secondary text-2xl'>
                         <IoIosCheckmarkCircle />
-                    </button>
+                    </button> */}
+                    <div></div>
                 </div>
             </div>
 
