@@ -123,6 +123,7 @@ const NavBottom = () => {
                         <li><Link to={`/profile/${cookies.user.id}`}>Profile</Link></li>
                         <li><Link to="/history">my purchase</Link></li>
                         <li><span onClick={logOut} >logout</span></li>
+                        <li className={`${cookies.user.role === "Admin" ? 'block' : 'hidden'}`}><Link to="/verifyusers">verify users</Link></li>
                     </ul>
                 </div>
 

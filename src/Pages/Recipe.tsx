@@ -410,7 +410,7 @@ const Recipe = () => {
                     </div> :
                     <CardPost
                         key={recipe.id}
-                        verifiedUser={recipe.user_role === "Verified"}
+                        verifiedUser={recipe.user_role === "VerifiedUser"}
                         verifiedRecipe={recipe.status === "OpenForSale"}
                         username={recipe.username}
                         profileID={recipe.user_id}
@@ -436,7 +436,7 @@ const Recipe = () => {
                                     recipeName={recipe.replied_recipe.name}
                                     description={recipe.replied_recipe.description}
                                     recipePicture={recipe.replied_recipe.images[0].url_image}
-                                    verifiedUser={recipe.replied_recipe.user_role === "Verified"}
+                                    verifiedUser={recipe.replied_recipe.user_role === "VerifiedUser"}
                                     verifiedRecipe={recipe.replied_recipe.status === "OpenForSale"}
                                 />
                             </> :
