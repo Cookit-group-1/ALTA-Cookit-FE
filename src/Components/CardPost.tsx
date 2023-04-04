@@ -47,12 +47,6 @@ const CardPost: FC<CardPostProps> =
         verifiedUser,
         verifiedRecipe,
         handleCart,
-        // handleToPost,
-        handleToProfile,
-        // handleComment,
-        handleLike,
-        handleRecook,
-        handleRemix
     }) => {
         const navigate = useNavigate()
         const [cookies, setCookie] = useCookies(['user'])
@@ -104,7 +98,9 @@ const CardPost: FC<CardPostProps> =
             <div className={`w-full bg-base-100 border-2 border-t-0 gap-2 p-4 ${deleted ? 'hidden' : 'flex'}`}>
                 {/* Profile Picture */}
                 <div className='w-2/12'>
-                    <div onClick={() => navigate(`/profile/${profileID}`)} className='h-0 pb-1/1 relative hover:cursor-pointer'>
+                    <div
+                        className='h-0 pb-1/1 relative hover:cursor-pointer'
+                        onClick={() => navigate(`/profile/${profileID}`)} >
                         <img
                             src={profilePicture}
                             className='inset-0 absolute w-full h-full object-cover rounded-full'
@@ -204,15 +200,11 @@ const CardPost: FC<CardPostProps> =
                                     <p>
                                         <MdDeleteForever />
                                         Delete Post
-
                                     </p>
-
                                 </li>
-
                             </ul>
                         </div>
                     </div>
-
                 </div>
             </div>
         )

@@ -5,12 +5,14 @@ import NavBack from '../Components/NavBack'
 import NavBottom from '../Components/NavBottom'
 import PostBox from '../Components/PostBox'
 import { useCookies } from 'react-cookie'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import LoadingSpinner from '../Components/LoadingSpinner'
 import CardQuote from '../Components/CardQuote'
+import Swal from 'sweetalert2'
 
 
 const NewCooking = () => {
+    const navigate = useNavigate()
     const [loading, setLoading] = React.useState(true)
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const endpoint = `https://cookit.my-extravaganza.site`
@@ -26,7 +28,6 @@ const NewCooking = () => {
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
-            console.log("recipe: ", response.data.data)
             setRecipe(response.data.data)
         } catch (error) {
             console.error(error);
@@ -49,6 +50,7 @@ const NewCooking = () => {
             const formData = new FormData();
             formData.append('description', description)
             formData.append('type', "Cooked")
+            formData.append('name', "arbi")
             if (recipeID !== undefined) {
                 formData.append('recipe_id', recipeID)
             }
@@ -64,11 +66,18 @@ const NewCooking = () => {
                         Authorization: `Bearer ${cookies.user.token}`
                     }
                 });
-            console.log("Post Recipe: ", response)
         } catch (error) {
             console.error(error);
         } finally {
             setLoading(false)
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'successfuly added new cooking',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            navigate(`/profile/${cookies.user.id}`)
         }
     }
 

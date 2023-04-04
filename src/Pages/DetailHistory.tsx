@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import Header from '../Components/Header'
-import DeliveryData from '../Components/DeliveryData.json'
 import { useLocation } from 'react-router-dom'
-
 import food1 from '../assets/food1.jpg'
-
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import { MdFileCopy } from 'react-icons/md'
 import Format from '../Components/Format'
 
 
-
 const DetailHostory = () => {
     const location = useLocation()
     const navigate = useNavigate()
-    const [deliveryPrice, setDeliveryPrice] = useState<number>(0)
-    const [totalPrice, setTotalPrice] = useState<number>(location.state.total)
     const cartsBySeller: any = [];
     const arrDetail = location?.state.data.transaction_details
     const dataTransaction = location?.state.data
@@ -30,15 +24,13 @@ const DetailHostory = () => {
         cartsBySeller[id_seller].push(cart);
     }
 
-    console.log('erre', dataTransaction)
-
+    // copy virtual account number
     const copyVa = () => {
         navigator.clipboard.writeText(dataTransaction.virtual_account_number)
             .then(() => {
-                console.log('Teks berhasil dicopy!');
             })
             .catch((error) => {
-                console.error('Tidak dapat menyalin teks: ', error);
+                console.error(error);
             });
     }
 
@@ -71,7 +63,6 @@ const DetailHostory = () => {
 
                 <div className='lg:h-[90vh] relative rounded-lg overflow-auto'>
                     {cartsBySeller?.map((data: any, index: number) => {
-                        console.log('fre', data)
                         return (
                             <div key={index} className='bg-white mb-5 py-3'>
                                 <div className='w-full h-12  flex items-center border-b-2 mb-5 '>
@@ -79,7 +70,6 @@ const DetailHostory = () => {
                                 </div>
                                 {/* card product */}
                                 {data.map((item: any, index: number) => {
-                                    console.log(item)
                                     return (
                                         <div key={index} className='grid grid-cols-3 mb-6 lg:mb-1 ml-5 gap-5 '>
                                             <div className='w-6/6 h-4/4 lg:h-2/3 relative overflow-hidden rounded-md'>

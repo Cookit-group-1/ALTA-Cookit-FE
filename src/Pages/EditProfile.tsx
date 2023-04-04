@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import Header from '../Components/Header'
 import { BsFileImageFill } from 'react-icons/bs'
 import axios, { AxiosRequestConfig } from 'axios';
-
 import FormInput from '../Components/FormInput'
 import { useCookies } from 'react-cookie'
 import Swal from 'sweetalert2'
@@ -27,6 +25,7 @@ const EditProfile = () => {
     const [alert, setAlert] = useState('')
     const [pict, setPict] = useState<any>(null);
     const [imageUrl, setImageUrl] = useState('');
+    const [bigSizes, setBigSizes] = useState("false");
 
     // ALERT
     function isAlert() {
@@ -80,17 +79,18 @@ const EditProfile = () => {
                 Authorization: `Bearer ${cookies.user.token}`
             }
         })
-            .then((response) => { console.log(response) })
-            .catch((err) => { console.log(err) })
     }
 
     // UPDATE DATA PROFILE
     const updateProfile = async () => {
+
+        setLoading(true)
         if (oldPw && newPw && confirmPw != '') {
             if (newPw == confirmPw) {
                 updatePassword()
             } else {
                 setAlert('error')
+                setLoading(false)
                 const result = await isAlert();
                 return false
             }
@@ -98,39 +98,39 @@ const EditProfile = () => {
 
         let formData = new FormData();
         formData.append("profile_picture", pict);
-
-        await axios.put('https://cookit.my-extravaganza.site/users', formData, {
-            headers: {
-                Authorization: `Bearer ${cookies.user.token}`,
-                "Content-Type": "multipart/form-data",
-            }
-        })
-            .then((response) => { })
-            .catch((err) => { console.log(err) });
-
-        axios.put(`https://cookit.my-extravaganza.site/users`, {
-            "username": username,
-            "bio": bio,
-            "profile_picture": pict
-        }, {
-            headers: {
-                Authorization: `Bearer ${cookies.user.token}`
-            }
-        })
-            .then((response) => {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Update profile has been successful',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
+        formData.append("username", username);
+        formData.append("bio", bio);
+        if (formData != null) {
+            axios.put('https://cookit.my-extravaganza.site/users', formData, {
+                headers: {
+                    Authorization: `Bearer ${cookies.user.token}`,
+                    "Content-Type": "multipart/form-data",
+                }
             })
-            .catch((err) => { console.log(err) })
+                .then((response) => {
+                    setLoading(false)
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Update profile has been successful',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                })
+                .catch((err) => {
+                    setLoading(false)
+                    return (Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Maximum image size is 500kb',
+                    }))
+                });
+        }
     }
 
     // REQUEST UPDATE ROLE  
     const upgradeAccount = () => {
+        setLoading(true)
         const headers = {
             method: 'POST',
             headers: {
@@ -142,7 +142,6 @@ const EditProfile = () => {
         fetch(`https://cookit.my-extravaganza.site/users/upgrade`, headers)
             .then(response => response.json())
             .then(data => {
-                console.log('fre', data)
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -152,6 +151,7 @@ const EditProfile = () => {
                 })
             })
             .catch(error => console.error(error));
+        setLoading(false)
     }
 
     // GET URL IMG
@@ -172,14 +172,17 @@ const EditProfile = () => {
     }, [])
 
     return (
-        <div className='bg-gray-100'>
+        <div className='bg-gray-100 h-screen'>
             <Alert type={alert} message='Please input the password correctly' />
             <NavBack title='Edit Profile' />
-            {loading ? <LoadingSpinner /> : <>
-                <div className='grid grid-cols-1 px-5 gap-3 lg:grid-cols-2 bg-gray-100 max-w-5xl mx-auto'>
+            {loading
+                ? <div className='absolute w-full h-full bg-transparent flex items-center justify-center z-50'>
+                    <LoadingSpinner />
+                </div>
+                : <div className='grid grid-cols-1 gap-3 lg:grid-cols-2 bg-gray-100 px-5 mx-auto'>
                     {data?.map((item: any, index: number) => {
                         return (
-                            <div className='p-3 mb-5 bg-white rounded-lg my-4'>
+                            <div key={index} className='p-3 lg:h-screen  bg-white rounded-lg my-4'>
                                 <input onChange={handleImageChange} className='hidden' id='pict' type="file" />
                                 <div className='grid grid-cols-2 place-content-end items-center mb-10'>
                                     <label htmlFor='pict' onMouseLeave={() => setIsHover(false)} onMouseOver={() => setIsHover(true)} className='w-24 h-24 rounded-full cursor-pointer relative overflow-hidden flex justify-center items-center hover:brightness-50'>
@@ -231,7 +234,7 @@ const EditProfile = () => {
                         </section>
                     </div>
                 </div>
-            </>}
+            }
         </div>
     )
 }

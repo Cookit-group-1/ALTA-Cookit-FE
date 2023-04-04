@@ -4,7 +4,6 @@ import axios from 'axios'
 import { useCookies } from 'react-cookie'
 import { useGoogleLogin } from '@react-oauth/google';
 
-
 import loginImg from '../assets/login.jpg'
 import graph from '../assets/graph.png'
 import googleImg from '../assets/google.png'
@@ -46,6 +45,7 @@ const Login = () => {
         }
     }
 
+    // extract token from google
     useEffect(() => {
         handleOauth()
         // axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${token}`)

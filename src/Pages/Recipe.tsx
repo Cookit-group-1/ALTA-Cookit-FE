@@ -5,7 +5,6 @@ import NavBottom from '../Components/NavBottom'
 import { useState } from 'react'
 import { IoIosCheckmarkCircle } from 'react-icons/io'
 import { MdModeComment, MdFavorite, MdModeEdit, MdDeleteForever, MdMoreVert, MdOutlineReply } from 'react-icons/md'
-import Carousel from '../Components/Carousel'
 import axios from 'axios'
 import { useCookies } from 'react-cookie'
 import { Link, useParams, useNavigate } from 'react-router-dom'
@@ -17,6 +16,7 @@ import CardPost from '../Components/CardPost'
 import CardQuote from '../Components/CardQuote'
 import ButtonLike from '../Components/ButtonLike'
 import { ImLoop2 } from 'react-icons/im'
+import Format from '../Components/Format'
 interface Ingredients {
     id: number,
     name: string,
@@ -53,7 +53,6 @@ const Recipe = () => {
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
-            console.log("recipe: ", response.data.data)
             setRecipe(response.data.data)
         } catch (error) {
             console.error(error);
@@ -66,9 +65,6 @@ const Recipe = () => {
         console.log("Handle Comment")
     }
 
-    const handleLike = () => {
-        console.log("Handle Like")
-    }
 
     const handleChangeServing = (amount: number) => {
         // setRecipeDetails({ ...recipeDetails, serving: Math.max(0, amount) })
@@ -76,8 +72,8 @@ const Recipe = () => {
     }
 
     // add to cart
-    const addToCart = (id: number, serving: any) => {
-        axios.post(`https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/users/carts`, {
+    const addToCart = (id: number) => {
+        axios.post(`https://cookit.my-extravaganza.site/users/carts`, {
             "ingredient_id": id,
             "quantity": 1
         }, {
@@ -86,7 +82,6 @@ const Recipe = () => {
             }
         })
             .then((response) => {
-                console.log("add to cart: ", response.data);
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -108,7 +103,6 @@ const Recipe = () => {
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
-            console.log("Comments: ", response.data.data)
             setComments(response.data.data)
         } catch (error) {
             console.error(error);
@@ -135,7 +129,6 @@ const Recipe = () => {
                         Authorization: `Bearer ${cookies.user.token}`
                     }
                 });
-            console.log(response.data.data)
         } catch (error) {
             console.error(error);
         } finally {
@@ -147,8 +140,6 @@ const Recipe = () => {
 
     const handleSubmitComment = (post: string, postImage: File | null) => {
         postComment(post, postImage)
-        console.log("New Comment", post)
-
     }
 
     // Delete
@@ -165,7 +156,6 @@ const Recipe = () => {
             cancelButtonColor: "#E85D04",
         }).then((willDelete) => {
             if (willDelete.isConfirmed) {
-                console.log("deleted")
                 axios.delete(`https://cookit.my-extravaganza.site/recipes/${recipeID}`, {
                     headers: {
                         Authorization: `Bearer ${cookies.user.token}`,
@@ -342,6 +332,7 @@ const Recipe = () => {
                                         onClick={() => handleChangeServing(serving + 1)}
                                     >+</button>
                                     <p className='ml-4 font-semibold'>Servings</p>
+                                    
                                 </div>
 
                                 {/* Table */}
@@ -361,10 +352,10 @@ const Recipe = () => {
 
                                 {/* Purchase */}
                                 {recipe.status !== "None" ?
-                                    <div className='flex flex-col border-2 border-primary mt-1 px-2 pb-2'>
+                                    <div className='flex flex-col gap-5 border-2 border-primary mt-1 px-2 pb-2'>
                                         <p className='self-center text-primary font-semibold bg-white -mt-3 px-2'>Buy Ingredients</p>
-                                        <p>This is a verified recipe, you can directly purchase the ingredients for
-                                            <span className='text-primary'> {recipe.ingredients[0].price} / batch</span>
+                                        <p>{'This is a verified recipe, you can directly purchase the ingredients for '}
+                                            <span className='text-primary'><Format>{recipe.ingredients[0].price}</Format> / batch</span>
                                         </p>
                                         <div className='grid grid-cols-2 items-center font-bold'>
                                             <div className='flex'>
@@ -385,7 +376,7 @@ const Recipe = () => {
                                                     onClick={() => handleChangeServing(serving + 1)}
                                                 >+</button>
                                             </div>
-                                            {/* <button onClick={() => addToCart(recipe.id)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button> */}
+                                            <button onClick={() => addToCart(recipe.ingredients[0].id)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button>
                                         </div>
                                     </div> :
                                     <></>}

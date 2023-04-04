@@ -35,10 +35,6 @@ function FormInput({ inputCount, inputType, placeholder, onChange, width, mdWidt
 
     onChange(inputValues);
 
-    const hidePw = () => {
-        return inputType.includes("text");
-    }
-
     return (
         <div>
             {Array.from({ length: inputCount }, (_, i) => (

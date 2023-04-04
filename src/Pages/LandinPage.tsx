@@ -184,8 +184,6 @@ const LandingPage: React.FC = () => {
                     <Swiper
                         spaceBetween={50}
                         slidesPerView={1}
-                        onSlideChange={() => console.log('slide change')}
-                        onSwiper={(swiper) => console.log(swiper)}
                     >
                         <SwiperSlide>
                             <div className='md:px-16 lg:px-24'>

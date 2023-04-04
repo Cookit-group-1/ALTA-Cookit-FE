@@ -22,8 +22,6 @@ const CardUser: FC<CardPostProps> =
         children
     }) => {
         const navigate = useNavigate()
-        const [cookies, setCookie] = useCookies(['user'])
-
 
         return (
             <div className={`w-full bg-base-100 border-2 border-t-0 gap-2 p-4 flex`}>

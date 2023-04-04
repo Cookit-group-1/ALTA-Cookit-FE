@@ -1,9 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie';
-import { useParams } from 'react-router-dom';
 import { BsCheckLg } from 'react-icons/bs'
-import CardQuote from '../Components/CardQuote';
 import CardUser from '../Components/CardUser';
 import Layout from '../Components/Layout';
 import LoadingSpinner from '../Components/LoadingSpinner';
@@ -15,7 +13,6 @@ const Admin = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['user']);
   const endpoint = `https://cookit.my-extravaganza.site`
 
-  const { recipeID } = useParams()
   const [users, setUsers] = useState<any>()
 
   const fetchUsers = async () => {
@@ -27,7 +24,6 @@ const Admin = () => {
           Authorization: `Bearer ${cookies.user.token}`
         }
       });
-      console.log("recipe: ", response.data.data)
       setUsers(response.data.data)
     } catch (error) {
       console.error(error);
@@ -42,7 +38,6 @@ const Admin = () => {
 
   const handleVerify = async (id: number) => {
     try {
-      console.log("endpoint: ", `${endpoint}/users/approval/${id}`)
       const response = await axios.put(`${endpoint}/users/approval/${id}`,
         {
           status: "verify"
@@ -53,7 +48,6 @@ const Admin = () => {
             Authorization: `Bearer ${cookies.user.token}`
           }
         });
-      console.log("recipe: ", response.data.data)
       setUsers(response.data.data)
     } catch (error) {
       console.error(error);

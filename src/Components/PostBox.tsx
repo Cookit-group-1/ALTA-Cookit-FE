@@ -84,7 +84,7 @@ const PostBox: FC<PostBoxProps> = ({ onSubmit, profilePicture, placeholderText }
 
                 )}
                 <div className='flex justify-between w-full flex-col sm:flex-row gap-2'>
-                    <label className="btn btn-ghost w-full sm:w-20 w-10 sm:btn-sm flex gap-2">
+                    <label className="btn btn-secondary  w-full sm:w-20 sm:btn-sm flex gap-2">
                         <input type="file"
                             onChange={(e) => {
                                 const file = e.target.files?.[0];

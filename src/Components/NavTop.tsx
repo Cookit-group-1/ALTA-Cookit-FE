@@ -136,7 +136,7 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
                             </div>
                             <p className='text-lg hidden lg:flex'>Profile</p>
                         </label>
-                        <ul tabIndex={0} className="dropdown-content md:text-sm menu p-2 text-black shadow-lg bg-base-100 rounded-box w-52">
+                        <ul tabIndex={0} className="dropdown-content text-sm md:text-md lg:text-lg xl:text-xl md:text-sm menu p-2 text-black shadow-lg bg-base-100 rounded-box w-52">
                             <li><Link to={`/profile/${cookies.user.id}`}>Profile</Link></li>
                             <li><Link to="/history">my purchase</Link></li>
                             <li><span onClick={logOut} >logout</span></li>

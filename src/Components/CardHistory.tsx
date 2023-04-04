@@ -15,9 +15,6 @@ interface myProps {
 }
 
 const CardHistory: FC<myProps> = ({ title, titleBtn, route, transactionDetails, totalPrice, orderReceived, handleDetailHistory }) => {
-    console.log('t', transactionDetails)
-
-    console.log('fere', transactionDetails)
     return (
         <>
             <div className='bg-white pb-10 mb-5'>

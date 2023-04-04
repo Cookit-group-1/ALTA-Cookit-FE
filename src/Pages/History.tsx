@@ -6,21 +6,24 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import LoadingSpinner from '../Components/LoadingSpinner';
+import clipboard from '../assets/clipboard.png'
 
 const History = () => {
-    const MAX_TIME = 20;
+    const MAX_TIME = 10;
+    let intervalId: any;
     const [cookies, setCookies] = useCookies(['user'])
     const navigate = useNavigate()
     const [data, setData] = useState<any>([])
     const [router, setRouter] = useState('Unpaid')
     const [count, setCount] = useState(0);
     const [idTransaction, setIdTransaction] = useState<any>([]);
-    let intervalId: any;
     const [received, setReceived] = useState(false)
-
+    const [loading, setLoading] = useState(false)
 
     // get data transactions 
     const getData = async () => {
+        setLoading(true)
         setData([])
         await axios.get(`https://cookit.my-extravaganza.site/users/transactions?status=${router}`, {
             headers: {
@@ -31,6 +34,7 @@ const History = () => {
                 setData(response.data.data)
             })
             .catch((error) => { console.error(error) })
+        setLoading(false)
     }
 
     // go to detail transaction page 
@@ -97,7 +101,6 @@ const History = () => {
 
                 fetch(`https://cookit.my-extravaganza.site/users/transactions/${idTransaction}/status`, headers)
                     .then(response => response.json())
-                    .then(data => console.log('fre', data))
                     .catch(error => console.error(error));
                 localStorage.clear();
             }
@@ -120,7 +123,6 @@ const History = () => {
         fetch(`https://cookit.my-extravaganza.site/users/transactions/${id}/status`, headers)
             .then(response => response.json())
             .then(data => {
-                console.log('fre', data)
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -138,7 +140,7 @@ const History = () => {
     }, [router, received])
 
     return (
-        <div className='bg-gray-100'>
+        <div className={`bg-gray-100 ${data.length >= 1 ? '' : 'h-screen'} `}>
             <Header link='timeline' title='My Purchase' />
             {/* navigate */}
             <div className='w-full h-16 text-gray-100 px-3 text-center flex sticky top-16 z-50 items-center gap-10 bg-primary realtive overflow-hidden'>
@@ -160,20 +162,34 @@ const History = () => {
                     </SwiperSlide>
                 </Swiper>
             </div>
-            {data.map((item: any, index: number) => {
-                console.log('frerre', item)
-                return (
-                    <div key={index} className='bg-white mt-3'>
-                        {
-                            router == 'Unpaid' ? <CardHistory handleDetailHistory={() => handleDetailHistory(index)} titleBtn='Pay' route='Unpaid' title='to pay' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
-                                : router == 'Shipped' ? <CardHistory handleDetailHistory={() => handleDetailHistory(index)} titleBtn='Order Received' route='Shipped' title='Shipped' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
-                                    : router == 'Received' ? <CardHistory handleDetailHistory={() => handleDetailHistory(index)} route='Received' orderReceived={() => orderReceived(data[index].id)} titleBtn='Order Received' title='Received' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
-                                        : router == 'Complete' ? <CardHistory handleDetailHistory={() => handleDetailHistory(index)} titleBtn={item.created_at} route='Complete' title='Complete' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
-                                            : ''
-                        }
-                    </div>
-                )
-            })}
+            {loading
+                ? <div className='absolute top-[10vh] w-full h-full bg-transparent flex justify-center z-50'>
+                    <LoadingSpinner />
+                </div>
+                : <>
+                    {data.length >= 1
+                        ? <>
+                            {data.map((item: any, index: number) => {
+                                return (
+                                    <div key={index} className='bg-white mt-3'>
+                                        {
+                                            router == 'Unpaid' ? <CardHistory handleDetailHistory={() => handleDetailHistory(index)} titleBtn='Pay' route='Unpaid' title='to pay' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
+                                                : router == 'Shipped' ? <CardHistory handleDetailHistory={() => handleDetailHistory(index)} titleBtn='Order Received' route='Shipped' title='Shipped' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
+                                                    : router == 'Received' ? <CardHistory handleDetailHistory={() => handleDetailHistory(index)} route='Received' orderReceived={() => orderReceived(data[index].id)} titleBtn='Order Received' title='Received' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
+                                                        : router == 'Complete' ? <CardHistory handleDetailHistory={() => handleDetailHistory(index)} titleBtn={item.created_at} route='Complete' title='Complete' transactionDetails={item.transaction_details} totalPrice={item.total_price} />
+                                                            : ''
+                                        }
+                                    </div>
+                                )
+                            })
+                            }
+                        </>
+                        : <div className='flex justify-center mt-[30vh]'>
+                            <img src={clipboard} className='w-2/6 md:w-1/6 lg:w-1/12' alt="" />
+                        </div>
+                    }
+                </>
+            }
         </div>
     )
 }

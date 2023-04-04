@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { IoIosCheckmarkCircle, IoIosArrowBack } from 'react-icons/io'
+import { IoIosArrowBack } from 'react-icons/io'
 
 interface NavSearchProps {
     handlePeople: React.MouseEventHandler
