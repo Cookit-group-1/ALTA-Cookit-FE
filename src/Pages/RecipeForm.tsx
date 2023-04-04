@@ -61,7 +61,6 @@ const RecipeForm = () => {
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
-            console.log("recipe: ", response.data.data)
             if ((cookies.user.id !== response.data.data.user_id && editType === "edit") ||
                 (editType !== "edit" && editType !== "recook")) {
                 navigate(`/recipes/${recipeID}`)
@@ -193,12 +192,7 @@ const RecipeForm = () => {
                 const formData = new FormData();
                 for (let image = 0; image < newRecipeDetails.images.length; image++) {
                     formData.append('image', newRecipeDetails.images[image])
-                    console.log(newRecipeDetails.images[image])
                 }
-                // formData.append('images', newRecipeDetails.images);
-
-                console.log("Images: ", newRecipeDetails.images)
-
                 const response = await axios.post(`${endpoint}/recipes/${recipeID}/images`,
                     formData,
                     {
@@ -208,7 +202,6 @@ const RecipeForm = () => {
                             Authorization: `Bearer ${cookies.user.token}`
                         }
                     });
-                console.log("Post Image: ", response)
             } catch (error) {
                 console.error(error);
             } finally {
@@ -232,7 +225,6 @@ const RecipeForm = () => {
                     ingredient_details: newRecipeDetails.ingredients
                 }
             ];
-            console.log("Ingredients: ", ingredients)
             const data =
             {
                 name: newRecipeDetails.name,
@@ -254,7 +246,6 @@ const RecipeForm = () => {
                     }
                 });
             postImage(response.data.data.id)
-            console.log("Post Recipe: ", response)
         } catch (error) {
             console.error(error);
         }
@@ -273,8 +264,6 @@ const RecipeForm = () => {
                     ingredient_details: newRecipeDetails.ingredients
                 }
             ];
-            console.log("Steps: ", steps)
-            console.log("Ingredients: ", ingredients)
             const data =
             {
                 name: newRecipeDetails.name,
@@ -295,7 +284,6 @@ const RecipeForm = () => {
                         Authorization: `Bearer ${cookies.user.token}`
                     }
                 });
-            console.log("Edit Recipe: ", response)
         } catch (error) {
             console.error(error);
         } finally {
@@ -321,7 +309,6 @@ const RecipeForm = () => {
                         Authorization: `Bearer ${cookies.user.token}`
                     }
                 });
-            console.log("Deleting Steps... ", response)
         } catch (error) {
             console.error(error);
         } finally {
@@ -339,7 +326,6 @@ const RecipeForm = () => {
                         Authorization: `Bearer ${cookies.user.token}`
                     }
                 });
-            console.log("Deleting Ingredients... ", response)
         } catch (error) {
             console.error(error);
         } finally {
@@ -357,7 +343,6 @@ const RecipeForm = () => {
                         Authorization: `Bearer ${cookies.user.token}`
                     }
                 });
-            console.log("Deleting Images... ", response)
         } catch (error) {
             console.error(error);
         } finally {
@@ -386,7 +371,6 @@ const RecipeForm = () => {
         fetch(`${endpoint}/users`, headers)
             .then(response => response.json())
             .then(response => {
-                console.log(response.data)
                 setUserRole(response.data.role)
             })
             .catch(error => console.error(error));

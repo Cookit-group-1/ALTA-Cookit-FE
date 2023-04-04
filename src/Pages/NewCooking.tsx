@@ -28,7 +28,6 @@ const NewCooking = () => {
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
-            console.log("recipe: ", response.data.data)
             setRecipe(response.data.data)
         } catch (error) {
             console.error(error);
@@ -50,7 +49,6 @@ const NewCooking = () => {
         try {
             const formData = new FormData();
             formData.append('description', description)
-            console.log(description)
             formData.append('type', "Cooked")
             formData.append('name', "arbi")
             if (recipeID !== undefined) {
@@ -68,7 +66,6 @@ const NewCooking = () => {
                         Authorization: `Bearer ${cookies.user.token}`
                     }
                 });
-            console.log("Post Recipe: ", response)
         } catch (error) {
             console.error(error);
         } finally {

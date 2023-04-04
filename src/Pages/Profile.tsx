@@ -30,14 +30,12 @@ const Profile = () => {
             }
         })
             .then((response) => {
-                console.log('re', response.data);
                 let sum: any = 0
                 if (cookies.cart) {
                     sum = parseInt(cookies.cart) + 1
                 } else {
                     sum = 1
                 }
-                console.log('s', sum)
                 setCookie('cart', sum, { path: "/" })
                 Swal.fire({
                     position: 'center',
@@ -68,7 +66,6 @@ const Profile = () => {
         fetch(`${endpoint}/users`, headers)
             .then(response => response.json())
             .then(response => {
-                console.log(response.data)
                 setUserData(response.data)
                 setLoading(false);
                 setLoadnew(false);
@@ -86,7 +83,6 @@ const Profile = () => {
                 }
             });
             setUserData(response.data.data)
-            console.log(response.data.data)
         } catch (error) {
             console.error(error);
         } finally {
@@ -145,7 +141,6 @@ const Profile = () => {
                 }
             })
             .catch(error => {
-                console.log(error.data)
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -158,11 +153,9 @@ const Profile = () => {
 
     useEffect(() => {
         setLoadnew(true);
-        console.log('ret', userID)
 
         if (cookies.user.id == userID) {
             fetchUserData()
-            console.log('test')
         } else {
             fetchUserDataId()
         }

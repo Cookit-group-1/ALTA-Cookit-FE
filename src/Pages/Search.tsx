@@ -38,7 +38,6 @@ const Search = () => {
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
-            console.log("recipe: ", response.data.data)
             setRecipes(response.data.data)
         } catch (error) {
             console.error(error);
@@ -56,7 +55,6 @@ const Search = () => {
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
-            console.log("people: ", response.data.data)
             setPeople(response.data.data)
         } catch (error) {
             console.error(error);
@@ -85,14 +83,12 @@ const Search = () => {
             }
         })
             .then((response) => {
-                console.log('re', response.data);
                 let sum: any = 0
                 if (cookies.cart) {
                     sum = parseInt(cookies.cart) + 1
                 } else {
                     sum = 1
                 }
-                console.log('s', sum)
                 setCookie('cart', sum, { path: "/" })
                 Swal.fire({
                     position: 'center',

@@ -53,7 +53,6 @@ const Recipe = () => {
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
-            console.log("recipe: ", response.data.data)
             setRecipe(response.data.data)
         } catch (error) {
             console.error(error);
@@ -66,9 +65,6 @@ const Recipe = () => {
         console.log("Handle Comment")
     }
 
-    const handleLike = () => {
-        console.log("Handle Like")
-    }
 
     const handleChangeServing = (amount: number) => {
         // setRecipeDetails({ ...recipeDetails, serving: Math.max(0, amount) })
@@ -86,7 +82,6 @@ const Recipe = () => {
             }
         })
             .then((response) => {
-                console.log("add to cart: ", response.data);
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -108,7 +103,6 @@ const Recipe = () => {
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
-            console.log("Comments: ", response.data.data)
             setComments(response.data.data)
         } catch (error) {
             console.error(error);
@@ -135,7 +129,6 @@ const Recipe = () => {
                         Authorization: `Bearer ${cookies.user.token}`
                     }
                 });
-            console.log(response.data.data)
         } catch (error) {
             console.error(error);
         } finally {
@@ -147,8 +140,6 @@ const Recipe = () => {
 
     const handleSubmitComment = (post: string, postImage: File | null) => {
         postComment(post, postImage)
-        console.log("New Comment", post)
-
     }
 
     // Delete
@@ -165,7 +156,6 @@ const Recipe = () => {
             cancelButtonColor: "#E85D04",
         }).then((willDelete) => {
             if (willDelete.isConfirmed) {
-                console.log("deleted")
                 axios.delete(`https://cookit.my-extravaganza.site/recipes/${recipeID}`, {
                     headers: {
                         Authorization: `Bearer ${cookies.user.token}`,

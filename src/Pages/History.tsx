@@ -101,7 +101,6 @@ const History = () => {
 
                 fetch(`https://cookit.my-extravaganza.site/users/transactions/${idTransaction}/status`, headers)
                     .then(response => response.json())
-                    .then(data => console.log('fre', data))
                     .catch(error => console.error(error));
                 localStorage.clear();
             }
