@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import food1 from '../assets/food3.jpg'
 import Format from './Format';
+import { useNavigate } from 'react-router-dom';
 
 
 interface myProps {
@@ -16,7 +17,7 @@ interface myProps {
 
 
 const ItemCart: FC<myProps> = ({ sellerName, cartItems, increment, decrement, deleteCartItem, getIdProduct }) => {
-
+    const navigate = useNavigate()
     return (
         <div className='bg-white'>
             <div className='w-full h-12  flex items-center border-b-2 '>
@@ -24,14 +25,12 @@ const ItemCart: FC<myProps> = ({ sellerName, cartItems, increment, decrement, de
             </div>
             {/* card product */}
             {cartItems?.map((item: any, index: number) => {
-                // console.log('s', item);
                 return (
                     <div key={index} className='py-2 px-3'>
                         <div className='grid grid-cols-5 md:grid-cols-4 '>
                             <figure className='w-full lg:w-2/3 h-5/6 lg:pl-5 flex gap-3  col-span-2 md:col-span-1 relative overflow-hidden rounded-md'>
                                 <input className='w-5 h-5 text-secondary bg-secondary cursor-pointer'  value={item.id}  onChange={getIdProduct} type="checkbox" />
-                                {/* item.recipe_images[0].url_image */}
-                                <img src={food1} className='' alt="" />
+                                <img src={item.recipe_images[0].url_image} className='' alt="" />
                             </figure>
                             <div className='col-span-3 pl-5 relative  grid grid-cols-1 md:grid-cols-1 lg:grid-cols-4 md:gap-5'>
                                 <p className='text-md md:text-2xl col-span-1'>
@@ -44,7 +43,7 @@ const ItemCart: FC<myProps> = ({ sellerName, cartItems, increment, decrement, de
                                     <p>{item.quantity}</p>
                                     <p onClick={() => increment(item.price, item.id, item.quantity)} className='cursor-pointer'>+</p>
                                 </div>
-                                <RiDeleteBin6Line id='1' onClick={() => deleteCartItem(item.id)} className='absolute md:absolute lg:static cursor-pointer text-xl md:text-2xl lg:text-xl lg:mt-[20%] right-0 md:right-3 top-2/3 text-red-600' />
+                                <RiDeleteBin6Line id={`${index}`} onClick={() => deleteCartItem(item.id)} className='cursor-pointer text-xl absolute md:absolute lg:static md:text-2xl lg:text-xl lg:mt-[20%] right-0 md:right-3 top-2/3 text-red-600' />
                             </div>
                         </div>
                     </div>

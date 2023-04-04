@@ -10,12 +10,10 @@ interface myProps {
 }
 
 const Followers: FC<myProps> = ({ name, img, handleFollback, fromUser, toUser }) => {
-    console.log('1',fromUser)
     let isFollback = false
     for(let i = 0; i < toUser.length; i++) {
         if(fromUser == toUser[i]){
             isFollback = true
-            console.log(isFollback)
         }
     }
 
@@ -26,7 +24,7 @@ const Followers: FC<myProps> = ({ name, img, handleFollback, fromUser, toUser })
                 <p className=' place-items-center col-span-2 text-start'>{name}</p>
                 {isFollback
                     ? <button className=' col-span-2 w-3/4 lg:w-1/2 place-self-end bg-white border-2 border-black rounded-md h-8 text-black'>Friend</button>
-                    : <button onClick={handleFollback} className=' col-span-2 w-3/4 lg:w-1/2 place-self-end bg-error rounded-md h-8 text-white'>Folow back</button>
+                    : <button onClick={handleFollback} className=' col-span-2 w-3/4 lg:w-1/2 place-self-end bg-secondary rounded-md h-8 text-white'>Folow back</button>
                 }
             </div>
         </>

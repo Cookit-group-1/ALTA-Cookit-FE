@@ -76,8 +76,8 @@ const Recipe = () => {
     }
 
     // add to cart
-    const addToCart = (id: number, serving: any) => {
-        axios.post(`https://virtserver.swaggerhub.com/STARCON10_1/ALTA-Cookit-BE/1.0/users/carts`, {
+    const addToCart = (id: number) => {
+        axios.post(`https://cookit.my-extravaganza.site/users/carts`, {
             "ingredient_id": id,
             "quantity": 1
         }, {
@@ -342,6 +342,7 @@ const Recipe = () => {
                                         onClick={() => handleChangeServing(serving + 1)}
                                     >+</button>
                                     <p className='ml-4 font-semibold'>Servings</p>
+                                    
                                 </div>
 
                                 {/* Table */}
@@ -361,7 +362,7 @@ const Recipe = () => {
 
                                 {/* Purchase */}
                                 {recipe.status !== "None" ?
-                                    <div className='flex flex-col border-2 border-primary mt-1 px-2 pb-2'>
+                                    <div className='flex flex-col gap-5 border-2 border-primary mt-1 px-2 pb-2'>
                                         <p className='self-center text-primary font-semibold bg-white -mt-3 px-2'>Buy Ingredients</p>
                                         <p>This is a verified recipe, you can directly purchase the ingredients for
                                             <span className='text-primary'> {recipe.ingredients[0].price} / batch</span>
@@ -385,7 +386,7 @@ const Recipe = () => {
                                                     onClick={() => handleChangeServing(serving + 1)}
                                                 >+</button>
                                             </div>
-                                            {/* <button onClick={() => addToCart(recipe.id)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button> */}
+                                            <button onClick={() => addToCart(recipe.ingredients[0].id)} className='btn btn-secondary w-40 justify-self-end'>Add to Cart</button>
                                         </div>
                                     </div> :
                                     <></>}

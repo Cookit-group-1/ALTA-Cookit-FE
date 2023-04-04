@@ -3,18 +3,22 @@ import Layout from '../Components/Layout'
 import NavBack from '../Components/NavBack'
 import NavBottom from '../Components/NavBottom'
 import { useCookies } from 'react-cookie'
-import { Link, useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import axios from 'axios'
 import CardPost from '../Components/CardPost'
 import { useNavigate } from 'react-router-dom'
 import LoadingSpinner from '../Components/LoadingSpinner'
 import { IoIosCheckmarkCircle } from 'react-icons/io'
 import CardQuote from '../Components/CardQuote'
+import { BsPencilSquare } from 'react-icons/bs'
+import Swal from 'sweetalert2'
+
 
 const Profile = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const navigate = useNavigate()
-    const { userID } = useParams();
+    const location = useLocation()
+    const { userID, profileID } = useParams();
 
     // Get User Data
     const [loading, setLoading] = useState(true)
@@ -23,6 +27,7 @@ const Profile = () => {
     const [userPosts, setUserPosts] = useState<any[]>([])
     const endpoint = `https://cookit.my-extravaganza.site`
     const [limit, setLimit] = useState(10)
+
     const fetchUserData = async () => {
         try {
             const response = await axios.get(`${endpoint}/users`, {
@@ -31,7 +36,23 @@ const Profile = () => {
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             });
-            console.log(response.data.data)
+            setUserData(response.data.data)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+            setLoadnew(false);
+        }
+    };
+
+    const fetchUserDataId = async () => {
+        try {
+            const response = await axios.get(`${endpoint}/users/${location.state.profileID}`, {
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${cookies.user.token}`
+                }
+            });
             setUserData(response.data.data)
         } catch (error) {
             console.error(error);
@@ -63,14 +84,56 @@ const Profile = () => {
         })
     }
 
+    const handleFollow = () => {
+        const headers = {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${cookies.user.token}`
+            },
+        };
+
+
+        fetch(`https://cookit.my-extravaganza.site/users/follow/${location.state.profileID}`, headers)
+            .then(response => response.json())
+            .then(data => {
+                if (data.message == 'you already follow this user') {
+                    Swal.fire({
+                        text: "you already follow this user",
+                        icon: 'warning',
+                        confirmButtonColor: '#3085d6',
+                    })
+                } else {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'success follow this user',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            })
+            .catch(error => {
+                console.log(error.data)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'follow user has been successful',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            });
+    }
+
     useEffect(() => {
-
         setLoadnew(true);
-        // getFollowers
-        fetchUserData();
+        {
+            cookies.user.id == userID
+                ? fetchUserData()
+                : fetchUserDataId()
+        }
         fetchUserPosts();
-
     }, [endpoint, userID, limit]);
+
 
     return (
         <Layout>
@@ -79,89 +142,103 @@ const Profile = () => {
             />
             {loading ? <LoadingSpinner /> :
                 <>
-                    <div className='border-2'>
-                        <div className='flex gap-2 w-full py-4 px-4 justify-between'>
-                            <div className='flex gap-2'>
+                    <div className='border-2 w-full'>
+                        <div className=' gap-2 w-full  px-4 justify-between'>
+                            <div className='grid grid-cols-3 lg:grid-cols-3 w-full gap-2'>
                                 {/* Profile Picture */}
                                 <div className={`w-32 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
-                                    <div className='h-0 pb-1/1 relative hover:cursor-pointer'>
+                                    <div className=' pb-1/1 mt-7 relative hover:cursor-pointer'>
                                         <img
                                             src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : userData?.profile_picture}
-                                            className='inset-0 absolute w-full h-full object-cover rounded-full'
+                                            className='inset-0 absolute w-3/4 md:w-32 h-3/4 md:h-32 object-cover rounded-full'
                                         />
                                     </div>
                                 </div>
                                 {/* Username, Following-Follower, Bio */}
-                                <div className='grid grid-cols-2 items-center justify-center'>
-                                    <h1 className='font-bold text-3xl flex'>
+                                <div className='grid grid-cols-2 place-content-center gap-5 col-span-2 items-center'>
+                                    <h1 className='font-bold col-span-2 text-xl md:text-xl flex'>
                                         {userData?.username}
                                         {userData.role == "Verified" ?
-                                            <IoIosCheckmarkCircle className='text-accent' /> :
-                                            <></>
+                                            <IoIosCheckmarkCircle className='text-accent' />
+                                            : ''
                                         }
                                     </h1>
-                                    {userID == cookies.user.id ?
-                                        <button onClick={() => navigate('/editprofile')} className='btn btn-primary btn-sm rounded-full'>Edit Profile</button> :
-                                        <button className='btn btn-primary btn-sm rounded-full'>Follow</button>}
-
-                                    <p onClick={() => goToFollow('Following')} className='font-semibold'>{userData.following} Following</p>
-                                    <p onClick={() => goToFollow('Followers')} className='font-semibold'>{userData.followers} Followers</p>
+                                    <div className='absolute top-20 right-6'>
+                                        {userID == cookies.user.id
+                                            ? <button onClick={() => navigate('/editprofile')} className=' text-primary place-self-end mb-24 text-2xl rounded-full'><BsPencilSquare /></button>
+                                            : <button onClick={handleFollow} className=' btn-primary place-self-end mb-24 w-fit px-7 py-1 rounded-full'>Follow</button>
+                                        }
+                                    </div>
+                                    {cookies.user.id == userID
+                                        ? <>
+                                            <p onClick={() => goToFollow('Followers')} className='font-regular sm:text-sm md:text-lg lg:text-lg md:font-regular cursor-pointer' >{userData.followers} Followers</p>
+                                            <p onClick={() => goToFollow('Following')} className='font-regular sm:text-sm md:text-lg lg:text-lg md:font-regular cursor-pointer'>{userData.following} Following</p>
+                                        </>
+                                        : ''
+                                    }
                                 </div>
                             </div>
                         </div>
 
-                        <div className='w-full h-full pb-10 grid grid-cols-3 px-5 border-b-2'>
+                        <div className='w-full h-full py-5 pr-10 grid  px-5 border-b-2'>
                             <p>{userData?.bio}</p>
                         </div>
                     </div>
 
-                    {userPosts.map((post: any) => {
-                        console.log('gt', post)
-                        return (
-                            <CardPost
-                                key={post.id}
-                                verifiedUser={post.user_role === "Verified"}
-                                verifiedRecipe={post.status === "OpenForSale"}
-                                username={post.username}
-                                profileID={post.user_id}
-                                recipeID={post.id}
-                                profilePicture={post.profile_picture}
-                                postType={post.type}
-                                postPicture={post.images ? post.images[0].url_image : null}
-                                recipeName={post.name}
-                                description={post.description}
-                                commentAmt={post.total_comment}
-                                likeAmt={post.total_like}
-                                handleToPost={() => navigate(`/recipes/${post.id}`)}
-                                handleToProfile={() => navigate(`/profile/${post.user_id}`)}
-                            >
-                                {post.replied_recipe !== undefined ?
-                                    <>
-                                        <CardQuote
-                                            username={post.replied_recipe.username}
-                                            profileID={post.replied_recipe.user_id}
-                                            recipeID={post.replied_recipe.id}
-                                            profilePicture={post.replied_recipe.profile_picture}
-                                            postType={post.replied_recipe.type}
-                                            recipeName={post.replied_recipe.name}
-                                            description={post.replied_recipe.description}
-                                            recipePicture={post.replied_recipe.images[0].url_image}
-                                            verifiedUser={post.replied_recipe.user_role === "Verified"}
-                                            verifiedRecipe={post.replied_recipe.status === "OpenForSale"}
-                                        />
-                                    </> :
-                                    <></>}
-                            </CardPost>
-                        )
-                    })}
-
-                    <button
-                        className={`w-full ${loadnew ? 'animate-pulse bg-neutral-100' : ''} border-x-2 text-neutral-400 py-2 text-light hover:bg-neutral-100`}
-                        onClick={() => setLimit(limit + 10)}
-                    > Load More </button>
-
+                    {userPosts.length > 0
+                        ? <>{userPosts.map((post: any) => {
+                            return (
+                                <CardPost
+                                    key={post.id}
+                                    verifiedUser={post.user_role === "Verified"}
+                                    verifiedRecipe={post.status === "OpenForSale"}
+                                    username={post.username}
+                                    profileID={post.user_id}
+                                    recipeID={post.id}
+                                    profilePicture={post.profile_picture}
+                                    postType={post.type}
+                                    postPicture={post.images ? post.images[0].url_image : null}
+                                    recipeName={post.name}
+                                    description={post.description}
+                                    commentAmt={post.total_comment}
+                                    likeAmt={post.total_like}
+                                    handleToPost={() => navigate(`/recipes/${post.id}`)}
+                                    handleToProfile={() => navigate(`/profile/${post.user_id}`)}
+                                >
+                                    {post.replied_recipe !== undefined ?
+                                        <>
+                                            <CardQuote
+                                                username={post.replied_recipe.username}
+                                                profileID={post.replied_recipe.user_id}
+                                                recipeID={post.replied_recipe.id}
+                                                profilePicture={post.replied_recipe.profile_picture}
+                                                postType={post.replied_recipe.type}
+                                                recipeName={post.replied_recipe.name}
+                                                description={post.replied_recipe.description}
+                                                recipePicture={post.replied_recipe.images[0].url_image}
+                                                verifiedUser={post.replied_recipe.user_role === "Verified"}
+                                                verifiedRecipe={post.replied_recipe.status === "OpenForSale"}
+                                            />
+                                        </> :
+                                        <></>}
+                                </CardPost>
+                            )
+                        })
+                        }
+                        </>
+                        : <div className='text-center'>
+                            <p className='pt-32 text-2xl font-semibold'>Share your recipe now</p>
+                            <p><span onClick={() => navigate('/newcooking')} className='text-primary cursor-pointer'>New recipe</span> or <span onClick={() => navigate('/recipes/new')} className='text-primary cursor-pointer'>New cooking</span></p>
+                        </div>
+                    }
+                    {userPosts.length < 3
+                        ? ''
+                        : <button
+                            className={`w-full ${loadnew ? 'animate-pulse bg-neutral-100' : ''} border-x-2 text-neutral-400 py-2 text-light hover:bg-neutral-100`}
+                            onClick={() => setLimit(limit + 10)}
+                        > Load More </button>
+                    }
                 </>}
-
             <NavBottom />
         </Layout>
     )

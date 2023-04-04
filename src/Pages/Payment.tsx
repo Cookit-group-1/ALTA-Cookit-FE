@@ -7,22 +7,16 @@ import food1 from '../assets/food1.jpg'
 import gofood from '../assets/gofood.png'
 import shopeefood from '../assets/shopeefood.png'
 import grabfood from '../assets/grabfood.png'
-import cod from '../assets/cod.jpg'
 import bni from '../assets/bni.png'
-import mandiri from '../assets/mandiri.jpg'
 import bri from '../assets/bri.png'
-import permata from '../assets/permata.png'
 import bca from '../assets/bca.png'
-import seabank from '../assets/seabank.png'
 import banktransfer from '../assets/banktransfer.png'
-import gopay from '../assets/gopay.png'
-import qris from '../assets/qris.png'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { useCookies } from 'react-cookie'
-import Alert from '../Components/Alert'
 import axios from 'axios'
 import Format from '../Components/Format'
+import LoadingSpinner from '../Components/LoadingSpinner'
 
 const Payment = () => {
     const navigate = useNavigate()
@@ -35,14 +29,13 @@ const Payment = () => {
     const [alert, setAlert] = useState('')
     const [cookies, setCookies] = useCookies(['user'])
     const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const delivery = DeliveryData.data
     const handleDelivery = (index: any, price: number, name: string) => {
         setDeliveryPrice(price)
         setDeliveryName(name)
         setThisDelivery(index)
-        console.log('g', deliveryPrice)
-        console.log('name', deliveryName)
     }
 
     function isAlert() {
@@ -54,7 +47,6 @@ const Payment = () => {
     }
 
     const [transactionDetails, setTransactionDetails] = useState([])
-    console.log('ty', location.state.data)
     // collect data trasaction details
     useEffect(() => {
         let dataTransaction: any = []
@@ -66,9 +58,7 @@ const Payment = () => {
             })
         })
         setTransactionDetails(dataTransaction)
-        console.log('fg', dataTransaction)
     }, [])
-    console.log(paymentOptions)
 
     const handleAlert = async () => {
         Swal.fire({
@@ -78,8 +68,8 @@ const Payment = () => {
         })
     }
 
-    const handlePayment = async () => {
-        console.log('gfg', deliveryPrice, paymentOptions)
+    const handlePayment = () => {
+        setLoading(true)
         axios.post('https://cookit.my-extravaganza.site/login', {
             "username": cookies.user.username,
             "password": password
@@ -94,7 +84,7 @@ const Payment = () => {
                     Authorization: `Bearer ${cookies.user.token}`
                 }
             }).then((response) => {
-                console.log(response.data);
+                setLoading(false)
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -114,6 +104,7 @@ const Payment = () => {
                 title: 'Oops...',
                 text: 'Please enter the password correctly',
             })
+            setLoading(false)
         })
     }
 
@@ -134,7 +125,11 @@ const Payment = () => {
 
     return (
         <>
-            <Alert type={alert} message='please select shipping options and payment options' />
+            {loading
+                ? <div className='absolute w-full h-full bg-transparent flex items-center justify-center z-50'>
+                    <LoadingSpinner />
+                </div>
+                : ''}
             <Header link='cart' title='Payment' />
             <div className='px-5 py-5 grid grid-cols-1 lg:grid-cols-2 gap-5'>
                 {/* order */}
@@ -142,7 +137,6 @@ const Payment = () => {
                     <div className='bg-gray-100 w-full h-fit px-4 rounded-lg md:max-h-[60vh] md:overflow-auto'>
                         <p className='my-5 font-semibold'>Order</p>
                         {location?.state?.data.map((item: any, index: number) => {
-                            console.log(item)
                             return (
                                 <div key={index} className='grid grid-cols-3 gap-5 '>
                                     <div className='w-6/6 h-3/4 lg:h-2/3 relative overflow-hidden rounded-md'>
@@ -162,7 +156,6 @@ const Payment = () => {
                         <p className='my-5 font-semibold'>Delivery</p>
                         <div className='grid grid-cols-1 gap-5 md:grid-cols-2'>
                             {delivery.map((item: any, index: number) => {
-                                console.log('fr', item)
                                 return (
                                     <div key={index} onClick={() => handleDelivery(index, item.name, item.price)} className={`${index == thisDelivery ? 'border-2 border-primary shadow-none' : ''} h-16 py-2 px-3 grid gap-2 grid-cols-5 items-center cursor-pointer justify-between rounded-md bg-gray-100 shadow-md`}>
                                         <img src={index == 0 ? gofood : index == 1 ? shopeefood : index == 2 ? grabfood : ''} className='h-auto w-full' alt="" />
@@ -204,11 +197,11 @@ const Payment = () => {
                             <div className="modal-box flex gap-5 flex-col ">
                                 <p className='text-center'>Please confirm your password</p>
                                 <div className='flex flex-col gap-5 px-10'>
-                                    <input type="password" className='border-2 border-primary px-2 rounded-md' onChange={(e) => setPassword(e.target.value)} placeholder='passord' />
+                                    <input type="password" className='border-2 border-black py-2 px-2 rounded-md' onChange={(e) => setPassword(e.target.value)} placeholder='passord' />
                                 </div>
                                 <div className="modal-action">
-                                    <label htmlFor="my-modal-7" className="btn bg-primary text-white">close</label>
-                                    <label onClick={handlePayment} className="btn bg-primary text-white">Confirm</label>
+                                    <label htmlFor="my-modal-7" className="btn bg-primary hover:bg-secondary text-white">close</label>
+                                    <label htmlFor="my-modal-7" onClick={handlePayment} className="btn bg-primary hover:bg-secondary text-white">Confirm</label>
                                 </div>
                             </div>
                         </div>
@@ -230,15 +223,9 @@ const Payment = () => {
                             <label onClick={() => setPaymentOptions('BNI')} htmlFor="my-modal-6" className='border-b-2 py-4 pl-10 flex items-center gap-4'>
                                 <img className='w-8' src={bni} alt="" />
                                 Bank BNI</label>
-                            <label onClick={() => setPaymentOptions('Mandiri')} htmlFor="my-modal-6" className='border-b-2 py-4 pl-10 flex items-center gap-4'>
-                                <img className='w-8' src={mandiri} alt="" />
-                                Bank Mandiri</label>
                             <label onClick={() => setPaymentOptions('BRI')} htmlFor="my-modal-6" className='border-b-2 py-4 pl-10 flex items-center gap-4'>
                                 <img className='w-8' src={bri} alt="" />
                                 Bank BRI</label>
-                            <label onClick={() => setPaymentOptions('Permata')} htmlFor="my-modal-6" className='border-b-2 py-4 pl-10 flex items-center gap-4'>
-                                <img className='w-8' src={permata} alt="" />
-                                Bank Permata</label>
                         </div>
                     </div>
                 </div>

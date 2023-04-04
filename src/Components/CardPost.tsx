@@ -47,9 +47,7 @@ const CardPost: FC<CardPostProps> =
         verifiedUser,
         verifiedRecipe,
         handleCart,
-        // handleToPost,
         handleToProfile,
-        // handleComment,
         handleLike,
         handleRecook,
         handleRemix
@@ -104,7 +102,7 @@ const CardPost: FC<CardPostProps> =
             <div className={`w-full bg-base-100 border-2 border-t-0 gap-2 p-4 ${deleted ? 'hidden' : 'flex'}`}>
                 {/* Profile Picture */}
                 <div className='w-2/12'>
-                    <div onClick={() => navigate(`/profile/${profileID}`)} className='h-0 pb-1/1 relative hover:cursor-pointer'>
+                    <div onClick={() => navigate(`/profile/${profileID}`,{state : { profileID : profileID}})} className='h-0 pb-1/1 relative hover:cursor-pointer'>
                         <img
                             src={profilePicture}
                             className='inset-0 absolute w-full h-full object-cover rounded-full'

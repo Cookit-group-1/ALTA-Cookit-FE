@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import FormInput from '../Components/FormInput'
-
 import signupImg from '../assets/signup.jpg'
 import graph from '../assets/graph.png'
 import { useNavigate } from 'react-router-dom'
