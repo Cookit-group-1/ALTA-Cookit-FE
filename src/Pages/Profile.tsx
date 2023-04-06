@@ -14,7 +14,7 @@ import { BsPencilSquare } from 'react-icons/bs'
 import Swal from 'sweetalert2'
 
 const Profile = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['user', 'cart']);
+    const [cookies, setCookie, removeCookie] = useCookies(['user', 'picture','cart']);
     const navigate = useNavigate()
     const location = useLocation()
     const { userID, profileID } = useParams();
@@ -208,7 +208,7 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        <div className='w-full h-full py-5 pr-10 grid  px-5 border-b-2'>
+                        <div className='w-full h-full break-words py-5 pr-10  px-5 border-b-2'>
                             <p>{userData?.bio}</p>
                         </div>
                     </div>

@@ -11,7 +11,7 @@ interface NavTopProps {
 
 const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
     const navigate = useNavigate()
-    const [cookies, setCookie, removeCookie] = useCookies(['user']);
+    const [cookies, setCookie, removeCookie] = useCookies(['user','picture']);
 
     // Profile Picture
     const [img, setImg] = React.useState<any>()
@@ -129,19 +129,19 @@ const NavTop: FC<NavTopProps> = ({ handleTimeline, handleRecipe }) => {
                             <div className={`w-10 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
                                 <div className='w-10'>
                                     <div className="h-0 pb-1/1 relative ">
-                                        <img src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
+                                        <img src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : cookies.picture ? cookies.picture :  img}
                                             className='inset-0 absolute w-full h-full object-cover rounded-full' />
                                     </div>
                                 </div>
                             </div>
                             <p className='text-lg hidden lg:flex'>Profile</p>
                         </label>
-                        <ul tabIndex={0} className="dropdown-content text-sm md:text-md lg:text-lg xl:text-xl md:text-sm menu p-2 text-black shadow-lg bg-base-100 rounded-box w-52">
-                            <li><Link to={`/profile/${cookies.user.id}`}>Profile</Link></li>
-                            <li><Link to="/history">my purchase</Link></li>
-                            <li><span onClick={logOut} >logout</span></li>
-                            <li className={`${cookies.user.role === "Admin" ? 'block' : 'hidden'}`}><Link to="/verifyusers">verify users</Link></li>
-                        </ul>
+                        <ul tabIndex={0} className=" dropdown-content text-sm md:text-md lg:text-lg xl:text-xl md:text-sm menu p-2 text-black shadow-lg bg-base-100 rounded-box w-52">
+                            <li className='sm:py-3'><Link to={`/profile/${cookies.user.id}`}>Profile</Link></li>
+                            <li className='sm:py-3'><Link to="/history">my purchase</Link></li>
+                            <li className='sm:py-3'><span onClick={logOut} >logout</span></li>
+                            <li className={`${cookies.user.role === "Admin" ? 'block' : 'hidden'} sm:py-3`}><Link to="/verifyusers">verify users</Link></li>
+                        </ul>   
                     </div>
 
 

@@ -27,7 +27,7 @@ const Register = () => {
         setPassword(inputValues[2])
         const regex = /^(?=.*\d)(?=.*[A-Z])[a-zA-Z0-9]{8,}$/;
 
-        const isValidLength:any = /[a-zA-Z0-9]{8,}/.test(password);
+        const isValidLength: any = /[a-zA-Z0-9]{8,}/.test(password);
         const isValidNumber = /[0-9]/.test(password);
         const isValidUpperCase = /[A-Z]/.test(password);
 
@@ -63,6 +63,7 @@ const Register = () => {
             })
             .catch(async (err) => {
                 // set value alert to active alert and call isAlert to remove alert (5 seconds)
+                console.error(err)
                 setAlert('error')
                 const result = await isAlert();
             })

@@ -10,14 +10,20 @@ import googleImg from '../assets/google.png'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import Alert from '../Components/Alert'
+import LoadingSpinner from '../Components/LoadingSpinner';
 
 const Login = () => {
     const navigate = useNavigate()
-    const [cookies, setCookie] = useCookies(['user'])
+    const [cookies, setCookie] = useCookies(['user', "host","picture"])
     const [username, setUsername] = useState('')
+    let usernameOauth = ''
+    let emailOauth = ''
+    let pictureOauth = ''
     const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('')
     const [alert, setAlert] = useState('')
     const [token, setToken] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleInputChange = (inputValues: string[]) => {
         setUsername(inputValues[0]);
@@ -33,23 +39,82 @@ const Login = () => {
 
     const handleOauth = () => {
         if (token != '') {
-            axios.post('https://95d1-2001-448a-20e0-90f-34bf-1b6d-b57-7961.ap.ngrok.io/login/google',
-                {
-                    "token": `${token}`
-                })
+            setIsLoading(true);
+            axios.post('https://cookit.my-extravaganza.site/register', {
+                "username": usernameOauth,
+                "email": emailOauth,
+                "password": "U7f72jrtlk"
+            })
                 .then((response) => {
-                    setCookie('user', JSON.stringify(response.data.data), { path: "/" });
-                    navigate(`/timeline`)
+                    axios.post('https://cookit.my-extravaganza.site/login', {
+                        "username": usernameOauth,
+                        "password": "U7f72jrtlk"
+                    })
+                        .then(async (response) => {
+                            setCookie('user', JSON.stringify(response.data.data), { path: "/" });
+                            setCookie('host', "U7f72jrtlk", { path: "/" });
+                            setCookie('picture', pictureOauth, { path: "/" });
+                            const id = response.data.data.id
+                            await Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'sign in has been successful',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            navigate(`/timeline`)
+                        })
+                        .catch(async err => {
+                            // set value alert to active alert and call isAlert to remove alert (5 seconds)
+                            setAlert('error')
+                            const result = await isAlert();
+                        })
                 })
-                .catch((error) => console.log(error))
+                .catch(async (err) => {
+                    // set value alert to active alert and call isAlert to remove alert (5 seconds)
+                    console.error('errr', err)
+                    axios.post('https://cookit.my-extravaganza.site/login', {
+                        "username": usernameOauth,
+                        "password": "U7f72jrtlk"
+                    })
+                        .then(async (response) => {
+                            setCookie('user', JSON.stringify(response.data.data), { path: "/" });
+                            setCookie('host', "U7f72jrtlk", { path: "/" });
+                            setCookie('picture', pictureOauth, { path: "/" });
+                            const id = response.data.data.id
+                            await Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'sign in has been successful',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            navigate(`/timeline`)
+                        })
+                        .catch(async err => {
+                            // set value alert to active alert and call isAlert to remove alert (5 seconds)
+                            setAlert('error')
+                            const result = await isAlert();
+                        })
+                })
+            setIsLoading(false)
         }
     }
 
     // extract token from google
     useEffect(() => {
-        handleOauth()
-        // axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${token}`)
-        //     .then((res) => console.log('res', res.data))
+        if (token != '') {
+            axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${token}`)
+                .then((res) => {
+                    setUsername(res.data.name)
+                    setEmail(res.data.email)
+                    usernameOauth = res.data.name
+                    emailOauth = res.data.email
+                    pictureOauth = res.data.picture
+                    console.log(usernameOauth)
+                    handleOauth()
+                })
+        }
     }, [token])
 
     useEffect(() => {
@@ -67,33 +132,38 @@ const Login = () => {
     }
 
     const handleLogin = async (e: any) => {
-        e.preventDefault()
-        axios.post('https://cookit.my-extravaganza.site/login', {
-            "username": username,
-            "password": password
-        })
-            .then(async (response) => {
-                setCookie('user', JSON.stringify(response.data.data), { path: "/" });
-                const id = response.data.data.id
-                await Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'sign in has been successful',
-                    showConfirmButton: false,
-                    timer: 1500
+        if (username && password != '') {
+            e.preventDefault()
+            axios.post('https://cookit.my-extravaganza.site/login', {
+                "username": username,
+                "password": password
+            })
+                .then(async (response) => {
+                    setCookie('user', JSON.stringify(response.data.data), { path: "/" });
+                    const id = response.data.data.id
+                    await Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'sign in has been successful',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    navigate(`/timeline`)
                 })
-                navigate(`/timeline`)
-            })
-            .catch(async err => {
-                // set value alert to active alert and call isAlert to remove alert (5 seconds)
-                setAlert('error')
-                const result = await isAlert();
-            })
+                .catch(async err => {
+                    // set value alert to active alert and call isAlert to remove alert (5 seconds)
+                    setAlert('error')
+                    const result = await isAlert();
+                })
+        }
     }
 
     const responsive = screen.width
     return (
         <div className='grid grid-cols-1 lg:grid-cols-3 row-end-3 h-screen relative overflow-hidden justify-center items-center '>
+            <div className={`${isLoading ? 'block' : 'hidden'}  absolute w-full h-full bg-transparent flex items-center justify-center z-50`}>
+                <LoadingSpinner />
+            </div>
             <Alert type={alert} message='Please enter a valid username or password..' />
             <div className='w-full flex lg:col-span-2 justify-center items-center px-16 md:px-20'>
                 <img className='md:h-[50vh] lg:h-[90vh] ' src={loginImg} alt="" />

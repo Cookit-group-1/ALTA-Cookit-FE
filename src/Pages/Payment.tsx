@@ -27,9 +27,13 @@ const Payment = () => {
     const [thisDelivery, setThisDelivery] = useState<number>()
     const [paymentOptions, setPaymentOptions] = useState('')
     const [alert, setAlert] = useState('')
-    const [cookies, setCookies] = useCookies(['user'])
+    const [cookies, setCookies] = useCookies(['user', 'host'])
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        { cookies.host ? setPassword(cookies.host) : '' }
+    }, [])
 
     const delivery = DeliveryData.data
     const handleDelivery = (index: any, price: number, name: string) => {
@@ -122,7 +126,6 @@ const Payment = () => {
     const future1 = `${futureDay1} ${futureMonth1}`
     const future2 = `${futureDay2} ${futureMonth2}`
 
-
     return (
         <>
             {loading
@@ -197,7 +200,10 @@ const Payment = () => {
                             <div className="modal-box flex gap-5 flex-col ">
                                 <p className='text-center'>Please confirm your password</p>
                                 <div className='flex flex-col gap-5 px-10'>
-                                    <input type="password" className='border-2 border-black py-2 px-2 rounded-md' onChange={(e) => setPassword(e.target.value)} placeholder='password' />
+                                    {cookies.host
+                                        ? <input disabled type="password" className='border-2 border-black py-2 px-2 rounded-md ' value={password} onChange={(e) => setPassword(e.target.value)} placeholder='password' />
+                                        : <input type="password" className='border-2 border-black py-2 px-2 rounded-md ' value={password} onChange={(e) => setPassword(e.target.value)} placeholder='password' />
+                                    }
                                 </div>
                                 <div className="modal-action">
                                     <label htmlFor="my-modal-7" className="btn bg-primary hover:bg-secondary text-white">close</label>

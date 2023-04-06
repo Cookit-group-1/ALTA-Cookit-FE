@@ -24,11 +24,15 @@ function FormInput({ inputCount, inputType, placeholder, onChange, width, mdWidt
         new Array(inputCount).fill("")
     );
 
-    
+
     const handleChange = (index: number, value: string) => {
         setInputValues((prevState) => {
             const newState = [...prevState];
-            newState[index] = value;
+            {
+                index != 0
+                    ? newState[index] = value
+                    : newState[0] = value.substring(0,15)
+            }
             return newState;
         });
     };

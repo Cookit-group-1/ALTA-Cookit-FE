@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 
 
 const NavBottom = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['user']);
+    const [cookies, setCookie, removeCookie] = useCookies(['user','host','picture']);
     const [modalOpen, setModalOpen] = useState<boolean>(false)
     const [cartLength, setCartLength] = useState()
     const navigate = useNavigate()
@@ -86,6 +86,8 @@ const NavBottom = () => {
                     timer: 1500,
                 });
                 removeCookie("user");
+                removeCookie("host");
+                removeCookie("picture");
                 navigate("/login");
             }
         });
@@ -112,7 +114,7 @@ const NavBottom = () => {
                         <div className={`w-10 justify-self-start ${loading ? 'animate-pulse' : ''}`}>
                             <div className='w-10'>
                                 <div className="h-0 pb-1/1 relative ">
-                                    <img src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : img}
+                                    <img src={loading ? `https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png` : cookies.picture ? cookies.picture : img}
                                         className='inset-0 absolute w-full h-full object-cover rounded-full' />
                                 </div>
                             </div>

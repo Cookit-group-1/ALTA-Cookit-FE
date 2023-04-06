@@ -29,7 +29,7 @@ interface Steps {
 }
 
 const Recipe = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['user'])
+    const [cookies, setCookie, removeCookie] = useCookies(['user','picture'])
     const navigate = useNavigate();
     const { recipeID } = useParams();
     const { postType } = useParams();
@@ -452,7 +452,7 @@ const Recipe = () => {
                             profileID={18}
                             username={comment.username}
                             userRole={comment.user_role}
-                            profilePicture={comment.profile_picture}
+                            profilePicture={ comment.profile_picture}
                             comment={comment.comment}
                             image={comment.comment_image}
                         />

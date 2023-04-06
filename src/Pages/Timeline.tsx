@@ -13,7 +13,7 @@ import LazyLoading from '../Components/LazyLoading'
 
 
 const Timeline = () => {
-    const [cookies, setCookie] = useCookies(['user', 'cart'])
+    const [cookies, setCookie] = useCookies(['user', 'picture','cart'])
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
     const [lazyLoad, setLazyLoad] = useState(false)
@@ -153,9 +153,9 @@ const Timeline = () => {
                                     <>
                                         <CardQuote
                                             username={post.replied_recipe.username}
-                                            profileID={post.replied_recipe.user_id }
+                                            profileID={post.replied_recipe.user_id}
                                             recipeID={post.replied_recipe.id}
-                                            profilePicture={post.replied_recipe.profile_picture}
+                                            profilePicture={ post.replied_recipe.profile_picture}
                                             postType={post.replied_recipe.type}
                                             recipeName={post.replied_recipe.name}
                                             description={post.replied_recipe.description}

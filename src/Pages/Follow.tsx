@@ -43,7 +43,6 @@ const Follow = () => {
                 'Authorization': `Bearer ${cookies.user.token}`
             },
         };
-        console.log(id)
         fetch(`https://cookit.my-extravaganza.site/users/follow/${id}`, headers)
             .then(response => response.json())
             .then(data => {
