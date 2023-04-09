@@ -40,13 +40,13 @@ const Login = () => {
     const handleOauth = () => {
         if (token != '') {
             setIsLoading(true);
-            axios.post('https://cookit.my-extravaganza.site/register', {
+            axios.post('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/register', {
                 "username": usernameOauth,
                 "email": emailOauth,
                 "password": "U7f72jrtlk"
             })
                 .then((response) => {
-                    axios.post('https://cookit.my-extravaganza.site/login', {
+                    axios.post('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/login', {
                         "username": usernameOauth,
                         "password": "U7f72jrtlk"
                     })
@@ -73,7 +73,7 @@ const Login = () => {
                 .catch(async (err) => {
                     // set value alert to active alert and call isAlert to remove alert (5 seconds)
                     console.error('errr', err)
-                    axios.post('https://cookit.my-extravaganza.site/login', {
+                    axios.post('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/login', {
                         "username": usernameOauth,
                         "password": "U7f72jrtlk"
                     })
@@ -134,7 +134,7 @@ const Login = () => {
     const handleLogin = async (e: any) => {
         if (username && password != '') {
             e.preventDefault()
-            axios.post('https://cookit.my-extravaganza.site/login', {
+            axios.post('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/login', {
                 "username": username,
                 "password": password
             })

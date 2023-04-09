@@ -21,7 +21,7 @@ const Profile = () => {
 
     // add to cart
     const handleCart = (id: number) => {
-        axios.post(`https://cookit.my-extravaganza.site/users/carts`, {
+        axios.post(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/carts`, {
             "ingredient_id": id,
             "quantity": 1
         }, {
@@ -53,7 +53,7 @@ const Profile = () => {
     const [loadnew, setLoadnew] = useState(false)
     const [userData, setUserData] = useState<any>()
     const [userPosts, setUserPosts] = useState<any[]>([])
-    const endpoint = `https://cookit.my-extravaganza.site`
+    const endpoint = `https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app`
     const [limit, setLimit] = useState(10)
 
     const fetchUserData = async () => {
@@ -121,7 +121,7 @@ const Profile = () => {
             },
         };
 
-        fetch(`https://cookit.my-extravaganza.site/users/follow/${userID}`, headers)
+        fetch(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/follow/${userID}`, headers)
             .then(response => response.json())
             .then(data => {
                 if (data.message == 'you already follow this user') {

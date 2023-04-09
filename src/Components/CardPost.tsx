@@ -74,7 +74,7 @@ const CardPost: FC<CardPostProps> =
                 cancelButtonColor: "#E85D04",
             }).then((willDelete) => {
                 if (willDelete.isConfirmed) {
-                    axios.delete(`https://cookit.my-extravaganza.site/recipes/${recipeID}`, {
+                    axios.delete(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/recipes/${recipeID}`, {
                         headers: {
                             Authorization: `Bearer ${cookies.user.token}`,
                             Accept: 'application/json'

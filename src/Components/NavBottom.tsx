@@ -18,7 +18,7 @@ const NavBottom = () => {
 
     // Profile Picture
     const [loading, setLoading] = React.useState(true)
-    const endpoint = `https://cookit.my-extravaganza.site/users`
+    const endpoint = `https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users`
     const [img, setImg] = React.useState<any>()
     const fetchDataUser = async () => {
         try {
@@ -37,7 +37,7 @@ const NavBottom = () => {
     };
 
     const getcart = () => {
-        axios.get('https://cookit.my-extravaganza.site/users/carts', {
+        axios.get('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/carts', {
             headers: {
                 Authorization: `Bearer ${cookies.user.token}`
             }

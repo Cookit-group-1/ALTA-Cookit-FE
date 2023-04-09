@@ -38,7 +38,7 @@ const EditProfile = () => {
 
     // GET DATA PROFILE
     const getData = () => {
-        axios.get(`https://cookit.my-extravaganza.site/users`, {
+        axios.get(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users`, {
             headers: {
                 Authorization: `Bearer ${cookies.user.token}`
             }
@@ -70,7 +70,7 @@ const EditProfile = () => {
 
     // UPDATE PASSWORD
     const updatePassword = () => {
-        axios.put(`https://cookit.my-extravaganza.site/users/password`, {
+        axios.put(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/password`, {
             "old_password": oldPw,
             "new_password": newPw,
             "password_confirmation": confirmPw
@@ -101,7 +101,7 @@ const EditProfile = () => {
         formData.append("username", username);
         formData.append("bio", bio);
         if (formData != null) {
-            axios.put('https://cookit.my-extravaganza.site/users', formData, {
+            axios.put('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users', formData, {
                 headers: {
                     Authorization: `Bearer ${cookies.user.token}`,
                     "Content-Type": "multipart/form-data",
@@ -139,7 +139,7 @@ const EditProfile = () => {
             },
         };
 
-        fetch(`https://cookit.my-extravaganza.site/users/upgrade`, headers)
+        fetch(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/upgrade`, headers)
             .then(response => response.json())
             .then(data => {
                 Swal.fire({

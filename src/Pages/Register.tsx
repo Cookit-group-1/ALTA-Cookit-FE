@@ -46,7 +46,7 @@ const Register = () => {
 
     const handleRegister = (e: any) => {
         e.preventDefault()
-        axios.post('https://cookit.my-extravaganza.site/register', {
+        axios.post('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/register', {
             "username": username,
             "email": email,
             "password": password

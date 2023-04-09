@@ -43,7 +43,7 @@ const Recipe = () => {
 
     // Get Recipe
     const [loading, setLoading] = useState(true)
-    const endpoint = `https://cookit.my-extravaganza.site`
+    const endpoint = `https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app`
 
     const fetchRecipeDetails = async () => {
         try {
@@ -73,7 +73,7 @@ const Recipe = () => {
 
     // add to cart
     const addToCart = (id: number) => {
-        axios.post(`https://cookit.my-extravaganza.site/users/carts`, {
+        axios.post(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/carts`, {
             "ingredient_id": id,
             "quantity": 1
         }, {
@@ -156,7 +156,7 @@ const Recipe = () => {
             cancelButtonColor: "#E85D04",
         }).then((willDelete) => {
             if (willDelete.isConfirmed) {
-                axios.delete(`https://cookit.my-extravaganza.site/recipes/${recipeID}`, {
+                axios.delete(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/recipes/${recipeID}`, {
                     headers: {
                         Authorization: `Bearer ${cookies.user.token}`,
                         Accept: 'application/json'

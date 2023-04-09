@@ -24,7 +24,7 @@ const PostBox: FC<PostBoxProps> = ({ onSubmit, profilePicture, placeholderText }
     const [img, setImg] = React.useState<any>()
 
     const [loading, setLoading] = React.useState(true)
-    const endpoint = `https://cookit.my-extravaganza.site/users`
+    const endpoint = `https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users`
     const fetchDataUser = async () => {
         try {
             const response = await axios.get(endpoint, {

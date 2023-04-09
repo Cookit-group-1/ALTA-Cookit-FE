@@ -25,7 +25,7 @@ const History = () => {
     const getData = async () => {
         setLoading(true)
         setData([])
-        await axios.get(`https://cookit.my-extravaganza.site/users/transactions?status=${router}`, {
+        await axios.get(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/transactions?status=${router}`, {
             headers: {
                 Authorization: `Bearer ${cookies.user.token}`
             }
@@ -58,7 +58,7 @@ const History = () => {
     }, []);
 
     async function fetchData() {
-        const response = await fetch('https://cookit.my-extravaganza.site/users/transactions?status=Shipped', {
+        const response = await fetch('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/transactions?status=Shipped', {
             headers: {
                 Authorization: `Bearer ${cookies.user.token}`
             }
@@ -99,7 +99,7 @@ const History = () => {
                     },
                 };
 
-                fetch(`https://cookit.my-extravaganza.site/users/transactions/${idTransaction}/status`, headers)
+                fetch(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/transactions/${idTransaction}/status`, headers)
                     .then(response => response.json())
                     .catch(error => console.error(error));
                 localStorage.clear();
@@ -120,7 +120,7 @@ const History = () => {
             },
         };
 
-        fetch(`https://cookit.my-extravaganza.site/users/transactions/${id}/status`, headers)
+        fetch(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/transactions/${id}/status`, headers)
             .then(response => response.json())
             .then(data => {
                 Swal.fire({

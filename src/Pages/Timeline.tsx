@@ -27,7 +27,7 @@ const Timeline = () => {
 
     // Get Recipe Data
     const [recipes, setRecipes] = useState([])
-    const endpoint = `https://cookit.my-extravaganza.site`
+    const endpoint = `https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app`
     const [limit, setLimit] = useState(10)
     const [loadnew, setLoadnew] = useState(false)
     const [timelineMode, setTimelineMode] = useState(false)
@@ -85,7 +85,7 @@ const Timeline = () => {
 
     // add to cart
     const handleCart = (id: number) => {
-        axios.post(`https://cookit.my-extravaganza.site/users/carts`, {
+        axios.post(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/carts`, {
             "ingredient_id": id,
             "quantity": 1
         }, {
@@ -124,6 +124,7 @@ const Timeline = () => {
                     setTimelineMode(false)
                 }}
             />
+            
             {loading
                 ? <div className='absolute w-full h-full bg-transparent flex items-center justify-center z-50'>
                     <LoadingSpinner />

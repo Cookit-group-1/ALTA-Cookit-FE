@@ -74,11 +74,11 @@ const Payment = () => {
 
     const handlePayment = () => {
         setLoading(true)
-        axios.post('https://cookit.my-extravaganza.site/login', {
+        axios.post('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/login', {
             "username": cookies.user.username,
             "password": password
         }).then((response) => {
-            axios.post('https://cookit.my-extravaganza.site/users/transactions', {
+            axios.post('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/transactions', {
                 "transaction_details": transactionDetails,
                 "payment_method": paymentOptions,
                 "shipping_method": deliveryPrice,

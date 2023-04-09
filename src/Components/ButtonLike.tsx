@@ -12,7 +12,7 @@ interface Props {
 
 const LikeButton = ({ id }: Props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
-    const endpoint = `https://cookit.my-extravaganza.site`
+    const endpoint = `https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app`
     const dispatch = useDispatch();
     const likedIds = useSelector((state: RootState) => state.likeButton.ids);
     const [likes, setLikes] = useState(0)

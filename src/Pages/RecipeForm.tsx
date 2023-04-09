@@ -44,7 +44,7 @@ const initialNewRecipe: NewRecipeVariables = {
 const RecipeForm = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const [loading, setLoading] = React.useState(true)
-    const endpoint = `https://cookit.my-extravaganza.site`
+    const endpoint = `https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app`
     // const endpoint = 'https://82d3-2001-448a-20e0-4958-d97e-b05f-e535-46c3.ap.ngrok.io'
     const navigate = useNavigate()
 

@@ -25,7 +25,7 @@ const Cart = () => {
     // get cart data
     const getCartData = () => {
         setLoading(true)
-        axios.get('https://cookit.my-extravaganza.site/users/carts', {
+        axios.get('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/carts', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -63,7 +63,7 @@ const Cart = () => {
 
     // handle quantity changes +
     const handleIncrement = (price: any, id: number, quantity: number) => {
-        axios.put(`https://cookit.my-extravaganza.site/users/carts/${id}`, {
+        axios.put(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/carts/${id}`, {
             "quantity": quantity + 1
         }, {
             headers: {
@@ -78,7 +78,7 @@ const Cart = () => {
 
     // handle quantity changes -
     const handleDecrement = (price: any, id: number, quantity: number) => {
-        axios.put(`https://cookit.my-extravaganza.site/users/carts/${id}`, {
+        axios.put(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/carts/${id}`, {
             "quantity": quantity - 1
         }, {
             headers: {
@@ -93,7 +93,7 @@ const Cart = () => {
 
     // delete cart
     const deleteCartItem = (id: number) => {
-        axios.delete(`https://cookit.my-extravaganza.site/users/carts/${id}`, {
+        axios.delete(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/carts/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

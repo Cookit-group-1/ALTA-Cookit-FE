@@ -21,7 +21,7 @@ const Follow = () => {
     // get followers
     const getFollowers = async () => {
         setLoading(true)
-        await axios.get('https://cookit.my-extravaganza.site/users/follower', {
+        await axios.get('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/follower', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -43,7 +43,7 @@ const Follow = () => {
                 'Authorization': `Bearer ${cookies.user.token}`
             },
         };
-        fetch(`https://cookit.my-extravaganza.site/users/follow/${id}`, headers)
+        fetch(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/follow/${id}`, headers)
             .then(response => response.json())
             .then(data => {
                 Swal.fire({
@@ -59,7 +59,7 @@ const Follow = () => {
 
     // unFollow user
     const handleUnfollow = async (id: number) => {
-        await axios.delete(`https://cookit.my-extravaganza.site/users/unfollow/${id}`, {
+        await axios.delete(`https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/unfollow/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -78,7 +78,7 @@ const Follow = () => {
     // get following data
     const getFollowing = async () => {
         setLoading(true)
-        await axios.get('https://cookit.my-extravaganza.site/users/following', {
+        await axios.get('https://9ecf-2001-448a-20e0-1bf1-4169-b9cf-b7fe-a7c9.ngrok-free.app/users/following', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
